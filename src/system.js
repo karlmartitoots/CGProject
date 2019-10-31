@@ -1,13 +1,15 @@
 class System {
-  constructor() {
+  constructor(celBodies, orbits) {
+    this.celestialBodies = celBodies;
+    this.orbits = orbits;
+
     var sys = new THREE.Object3D();
-
-    var star = new Body();
-    sys.add(star.getBody());
-
-    this.bodies = [];
-    this.bodies.push(star);
-
+    this.celestialBodies.forEach(celBody => {
+      sys.add(celBody.mesh)
+    });
+    this.orbits.forEach(o => {
+      sys.add(o.lineloop)
+    });
     this.system = sys;
   }
 
@@ -15,7 +17,20 @@ class System {
     return this.system;
   }
 
-  getBodies() {
-    return this.bodies;
+  get celestialBodies() {
+    return this._bodies;
   }
+
+  set celestialBodies(newBodies) {
+    this._bodies = newBodies;
+  }
+
+  get orbits() {
+    return this._orbits;
+  }
+
+  set orbits(o) {
+    this._orbits = o;
+  }
+
 }

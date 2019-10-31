@@ -4,7 +4,7 @@ function createSphere(colorCode) {
 
   var material = new THREE.MeshBasicMaterial({
     color: colorCode,
-    wireframe: true
+    wireframe: false
   });
 
   var sphere = new THREE.Mesh(geometry, material);
