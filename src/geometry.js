@@ -2,7 +2,7 @@ function createSphere(colorCode) {
   var geometry = new THREE.SphereGeometry(1, 15, 15);
   var color = new THREE.Color(colorCode);
 
-  var material = new THREE.MeshBasicMaterial({
+  var material = new THREE.MeshPhongMaterial({
     color: colorCode,
     wireframe: false
   });

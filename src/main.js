@@ -49,6 +49,11 @@ function onLoad() {
   var system = new System(bodies, orbits);
   scene.add(system.getObject3D());
 
+  const color = 0xFFFFFF;
+  const intensity = 0.5;
+  const ambientlight = new THREE.AmbientLight(color, intensity);
+  scene.add(ambientlight);
+
   draw();
 }
 
