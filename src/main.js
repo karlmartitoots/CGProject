@@ -4,11 +4,13 @@ var orbits = [];
 var clock = new THREE.Clock();
 var delta = clock.getDelta();
 var dt;
+var camSpeed = 1;
 document.addEventListener("keydown", onKeyDown, false);
 document.addEventListener("keyup", onKeyUp, false);
 document.addEventListener('mousemove', onDocumentMouseMove, false);
 document.addEventListener('mousedown', onMouseDown, false);
 document.addEventListener('mouseup', onMouseUp, false);
+document.addEventListener('wheel', onMouseWheelMove, false);
 
 var direction = new THREE.Vector3(0, 0, 0);
 
@@ -29,12 +31,9 @@ function onLoad() {
   cam = new Camera(width, height);
   scene.add(cam.camera);
 
-  // Make a sphere + pointlight
-  var sphere = new THREE.SphereBufferGeometry(0.5, 16, 8);
-  var light = new THREE.PointLight(0xff0040, 2, 50);//"rgb(50%, 0%, 0%)"
-  light.add( new THREE.Mesh( sphere, new THREE.MeshBasicMaterial({ color: 0xff0040 })));
-  light.position.set(3, 5, 4);
-  scene.add(light);
+  // Make a light ball
+  var lgt = new Lighting(0.5, 3, 5, 4);
+  scene.add(lgt.light);
 
   var orb = new Orbit(2.0);
   var orb2 = new Orbit(10.0);
@@ -91,27 +90,53 @@ function onKeyDown(event) {
 
   switch (keyCode){
     case 65: // Left
-      direction.x = -1.0;
+      direction.x = -camSpeed;
       break;
 
     case 87: // W
-      direction.z = -1.0;
+      direction.z = -camSpeed;
       break;
 
     case 68: // Right
-      direction.x = 1.0;
+      direction.x = camSpeed;
       break;
 
     case 83: // S
-      direction.z = 1.0;
+      direction.z = camSpeed;
       break;
 
     case 81: // Q -- outside
-      direction.y = 1.0;
+      direction.y = camSpeed;
       break;
 
     case 69: // E -- inside
-      direction.y = -1.0;
+      direction.y = -camSpeed;
+      break;
+
+    case 37: // < -- left arrow key
+      cam.position.x -= 15;
+      break;
+
+    case 39: // > -- right arrow key
+      cam.position.x += 15;
+      break;
+
+    case 38: // ^ -- up arrow key
+      cam.position.z -= 15;
+      break;
+
+    case 40: // v -- down arrow key
+      cam.position.z += 15;
+      break;
+
+    case 188: // , -- speed UP
+      camSpeed ++;
+	  console.log(camSpeed);
+      break;
+
+    case 190: // . -- speed DOWN
+      if(camSpeed > 1)camSpeed --;
+	  console.log(camSpeed);
       break;
   }
 }
@@ -161,4 +186,10 @@ function onMouseDown (event) {
 
 function onMouseUp (event) {
   MouseDown = false;
+}
+
+function onMouseWheelMove (event) {
+  if(event.deltaY < 0) camSpeed ++;
+  else if(camSpeed > 1)camSpeed --;
+  console.log(camSpeed);
 }
