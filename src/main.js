@@ -5,6 +5,7 @@ var clock = new THREE.Clock();
 var delta = clock.getDelta();
 var dt;
 var camSpeed = 1;
+var movementLock = true;
 document.addEventListener("keydown", onKeyDown, false);
 document.addEventListener("keyup", onKeyUp, false);
 document.addEventListener('mousemove', onDocumentMouseMove, false);
@@ -16,6 +17,8 @@ var direction = new THREE.Vector3(0, 0, 0);
 
 var mouse = new THREE.Vector2();
 var MouseDown = false;
+
+var core;
 
 function onLoad() {
   var canvasContainer = document.getElementById('myCanvasContainer');
@@ -34,28 +37,29 @@ function onLoad() {
   scene.add(cam.camera);
 
   // Make a light ball
-  var lgt = new Lighting(0.5, 3, 5, 4);
-  scene.add(lgt.light);
-  var lgt2 = new Lighting(0.5, -10, 5, 0);
-  scene.add(lgt2.light);
+  //var lgt = new Lighting(0.5, 3, 5, 4);
+  //scene.add(lgt.light);
   /*var helper = new THREE.CameraHelper( lgt.light.shadow.camera );
   scene.add( helper );*/
 
-  var orb = new Orbit(2.0);
-  var orb2 = new Orbit(10.0);
-  orbits.push(orb);
-  orbits.push(orb2);
 
-  var star = new CelestialBody({orbit : orb, rotationsPerUnit : 0.05, revolutionsPerUnit : 1.0});
-  var planet = new CelestialBody({size : 3, orbit : orb2, rotationsPerUnit : 0.2, revolutionsPerUnit : 1.0});
-  bodies.push(star);
+  var star = new CelestialBody({radius: 0.0, size: 4, rotationsPerUnit: 1, revolutionsPerUnit: 1.0, tilt:0.2, light: true});
+  var planet = new CelestialBody({radius: 10.0, size: 2, rotationsPerUnit: 3, revolutionsPerUnit: 1.0, tilt:0.4});
+  var moon = new CelestialBody({radius:4, size: 0.5, rotationsPerUnit:1, revolutionsPerUnit:4, tilt:0.1});
+  star.add(planet);
+  planet.add(moon);
+
+  // Add all the created bodies to an array
+  bodies.push(moon);
   bodies.push(planet);
+  bodies.push(star);
 
-  var system = new System(bodies, orbits);
-  scene.add(system.getObject3D());
+  core = star;
+
+  scene.add(core.root);
 
   const color = 0xFFFFFF;
-  const intensity = 0.3;
+  const intensity = 0.2;
   const ambientlight = new THREE.AmbientLight(color, intensity);
   scene.add(ambientlight);
 
@@ -70,22 +74,13 @@ function draw() {
   delta = clock.getDelta();
 
   // Camera control
-  cam.updatePosition(direction, delta);
-  cam.updateDirection(mouse, delta);
+  if (movementLock) {
+    cam.updatePosition(direction, delta);
+    cam.updateDirection(mouse, delta);
+  }
 
   // Simple rotation and revolving of bodies
-  bodies.forEach((item, index) => {
-    // TODO: Rotate according to the speed, which is specified in Body class
-    // TODO: Add a 'rotate' function to the body
-
-    // revolve in polar coords
-    var angle = setAngle(item.revSpeed, item.revUnit)
-    item.mesh.position.x = item.orbit.radius * Math.cos(angle);
-    item.mesh.position.z = item.orbit.radius * Math.sin(angle);
-
-    // rotation
-    item.mesh.rotation.set(0, setAngle(item.rotSpeed, item.rotUnit), 0);
-  });
+  core.update();
 
   renderer.render(scene, cam.camera);
 }
@@ -136,13 +131,17 @@ function onKeyDown(event) {
       break;
 
     case 188: // , -- speed UP
-      camSpeed ++;
-	  console.log(camSpeed);
+      camSpeed++;
+      console.log(camSpeed);
       break;
 
     case 190: // . -- speed DOWN
-      if(camSpeed > 1)camSpeed --;
-	  console.log(camSpeed);
+      if(camSpeed > 1) camSpeed--;
+      console.log(camSpeed);
+      break;
+
+    case 191: // / -- lock/unlock movement
+      movementLock ^= true;
       break;
   }
 }
