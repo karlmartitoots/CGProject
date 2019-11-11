@@ -30,3 +30,25 @@ function setAngle2(n, unit = 'second'){
 function setAngle(n, unit = 'second'){
     return Math.PI * (0.002 * (new Date()).getTime() / timeMap.get(unit) * n % 2)
 }
+
+function getRandomFloatInRange(a, b){
+  return a + (b - a) * Math.random();
+}
+
+function getRandomIntInRange(a, b){
+    return Math.floor(Math.random() * b) + a;
+}
+
+/**
+ *  Needed a range function ¯\_(ツ)_/¯.
+ * @param {*} start 
+ * @param {*} stop 
+ * @param {*} step 
+ */
+function range(start, stop, step) {
+  var a = [start], b = start;
+  while (b < stop) {
+      a.push(b += step || 1);
+  }
+  return a;
+}

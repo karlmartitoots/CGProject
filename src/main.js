@@ -6,6 +6,7 @@ var delta = clock.getDelta();
 var dt;
 var camSpeed = 1;
 var movementLock = true;
+var confMap = new Conf();
 document.addEventListener("keydown", onKeyDown, false);
 document.addEventListener("keyup", onKeyUp, false);
 document.addEventListener('mousemove', onDocumentMouseMove, false);
@@ -42,19 +43,18 @@ function onLoad() {
   /*var helper = new THREE.CameraHelper( lgt.light.shadow.camera );
   scene.add( helper );*/
 
-  var conf = new Conf();
-  var star = new CelestialBody({radius: 0.0, size: 4, rotationsPerUnit: 1, revolutionsPerUnit: 1.0, tilt:0.2, light: true});
-  var planet = new CelestialBody({radius: 10.0, size: 2, rotationsPerUnit: 3, revolutionsPerUnit: 1.0, tilt:0.4});
-  var moon = new CelestialBody({radius:4, size: 0.5, rotationsPerUnit:1, revolutionsPerUnit:4, tilt:0.1});
-  star.add(planet);
-  planet.add(moon);
-
-  // Add all the created bodies to an array
-  bodies.push(moon);
-  bodies.push(planet);
-  bodies.push(star);
-
-  core = star;
+  var customConf = new Map();
+  customConf.set("starSize", 20);
+  customConf.set("planetMinSize", 1);
+  customConf.set("planetMaxSize", 6);
+  customConf.set("minRevolutionsPerUnit", 0.1);
+  customConf.set("maxRevolutionsPerUnit", 1.0);
+  customConf.set("minMoonAmount", 0);
+  customConf.set("maxMoonAmount", 4);
+  customConf.set("minMoonRevolutionsPerUnit", 0.1); 
+  customConf.set("maxMoonRevolutionsPerUnit", 1.0);
+  confMap = new Conf(customConf).confMap;
+  generateStarSystem();
 
   scene.add(core.root);
 
@@ -67,6 +67,76 @@ function onLoad() {
 }
 
 var counter = 0;
+
+function generateSimpleStarSystem(){
+  var star = new CelestialBody({orbitRadius: 0.0, size: 4, rotationsPerUnit: 1, revolutionsPerUnit: 1.0, tilt:0.2, light: true});
+  var planet = new CelestialBody({orbitRadius: 20.0, size: 2, rotationsPerUnit: 3, revolutionsPerUnit: 1.0, tilt:0.4});
+  var moon = new CelestialBody({orbitRadius:4, size: 0.5, rotationsPerUnit:1, revolutionsPerUnit:4, tilt:0.1});
+  star.add(planet);
+  planet.add(moon);
+
+  // Add all the created bodies to an array
+  bodies.push(moon);
+  bodies.push(planet);
+  bodies.push(star);
+
+  core = star;
+}
+
+function generateStarSystem(){
+  // Create star
+  var star = new CelestialBody({size: confMap.get("starSize"), rotationsPerUnit: 1, revolutionsPerUnit: 1.0, tilt: 0.2, light: true});
+  console.log("Star created");
+  core = star;
+  generatePlanets(star);
+
+  bodies.push(star);
+}
+
+function generateMoons(planet){
+  var moonsLeft = getRandomIntInRange(confMap.get("minMoonAmount"), confMap.get("maxMoonAmount")); 
+  var moonRevPerUnit = getRandomFloatInRange(confMap.get("minMoonRevolutionsPerUnit"), confMap.get("maxMoonRevolutionsPerUnit"));
+  var angles = range(0, moonsLeft).map(i => i * 2 * Math.PI / moonsLeft); // avoid collisions
+  while(moonsLeft){
+    var moonSize = getRandomFloatInRange(confMap.get("moonMinSize"), confMap.get("moonMaxSize"));
+    var moon = new CelestialBody({
+      startAngle: angles[moonsLeft - 1],
+      orbitRadius: planet.size + moonSize + 3.0, 
+      size: moonSize, 
+      rotationsPerUnit: 1, 
+      revolutionsPerUnit: moonRevPerUnit, // keep this the same for every moon to avoid collisions
+      tilt: getRandomFloatInRange(confMap.get("minMoonTilt"), confMap.get("maxMoonTilt"))}); 
+    console.log("Moon created for planet.");
+    bodies.push(moon);
+    planet.add(moon);
+
+    moonsLeft--;
+  }
+}
+
+function generatePlanets(star){
+  var r = confMap.get("maxDistanceBetweenPlanets");
+  var planetsLeft = confMap.get("planetAmount");
+  var currentRadius = star.size + r * Math.random() + confMap.get("planetMaxSize");
+  // Create random distanced planets 
+  while(planetsLeft){
+    var planet = new CelestialBody({orbitRadius: currentRadius, 
+            startAngle: 2 * Math.PI * Math.random(), 
+            size: getRandomFloatInRange(confMap.get("planetMinSize"), confMap.get("planetMaxSize")), 
+            rotationsPerUnit: 3, 
+            revolutionsPerUnit: getRandomFloatInRange(confMap.get("minRevolutionsPerUnit"), confMap.get("maxRevolutionsPerUnit")), 
+            tilt: getRandomFloatInRange(confMap.get("minTilt"), confMap.get("maxTilt"))});
+    console.log("Planet created with orbit radius ", currentRadius);
+    
+    if(confMap.get("maxMoonAmount") > 0) generateMoons(planet);
+    
+    bodies.push(planet);
+    star.add(planet);
+    
+    currentRadius = currentRadius + 2 * confMap.get("planetMaxSize") + r * Math.random();
+    planetsLeft--;
+  }
+}
 
 function draw() {
   requestAnimationFrame(draw);

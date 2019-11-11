@@ -1,7 +1,10 @@
 const defaults = {
   orbit : null,
+  orbitRadius : 0,
+  tilt : 0,
   rotationsPerUnit : 0,
   rotateUnit : 'second',
+  startAngle : 0,
   revolutionsPerUnit : 0,
   revolveUnit : 'minute',
   size : 3
@@ -20,11 +23,12 @@ class CelestialBody {
 
     // Root of the body
     this._root = new THREE.Object3D();
+    this._startAngle = params.startAngle || defaults.startAngle;
     this._center.add(this._root);
 
     // Tilt node
     this._tilt = new THREE.Object3D();
-    this._tilt.rotation.z = params.tilt;
+    this._tilt.rotation.z = params.tilt || defaults.tilt;
     this._root.add(this._tilt);
 
     // Rotation node
@@ -33,8 +37,8 @@ class CelestialBody {
     this._tilt.add(this._rotation);
 
     // Orbit
-    this._radius = params.radius;
-    this._orbit = new Orbit(this._radius);
+    this._orbitRadius = params.orbitRadius || defaults.orbitRadius;
+    this._orbit = new Orbit(this._orbitRadius);
 
     // Body temporal attributes
     this._rotSpeed = params.rotationsPerUnit || defaults.rotationsPerUnit;
@@ -57,9 +61,9 @@ class CelestialBody {
   _move(delta) {
 
     // revolve in polar coords
-    var angle = setAngle(this._revSpeed, this._revUnit)
-    this._root.position.x = this._radius * Math.cos(angle);
-    this._root.position.z = this._radius * Math.sin(angle);
+    var angle = this._startAngle + setAngle(this._revSpeed, this._revUnit)
+    this._root.position.x = this._orbitRadius * Math.cos(angle);
+    this._root.position.z = this._orbitRadius * Math.sin(angle);
   }
 
   _rotate(delta) {
@@ -98,6 +102,14 @@ class CelestialBody {
 
   set children(newChildren) {
     this._children = newChildren;
+  }
+
+  get size() {
+    return this._size;
+  }
+
+  set size(newSize) {
+    this._size = newSize;
   }
 
   get orbit() {
