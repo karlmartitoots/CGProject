@@ -42,7 +42,7 @@ function onLoad() {
   /*var helper = new THREE.CameraHelper( lgt.light.shadow.camera );
   scene.add( helper );*/
 
-
+  var conf = new Conf();
   var star = new CelestialBody({radius: 0.0, size: 4, rotationsPerUnit: 1, revolutionsPerUnit: 1.0, tilt:0.2, light: true});
   var planet = new CelestialBody({radius: 10.0, size: 2, rotationsPerUnit: 3, revolutionsPerUnit: 1.0, tilt:0.4});
   var moon = new CelestialBody({radius:4, size: 0.5, rotationsPerUnit:1, revolutionsPerUnit:4, tilt:0.1});
@@ -140,7 +140,7 @@ function onKeyDown(event) {
       console.log(camSpeed);
       break;
 
-    case 191: // / -- lock/unlock movement
+    case 27: // / -- lock/unlock movement
       movementLock ^= true;
       break;
   }
