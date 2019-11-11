@@ -24,6 +24,8 @@ function onLoad() {
 
   renderer = new THREE.WebGLRenderer();
   renderer.setSize(width, height);
+  renderer.shadowMap.enabled = true;//
+  renderer.shadowMap.type = THREE.BasicShadowMap;//PCFSoftShadowMap;//
   canvasContainer.appendChild(renderer.domElement);
 
   scene = new THREE.Scene();
@@ -34,6 +36,10 @@ function onLoad() {
   // Make a light ball
   var lgt = new Lighting(0.5, 3, 5, 4);
   scene.add(lgt.light);
+  var lgt2 = new Lighting(0.5, -10, 5, 0);
+  scene.add(lgt2.light);
+  /*var helper = new THREE.CameraHelper( lgt.light.shadow.camera );
+  scene.add( helper );*/
 
   var orb = new Orbit(2.0);
   var orb2 = new Orbit(10.0);
@@ -49,7 +55,7 @@ function onLoad() {
   scene.add(system.getObject3D());
 
   const color = 0xFFFFFF;
-  const intensity = 0.5;
+  const intensity = 0.3;
   const ambientlight = new THREE.AmbientLight(color, intensity);
   scene.add(ambientlight);
 

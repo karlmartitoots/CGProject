@@ -8,6 +8,7 @@ function createSphere(colorCode) {
   });
 
   var sphere = new THREE.Mesh(geometry, material);
-
+  sphere.receiveShadow = true;
+  sphere.castShadow = true;
   return sphere;
 }
