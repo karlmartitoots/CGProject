@@ -5,7 +5,7 @@ class Camera {
     this.height = height;
 
     // Viewer position in world space
-    var viewerPosition = new THREE.Vector3(0.0, 10.0, 4.0);
+    var viewerPosition = new THREE.Vector3(0.0, 50.0, 4.0);
 
     //Setup the camera
     var camera = new THREE.PerspectiveCamera(80, width / height, 1, 1000);
@@ -16,7 +16,7 @@ class Camera {
     this.camera = camera;
 
     // Position and target
-    this.position = new THREE.Vector3(0, 0, 0);
+    this.position = new THREE.Vector3().copy(viewerPosition);
     this.target = new THREE.Vector3(0, 0, 0);
 
     // Helper variables
@@ -29,6 +29,10 @@ class Camera {
     // TODO: Make configurable
     this.acc = 5;
     this.drag = 0.90;
+  }
+
+  update() {
+    this.camera.position.set(this.position.x, this.position.y, this.position.z);
   }
 
   updatePosition(direction, delta) {
@@ -65,7 +69,7 @@ class Camera {
       this.position.addScaledVector(dirZ, this.velocity.z * delta);
     }
 
-    this.camera.position.set(this.position.x, this.position.y, this.position.z);
+    this.update();
   }
 
   // Camera rotation

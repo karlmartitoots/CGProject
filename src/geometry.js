@@ -4,7 +4,7 @@ function createSphere(colorCode, radius, lsource) {
 
   var material = new THREE.MeshPhongMaterial({
     color: colorCode,
-    wireframe: false
+    wireframe: true
   });
 
   var sphere = new THREE.Mesh(geometry, material);

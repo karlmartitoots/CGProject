@@ -20,6 +20,7 @@ var mouse = new THREE.Vector2();
 var MouseDown = false;
 
 var core;
+var camController;
 
 function onLoad() {
   var canvasContainer = document.getElementById('myCanvasContainer');
@@ -33,15 +34,6 @@ function onLoad() {
   canvasContainer.appendChild(renderer.domElement);
 
   scene = new THREE.Scene();
-
-  cam = new Camera(width, height);
-  scene.add(cam.camera);
-
-  // Make a light ball
-  //var lgt = new Lighting(0.5, 3, 5, 4);
-  //scene.add(lgt.light);
-  /*var helper = new THREE.CameraHelper( lgt.light.shadow.camera );
-  scene.add( helper );*/
 
   var customConf = new Map();
   customConf.set("starSize", 20);
@@ -62,6 +54,9 @@ function onLoad() {
   const intensity = 0.2;
   const ambientlight = new THREE.AmbientLight(color, intensity);
   scene.add(ambientlight);
+
+  // Camera config
+  camController = new CameraController(renderer, core, width, height);
 
   draw();
 }
@@ -150,14 +145,13 @@ function draw() {
 
   // Camera control
   if (movementLock) {
-    cam.updatePosition(direction, delta);
-    cam.updateDirection(mouse, delta);
+    camController.update(direction, mouse);
   }
 
   // Simple rotation and revolving of bodies
   core.update();
 
-  renderer.render(scene, cam.camera);
+  renderer.render(scene, camController.current.camera);
 }
 
 function onKeyDown(event) {
@@ -190,19 +184,19 @@ function onKeyDown(event) {
       break;
 
     case 37: // < -- left arrow key
-      cam.position.x -= 15;
+      camController.translate(new THREE.Vector3(-15, 0, 0));
       break;
 
     case 39: // > -- right arrow key
-      cam.position.x += 15;
+      camController.translate(new THREE.Vector3(15, 0, 0));
       break;
 
     case 38: // ^ -- up arrow key
-      cam.position.z -= 15;
+      camController.translate(new THREE.Vector3(0, 0, -15));
       break;
 
     case 40: // v -- down arrow key
-      cam.position.z += 15;
+      camController.translate(new THREE.Vector3(0, 0, 15));
       break;
 
     case 188: // , -- speed UP
@@ -220,15 +214,15 @@ function onKeyDown(event) {
       break;
 
     case 84: // t / -- teleport to topview
-      cam.camera.rotation.set(-Math.PI / 2, 0, 0);
-      cam.position.x = 0;
-      cam.position.z = 0;
-      cam.position.y = core.children.map(planet => planet._orbitRadius).reduce((a, b) => {
+      var systemRadius = core.children.map(planet => planet.orbitRadius).reduce((a, b) => {
         return Math.max(a, b);
       });
 
-      cam.position.y /= Math.tan(toRad(cam.camera.fov / 2));
-      movementLock = true;
+      // A smigeon bigger
+      systemRadius *= 1.05;
+
+      camController.topview(systemRadius);
+
       break;
   }
 }
@@ -260,6 +254,18 @@ function onKeyUp(event){
 
     case 69: // E -- inside
       direction.y = 0;
+      break;
+
+    case 219: // [ -- body explorer up
+      camController.up();
+      break;
+
+    case 221: // ] -- body explorer down
+      camController.down();
+      break;
+
+    case 220: // \ -- body explorer next
+      camController.nextcam();
       break;
   }
 }

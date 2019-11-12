@@ -56,6 +56,11 @@ class CelestialBody {
     // Orbit line
     this._orbitline = this._orbit.lineloop;
     this._center.add(this._orbitline);
+
+    // Attached camera, set to zero for now
+    // TODO: Make width and height configurable somehow
+    this._cam = new Camera(800, 500);
+    this._rotation.add(this._cam.camera);
   }
 
   _move(delta) {
@@ -86,6 +91,14 @@ class CelestialBody {
   add(child) {
     this._root.add(child.root);
     this._children.push(child);
+  }
+
+  get cam() {
+    return this._cam;
+  }
+
+  set cam(newCam) {
+    this._came = newCam;
   }
 
   get mesh() {
@@ -154,6 +167,10 @@ class CelestialBody {
 
   get root() {
     return this._center;
+  }
+
+  get orbitRadius() {
+    return this._orbitRadius;
   }
 
 }
