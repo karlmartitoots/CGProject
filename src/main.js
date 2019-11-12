@@ -93,27 +93,6 @@ function generateStarSystem(){
   bodies.push(star);
 }
 
-function generateMoons(planet){
-  var moonsLeft = getRandomIntInRange(confMap.get("minMoonAmount"), confMap.get("maxMoonAmount")); 
-  var moonRevPerUnit = getRandomFloatInRange(confMap.get("minMoonRevolutionsPerUnit"), confMap.get("maxMoonRevolutionsPerUnit"));
-  var angles = range(0, moonsLeft).map(i => i * 2 * Math.PI / moonsLeft); // avoid collisions
-  while(moonsLeft){
-    var moonSize = getRandomFloatInRange(confMap.get("moonMinSize"), confMap.get("moonMaxSize"));
-    var moon = new CelestialBody({
-      startAngle: angles[moonsLeft - 1],
-      orbitRadius: planet.size + moonSize + 3.0, 
-      size: moonSize, 
-      rotationsPerUnit: 1, 
-      revolutionsPerUnit: moonRevPerUnit, // keep this the same for every moon to avoid collisions
-      tilt: getRandomFloatInRange(confMap.get("minMoonTilt"), confMap.get("maxMoonTilt"))}); 
-    console.log("Moon created for planet.");
-    bodies.push(moon);
-    planet.add(moon);
-
-    moonsLeft--;
-  }
-}
-
 function generatePlanets(star){
   var r = confMap.get("maxDistanceBetweenPlanets");
   var planetsLeft = confMap.get("planetAmount");
@@ -135,6 +114,27 @@ function generatePlanets(star){
     
     currentRadius = currentRadius + 2 * confMap.get("planetMaxSize") + r * Math.random();
     planetsLeft--;
+  }
+}
+
+function generateMoons(planet){
+  var moonsLeft = getRandomIntInRange(confMap.get("minMoonAmount"), confMap.get("maxMoonAmount")); 
+  var moonRevPerUnit = getRandomFloatInRange(confMap.get("minMoonRevolutionsPerUnit"), confMap.get("maxMoonRevolutionsPerUnit"));
+  var angles = range(0, moonsLeft).map(i => i * 2 * Math.PI / moonsLeft); // avoid collisions
+  while(moonsLeft){
+    var moonSize = getRandomFloatInRange(confMap.get("moonMinSize"), confMap.get("moonMaxSize"));
+    var moon = new CelestialBody({
+      startAngle: angles[moonsLeft - 1],
+      orbitRadius: planet.size + moonSize + 3.0, 
+      size: moonSize, 
+      rotationsPerUnit: 1, 
+      revolutionsPerUnit: moonRevPerUnit, // keep this the same for every moon to avoid collisions
+      tilt: getRandomFloatInRange(confMap.get("minMoonTilt"), confMap.get("maxMoonTilt"))}); 
+    console.log("Moon created for planet.");
+    bodies.push(moon);
+    planet.add(moon);
+
+    moonsLeft--;
   }
 }
 
@@ -213,6 +213,15 @@ function onKeyDown(event) {
     case 27: // / -- lock/unlock movement
       movementLock ^= true;
       break;
+      
+    case 84: // t / -- teleport to topview
+    cam.camera.rotation.set(-Math.PI / 2, 0, 0);
+    cam.position.x = 0;
+    cam.position.z = 0;
+    cam.position.y = core.children.map(planet => planet._orbitRadius)
+          .reduce(function(a, b) { return Math.max(a, b); }) / Math.tan(toRad(cam.camera.fov / 2));
+    movementLock ^= true;
+    break;
   }
 }
 
