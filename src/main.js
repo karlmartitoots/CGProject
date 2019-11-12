@@ -51,7 +51,7 @@ function onLoad() {
   customConf.set("maxRevolutionsPerUnit", 1.0);
   customConf.set("minMoonAmount", 0);
   customConf.set("maxMoonAmount", 4);
-  customConf.set("minMoonRevolutionsPerUnit", 0.1); 
+  customConf.set("minMoonRevolutionsPerUnit", 0.1);
   customConf.set("maxMoonRevolutionsPerUnit", 1.0);
   confMap = new Conf(customConf).confMap;
   generateStarSystem();
@@ -97,39 +97,44 @@ function generatePlanets(star){
   var r = confMap.get("maxDistanceBetweenPlanets");
   var planetsLeft = confMap.get("planetAmount");
   var currentRadius = star.size + r * Math.random() + confMap.get("planetMaxSize");
-  // Create random distanced planets 
+  // Create random distanced planets
   while(planetsLeft){
-    var planet = new CelestialBody({orbitRadius: currentRadius, 
-            startAngle: 2 * Math.PI * Math.random(), 
-            size: getRandomFloatInRange(confMap.get("planetMinSize"), confMap.get("planetMaxSize")), 
-            rotationsPerUnit: 3, 
-            revolutionsPerUnit: getRandomFloatInRange(confMap.get("minRevolutionsPerUnit"), confMap.get("maxRevolutionsPerUnit")), 
-            tilt: getRandomFloatInRange(confMap.get("minTilt"), confMap.get("maxTilt"))});
+    var planet = new CelestialBody({
+      orbitRadius: currentRadius,
+      startAngle: 2 * Math.PI * Math.random(),
+      size: getRandomFloatInRange(confMap.get("planetMinSize"), confMap.get("planetMaxSize")),
+      rotationsPerUnit: 3,
+      revolutionsPerUnit: getRandomFloatInRange(confMap.get("minRevolutionsPerUnit"), confMap.get("maxRevolutionsPerUnit")),
+      tilt: getRandomFloatInRange(confMap.get("minTilt"), confMap.get("maxTilt"))
+    });
+
     console.log("Planet created with orbit radius ", currentRadius);
-    
+
     if(confMap.get("maxMoonAmount") > 0) generateMoons(planet);
-    
+
     bodies.push(planet);
     star.add(planet);
-    
+
     currentRadius = currentRadius + 2 * confMap.get("planetMaxSize") + r * Math.random();
     planetsLeft--;
   }
 }
 
 function generateMoons(planet){
-  var moonsLeft = getRandomIntInRange(confMap.get("minMoonAmount"), confMap.get("maxMoonAmount")); 
+  var moonsLeft = getRandomIntInRange(confMap.get("minMoonAmount"), confMap.get("maxMoonAmount"));
   var moonRevPerUnit = getRandomFloatInRange(confMap.get("minMoonRevolutionsPerUnit"), confMap.get("maxMoonRevolutionsPerUnit"));
   var angles = range(0, moonsLeft).map(i => i * 2 * Math.PI / moonsLeft); // avoid collisions
   while(moonsLeft){
     var moonSize = getRandomFloatInRange(confMap.get("moonMinSize"), confMap.get("moonMaxSize"));
     var moon = new CelestialBody({
       startAngle: angles[moonsLeft - 1],
-      orbitRadius: planet.size + moonSize + 3.0, 
-      size: moonSize, 
-      rotationsPerUnit: 1, 
+      orbitRadius: planet.size + moonSize + 3.0,
+      size: moonSize,
+      rotationsPerUnit: 1,
       revolutionsPerUnit: moonRevPerUnit, // keep this the same for every moon to avoid collisions
-      tilt: getRandomFloatInRange(confMap.get("minMoonTilt"), confMap.get("maxMoonTilt"))}); 
+      tilt: getRandomFloatInRange(confMap.get("minMoonTilt"), confMap.get("maxMoonTilt"))
+    });
+
     console.log("Moon created for planet.");
     bodies.push(moon);
     planet.add(moon);
@@ -210,18 +215,21 @@ function onKeyDown(event) {
       console.log(camSpeed);
       break;
 
-    case 27: // / -- lock/unlock movement
+    case 27: // ESC -- lock/unlock movement
       movementLock ^= true;
       break;
-      
+
     case 84: // t / -- teleport to topview
-    cam.camera.rotation.set(-Math.PI / 2, 0, 0);
-    cam.position.x = 0;
-    cam.position.z = 0;
-    cam.position.y = core.children.map(planet => planet._orbitRadius)
-          .reduce(function(a, b) { return Math.max(a, b); }) / Math.tan(toRad(cam.camera.fov / 2));
-    movementLock ^= true;
-    break;
+      cam.camera.rotation.set(-Math.PI / 2, 0, 0);
+      cam.position.x = 0;
+      cam.position.z = 0;
+      cam.position.y = core.children.map(planet => planet._orbitRadius).reduce((a, b) => {
+        return Math.max(a, b);
+      });
+
+      cam.position.y /= Math.tan(toRad(cam.camera.fov / 2));
+      movementLock = true;
+      break;
   }
 }
 

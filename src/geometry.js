@@ -13,7 +13,7 @@ function createSphere(colorCode, radius, lsource) {
     sphere.castShadow = false;
     sphere.receiveShadow = false;
 
-    var light = new THREE.PointLight(0xff0040, 2, 50);
+    var light = new THREE.PointLight(0xff0040, 2, 1000000);
 
     light.add(sphere);
     light.castShadow = true;
