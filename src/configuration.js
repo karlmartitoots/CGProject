@@ -1,36 +1,37 @@
 const defaultConf = new Map();
-defaultConf.set("planetAmount", 10); // integer from 0 to undetermined 
+
+defaultConf.set("planetAmount", 10); // integer from 0 to undetermined
 defaultConf.set("starAmount", 1); // integer from 0 to 2
 defaultConf.set("minMoonAmount", 0); // less or equal to maxMoonAmount
 defaultConf.set("maxMoonAmount", 0); // more or equal to minMoonAmount
 defaultConf.set("visibleOrbits", true); // true or false
-defaultConf.set("celBodyRotationsPerUnit", 0); 
+defaultConf.set("celBodyRotationsPerUnit", 0);
 defaultConf.set("rotateUnit", 'second');
 defaultConf.set("minRevolutionsPerUnit", 0);
 defaultConf.set("maxRevolutionsPerUnit", 0);
 defaultConf.set("revolveUnit", 'minute');
 defaultConf.set("planetMinSize", 2); // less or equal to planetMaxSize
 defaultConf.set("planetMaxSize", 2); // more or equal to planetMinSize
-defaultConf.set("starSize", 5); 
+defaultConf.set("starSize", 5);
 defaultConf.set("maxDistanceBetweenPlanets", 30.0);
 defaultConf.set("minTilt", 0.0);
 defaultConf.set("maxTilt", Math.PI / 180 * 45);
+
 // moon settings
-defaultConf.set("minMoonRevolutionsPerUnit", 0); 
+defaultConf.set("minMoonRevolutionsPerUnit", 0);
 defaultConf.set("maxMoonRevolutionsPerUnit", 0); // these go for each planet not each moon
 defaultConf.set("moonMinSize", 0.1); // less or equal to moonMaxSize
 defaultConf.set("moonMaxSize", 1.0); // more or equal to moonMinSize
 defaultConf.set("moonMinTilt", 0.0);
 defaultConf.set("moonMaxTilt", Math.PI / 180 * 45);
 
-
 class Conf {
     constructor(params) {
         this.confMap = defaultConf; // set to defaults
 
-        if(params && params instanceof Map) 
+        if(params && params instanceof Map)
             this.setConf(params); // add custom conf options from params
-        else 
+        else
             console.log("No conf.");
 
         this.validateConf(); // validate fields
@@ -73,11 +74,11 @@ class Conf {
     validateNonNegative(field){
         if(field < 0) console.log(field, " is negative. Try make it not negative por favor.");
     }
-  
+
     get confMap() {
       return this._confMap;
     }
-  
+
     set confMap(newMap) {
       this._confMap = newMap;
     }
