@@ -42,9 +42,9 @@ function onLoad() {
   customConf.set("minRevolutionsPerUnit", 0.1);
   customConf.set("maxRevolutionsPerUnit", 1.0);
   customConf.set("minMoonAmount", 0);
-  customConf.set("maxMoonAmount", 4);
-  customConf.set("minMoonRevolutionsPerUnit", 0.1);
-  customConf.set("maxMoonRevolutionsPerUnit", 1.0);
+  customConf.set("maxMoonAmount", 14);
+  customConf.set("minMoonRevolutionsPerUnit", 0.0);
+  customConf.set("maxMoonRevolutionsPerUnit", 0.0);
   confMap = new Conf(customConf).confMap;
   generateStarSystem();
 

@@ -21,10 +21,17 @@ class CelestialBody {
     // Hierarchy
     this._center = new THREE.Group();
 
+    // Orbital tilt
+    // TODO
+    this._orbitTilt = new THREE.Object3D();
+    this._orbitTilt.rotation.z = (Math.random() * 11 - 5) / 100;
+    this._orbitTilt.rotation.x = (Math.random() * 11 - 5) / 100;
+    this._center.add(this._orbitTilt);
+
     // Root of the body
     this._root = new THREE.Object3D();
     this._startAngle = params.startAngle || defaults.startAngle;
-    this._center.add(this._root);
+    this._orbitTilt.add(this._root);
 
     // Tilt node
     this._tilt = new THREE.Object3D();
@@ -55,7 +62,7 @@ class CelestialBody {
 
     // Orbit line
     this._orbitline = this._orbit.lineloop;
-    this._center.add(this._orbitline);
+    this._orbitTilt.add(this._orbitline);
 
     // Attached camera, set to zero for now
     // TODO: Make width and height configurable somehow
@@ -64,7 +71,6 @@ class CelestialBody {
   }
 
   _move(delta) {
-
     // revolve in polar coords
     var angle = this._startAngle + setAngle(this._revSpeed, this._revUnit)
     this._root.position.x = this._orbitRadius * Math.cos(angle);
