@@ -134,20 +134,26 @@ function generateMoons(planet){
   var angles = range(0, moonsLeft).map(i => i * 2 * Math.PI / moonsLeft); // avoid collisions
   while(moonsLeft){
     var moonSize = getRandomFloatInRange(confMap.get("moonMinSize"), confMap.get("moonMaxSize"));
-    var moon = new CelestialBody({
-      startAngle: angles[moonsLeft - 1],
-      orbitRadius: planet.size + moonSize + 3.0,
-      size: moonSize,
-      rotationsPerUnit: 1,
-      revolutionsPerUnit: moonRevPerUnit, // keep this the same for every moon to avoid collisions
-      tilt: getRandomFloatInRange(confMap.get("minMoonTilt"), confMap.get("maxMoonTilt"))
-    });
+    var moon = makeMoon();
 
     console.log("Moon created for planet.");
     bodies.push(moon);
     planet.add(moon);
 
     moonsLeft--;
+  }
+
+  function makeMoon() {
+    return new CelestialBody({
+      startAngle: angles[moonsLeft - 1],
+      orbitRadius: planet.size + moonSize + 3.0,
+      size: moonSize,
+      rotationsPerUnit: 1,
+      revolutionsPerUnit: moonRevPerUnit,
+      tilt: getRandomFloatInRange(confMap.get("minMoonTilt"), confMap.get("maxMoonTilt")),
+      orbitTiltX: getRandomFloatInRange(confMap.get("minOrbitTiltX"), confMap.get("maxOrbitTiltX")),
+      orbitTiltZ: getRandomFloatInRange(confMap.get("minOrbitTiltZ"), confMap.get("minOrbitTiltZ"))
+    });
   }
 }
 
