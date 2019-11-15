@@ -89,20 +89,12 @@ function generateStarSystem(){
 }
 
 function generatePlanets(star){
-  var r = confMap.get("maxDistanceBetweenPlanets");
+  var orbitsDistance = confMap.get("minDistanceBetweenOrbits");
   var planetsLeft = confMap.get("planetAmount");
-  var currentRadius = star.size + r * Math.random() + confMap.get("planetMaxSize");
+  var currentRadius = star.size + orbitsDistance * Math.random() + confMap.get("planetMaxSize");
   // Create random distanced planets
   while(planetsLeft){
-    var planet = new CelestialBody({
-      orbitRadius: currentRadius,
-      startAngle: 2 * Math.PI * Math.random(),
-      size: getRandomFloatInRange(confMap.get("planetMinSize"), confMap.get("planetMaxSize")),
-      rotationsPerUnit: 3,
-      revolutionsPerUnit: getRandomFloatInRange(confMap.get("minRevolutionsPerUnit"), confMap.get("maxRevolutionsPerUnit")),
-      tilt: getRandomFloatInRange(confMap.get("minTilt"), confMap.get("maxTilt"))
-    });
-
+    var planet = makePlanet();
     console.log("Planet created with orbit radius ", currentRadius);
 
     if(confMap.get("maxMoonAmount") > 0) generateMoons(planet);
@@ -110,8 +102,19 @@ function generatePlanets(star){
     bodies.push(planet);
     star.add(planet);
 
-    currentRadius = currentRadius + 2 * confMap.get("planetMaxSize") + r * Math.random();
+    currentRadius = currentRadius + 2 * confMap.get("planetMaxSize") + orbitsDistance * Math.random();
     planetsLeft--;
+  }
+
+  function makePlanet() {
+    return new CelestialBody({
+      orbitRadius: currentRadius,
+      startAngle: 2 * Math.PI * Math.random(),
+      size: getRandomFloatInRange(confMap.get("planetMinSize"), confMap.get("planetMaxSize")),
+      rotationsPerUnit: 3,
+      revolutionsPerUnit: getRandomFloatInRange(confMap.get("minRevolutionsPerUnit"), confMap.get("maxRevolutionsPerUnit")),
+      tilt: getRandomFloatInRange(confMap.get("minTilt"), confMap.get("maxTilt"))
+    });
   }
 }
 

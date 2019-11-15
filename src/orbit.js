@@ -18,14 +18,14 @@ class Orbit {
         this._radius = r;
     }
 
-    get lineloop() {
+    get line() {
       if (this._radius == 0)
         return new THREE.Object3D();
 
       return this._line
     }
 
-    set lineloop(l) {
+    set line(l) {
       this._line = l;
     }
   }
