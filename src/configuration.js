@@ -27,6 +27,10 @@ defaultConf.set("moonMaxTilt", Math.PI / 180 * 45);
 
 // orbit settings
 defaultConf.set("ellipticalOrbit", false);
+defaultConf.set("minOrbitTiltX", 0);
+defaultConf.set("minOrbitTiltZ", 0);
+defaultConf.set("maxOrbitTiltX", 0);
+defaultConf.set("maxOrbitTiltZ", 0);
 
 class Conf {
     constructor(params) {
@@ -40,7 +44,8 @@ class Conf {
         var nonNegatives = ["planetAmount", "starAmount", "minMoonAmount", "maxMoonAmount", "planetMinSize", "planetMaxSize",
         "starSize", "minDistanceBetweenOrbits", "minTilt", "maxTilt", "moonMinSize", "moonMaxSize", "moonMinTilt", "moonMaxTilt"];
         var minMaxs = [["minMoonAmount", "maxMoonAmount"], ["planetMinSize", "planetMaxSize"], ["minTilt", "maxTilt"], 
-            ["moonMinSize", "moonMaxSize"], ["moonMinTilt", "moonMaxTilt"]];
+            ["moonMinSize", "moonMaxSize"], ["moonMinTilt", "moonMaxTilt"], ["minOrbitTiltX", "maxOrbitTiltX"], 
+            ["minOrbitTiltZ", "maxOrbitTiltZ"]];
         this.validateConf(nonNegatives, minMaxs); // validate fields
     }
 

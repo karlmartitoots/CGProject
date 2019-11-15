@@ -9,7 +9,7 @@ class System {
     });
 
     this.orbits.forEach(o => {
-      sys.add(o.lineloop)
+      sys.add(o.line)
     });
 
     this.system = sys;

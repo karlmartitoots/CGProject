@@ -8,7 +8,9 @@ const defaults = {
   revolutionsPerUnit : 0,
   revolveUnit : 'minute',
   size : 3,
-  ellipticalOrbit : false
+  ellipticalOrbit : false,
+  orbitTiltX : 0,
+  orbitTiltZ : 0
 }
 
 class CelestialBody {
@@ -25,8 +27,8 @@ class CelestialBody {
     // Orbital tilt
     // TODO
     this.orbitTilt = new THREE.Object3D();
-    this.orbitTilt.rotation.z = (Math.random() * 11 - 5) / 100;
-    this.orbitTilt.rotation.x = (Math.random() * 11 - 5) / 100;
+    this.orbitTilt.rotation.z = params.orbitTiltZ || defaults.orbitTiltZ;
+    this.orbitTilt.rotation.x = params.orbitTiltX || defaults.orbitTiltX;
     this._center.add(this.orbitTilt);
 
     // Root of the body

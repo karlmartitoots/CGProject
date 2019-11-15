@@ -35,17 +35,7 @@ function onLoad() {
 
   scene = new THREE.Scene();
 
-  var customConf = new Map();
-  customConf.set("starSize", 20);
-  customConf.set("planetMinSize", 1);
-  customConf.set("planetMaxSize", 6);
-  customConf.set("minRevolutionsPerUnit", 0.1);
-  customConf.set("maxRevolutionsPerUnit", 1.0);
-  customConf.set("minMoonAmount", 0);
-  customConf.set("maxMoonAmount", 14);
-  customConf.set("minMoonRevolutionsPerUnit", 0.0);
-  customConf.set("maxMoonRevolutionsPerUnit", 0.0);
-  confMap = new Conf(customConf).confMap;
+  setCustomConf();
   generateStarSystem();
 
   scene.add(core.root);
@@ -62,6 +52,24 @@ function onLoad() {
 }
 
 var counter = 0;
+
+function setCustomConf() {
+  var customConf = new Map();
+  customConf.set("starSize", 20);
+  customConf.set("planetMinSize", 1);
+  customConf.set("planetMaxSize", 6);
+  customConf.set("minRevolutionsPerUnit", 0.1);
+  customConf.set("maxRevolutionsPerUnit", 1.0);
+  customConf.set("minMoonAmount", 0);
+  customConf.set("maxMoonAmount", 14);
+  customConf.set("minMoonRevolutionsPerUnit", 0.0);
+  customConf.set("maxMoonRevolutionsPerUnit", 0.0);
+  customConf.set("minOrbitTiltX", - Math.PI / 20) // 9 degrees
+  customConf.set("maxOrbitTiltX", Math.PI / 20) 
+  customConf.set("minOrbitTiltZ", - Math.PI / 20) 
+  customConf.set("maxOrbitTiltZ", Math.PI / 20) 
+  confMap = new Conf(customConf).confMap;
+}
 
 function generateSimpleStarSystem(){
   var star = new CelestialBody({orbitRadius: 0.0, size: 4, rotationsPerUnit: 1, revolutionsPerUnit: 1.0, tilt:0.2, light: true});
@@ -113,7 +121,9 @@ function generatePlanets(star){
       size: getRandomFloatInRange(confMap.get("planetMinSize"), confMap.get("planetMaxSize")),
       rotationsPerUnit: 3,
       revolutionsPerUnit: getRandomFloatInRange(confMap.get("minRevolutionsPerUnit"), confMap.get("maxRevolutionsPerUnit")),
-      tilt: getRandomFloatInRange(confMap.get("minTilt"), confMap.get("maxTilt"))
+      tilt: getRandomFloatInRange(confMap.get("minTilt"), confMap.get("maxTilt")),
+      orbitTiltX: getRandomFloatInRange(confMap.get("minOrbitTiltX"), confMap.get("maxOrbitTiltX")),
+      orbitTiltZ: getRandomFloatInRange(confMap.get("minOrbitTiltZ"), confMap.get("minOrbitTiltZ"))
     });
   }
 }
