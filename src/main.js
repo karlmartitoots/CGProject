@@ -6,7 +6,7 @@ var delta = clock.getDelta();
 var dt;
 var camSpeed = 1;
 var movementLock = true;
-var confMap = new Conf();
+var confMap = new Conf().confMap;
 document.addEventListener("keydown", onKeyDown, false);
 document.addEventListener("keyup", onKeyUp, false);
 document.addEventListener('mousemove', onDocumentMouseMove, false);
@@ -61,19 +61,27 @@ function setCustomConf() {
   customConf.set("minRevolutionsPerUnit", 0.1);
   customConf.set("maxRevolutionsPerUnit", 1.0);
   customConf.set("minMoonAmount", 0);
-  customConf.set("maxMoonAmount", 14);
+  customConf.set("maxMoonAmount", 4);
   customConf.set("minMoonRevolutionsPerUnit", 0.0);
-  customConf.set("maxMoonRevolutionsPerUnit", 0.0);
-  customConf.set("minOrbitTiltX", - Math.PI / 20) // 9 degrees
-  customConf.set("maxOrbitTiltX", Math.PI / 20) 
-  customConf.set("minOrbitTiltZ", - Math.PI / 20) 
-  customConf.set("maxOrbitTiltZ", Math.PI / 20) 
+  customConf.set("maxMoonRevolutionsPerUnit", 1.0);
+  customConf.set("minOrbitTiltX", - Math.PI / 20); // 9 degrees
+  customConf.set("maxOrbitTiltX", Math.PI / 20); 
+  customConf.set("minOrbitTiltZ", - Math.PI / 20); 
+  customConf.set("maxOrbitTiltZ", Math.PI / 20);
+  customConf.set("ellipticalOrbit", true);
+  customConf.set("minEllipseX", 0.8); 
+  customConf.set("maxEllipseX", 1.5);
+  customConf.set("minEllipseZ", 0.8); 
+  customConf.set("maxEllipseZ", 1.5);
   confMap = new Conf(customConf).confMap;
 }
 
 function generateSimpleStarSystem(){
   var star = new CelestialBody({orbitRadius: 0.0, size: 4, rotationsPerUnit: 1, revolutionsPerUnit: 1.0, tilt:0.2, light: true});
-  var planet = new CelestialBody({orbitRadius: 20.0, size: 2, rotationsPerUnit: 3, revolutionsPerUnit: 1.0, tilt:0.4});
+  var planet = new CelestialBody({orbitRadius: 20.0, size: 2, rotationsPerUnit: 3, revolutionsPerUnit: 1.0, tilt:0.4, 
+    ellipticalOrbit: true,
+    ellipseX: 2,
+    ellipseZ: 0.8});
   var moon = new CelestialBody({orbitRadius:4, size: 0.5, rotationsPerUnit:1, revolutionsPerUnit:4, tilt:0.1});
   star.add(planet);
   planet.add(moon);
@@ -123,7 +131,10 @@ function generatePlanets(star){
       revolutionsPerUnit: getRandomFloatInRange(confMap.get("minRevolutionsPerUnit"), confMap.get("maxRevolutionsPerUnit")),
       tilt: getRandomFloatInRange(confMap.get("minTilt"), confMap.get("maxTilt")),
       orbitTiltX: getRandomFloatInRange(confMap.get("minOrbitTiltX"), confMap.get("maxOrbitTiltX")),
-      orbitTiltZ: getRandomFloatInRange(confMap.get("minOrbitTiltZ"), confMap.get("minOrbitTiltZ"))
+      orbitTiltZ: getRandomFloatInRange(confMap.get("minOrbitTiltZ"), confMap.get("minOrbitTiltZ")), 
+      ellipticalOrbit: confMap.get("ellipticalOrbit"),
+      ellipseX: getRandomFloatInRange(confMap.get("minEllipseX"), confMap.get("maxEllipseX")),
+      ellipseZ: getRandomFloatInRange(confMap.get("minEllipseZ"), confMap.get("maxEllipseZ"))
     });
   }
 }
@@ -152,7 +163,10 @@ function generateMoons(planet){
       revolutionsPerUnit: moonRevPerUnit,
       tilt: getRandomFloatInRange(confMap.get("minMoonTilt"), confMap.get("maxMoonTilt")),
       orbitTiltX: getRandomFloatInRange(confMap.get("minOrbitTiltX"), confMap.get("maxOrbitTiltX")),
-      orbitTiltZ: getRandomFloatInRange(confMap.get("minOrbitTiltZ"), confMap.get("minOrbitTiltZ"))
+      orbitTiltZ: getRandomFloatInRange(confMap.get("minOrbitTiltZ"), confMap.get("minOrbitTiltZ")), 
+      ellipticalOrbit: confMap.get("ellipticalOrbit"),
+      ellipseX: getRandomFloatInRange(confMap.get("minEllipseX"), confMap.get("maxEllipseX")),
+      ellipseZ: getRandomFloatInRange(confMap.get("minEllipseZ"), confMap.get("maxEllipseZ"))
     });
   }
 }

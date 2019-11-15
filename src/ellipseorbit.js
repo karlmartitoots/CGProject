@@ -1,14 +1,14 @@
 class EllipseOrbit {
-    constructor(radius, x, y, rot){
+    constructor(radius, x, y){
         this._xRadius = radius * x;
         this._yRadius = radius * y;
-        this._rotation = rot;
+        //this._rotation = rot;
         var curve = new THREE.EllipseCurve(
             0,  0,            // ax, aY
             this._xRadius, this._yRadius,           // xRadius, yRadius
             0,  2 * Math.PI,  // aStartAngle, aEndAngle
             false,            // aClockwise
-            this._rotation                 // aRotation
+            0                 // aRotation
           );
           
         var points = curve.getPoints( 50 );
@@ -18,5 +18,6 @@ class EllipseOrbit {
         
         // Create the final object to add to the scene
         this.line = new THREE.Line( geometry, material );
+        this.line.rotation.x = Math.PI / 2;
     }
 }
