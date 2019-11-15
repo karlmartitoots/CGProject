@@ -35,7 +35,8 @@ defaultConf.set("minEllipseX", 1);
 defaultConf.set("maxEllipseX", 1);
 defaultConf.set("minEllipseZ", 1);
 defaultConf.set("maxEllipseZ", 1);
-
+defaultConf.set("ellipseFocusDir", Math.random() < 0.5 ? -1 : 1); // Sets the parent (Sun for planet, planet for moon) at random but consistent focus
+ 
 class Conf {
     constructor(params) {
         this.confMap = defaultConf; // set to defaults
