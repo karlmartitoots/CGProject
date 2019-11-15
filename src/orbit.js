@@ -6,8 +6,8 @@ class Orbit {
         geometry.vertices.shift(); // this removes the center vertix
 
         this.radius = radius;
-        this.lineloop = new THREE.LineLoop(geometry, material);
-        this.lineloop.rotation.x = Math.PI / 2;
+        this.line = new THREE.LineLoop(geometry, material);
+        this.line.rotation.x = Math.PI / 2;
     }
 
     get radius() {
@@ -22,11 +22,11 @@ class Orbit {
       if (this._radius == 0)
         return new THREE.Object3D();
 
-      return this._lineloop
+      return this._line
     }
 
     set lineloop(l) {
-      this._lineloop = l;
+      this._line = l;
     }
   }
 
