@@ -23,15 +23,23 @@ var core;
 var camController;
 
 function onLoad() {
+  if (WEBGL.isWebGL2Available() === false ) {
+    document.body.appendChild( WEBGL.getWebGL2ErrorMessage() );
+    console.log("WebGL2 is not available");
+  }
+
   var canvasContainer = document.getElementById('myCanvasContainer');
+  var canvas = document.getElementById('canvas');
+  var context = canvas.getContext('webgl2', {alpha: false});
+
   var width = 800;
   var height = 500;
 
-  renderer = new THREE.WebGLRenderer();
+  renderer = new THREE.WebGLRenderer({canvas: canvas, context: context});
   renderer.setSize(width, height);
   renderer.shadowMap.enabled = true;//
   renderer.shadowMap.type = THREE.BasicShadowMap;//PCFSoftShadowMap;//
-  canvasContainer.appendChild(renderer.domElement);
+  canvasContainer.appendChild(canvas);
 
   scene = new THREE.Scene();
 
@@ -325,5 +333,4 @@ function onMouseUp (event) {
 function onMouseWheelMove (event) {
   if(event.deltaY < 0) camSpeed ++;
   else if(camSpeed > 1)camSpeed --;
-  console.log(camSpeed);
 }

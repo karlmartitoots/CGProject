@@ -2,10 +2,27 @@ function createSphere(colorCode, radius, lsource) {
   var geometry = new THREE.SphereBufferGeometry(radius, 15, 15);
   var color = new THREE.Color(colorCode);
 
-  var material = new THREE.MeshPhongMaterial({
-    color: colorCode,
-    wireframe: true
+  //var material = new THREE.MeshPhongMaterial({
+  //  color: colorCode,
+  //  wireframe: true
+  //});
+  var material = new THREE.ShaderMaterial({
+    uniforms: {
+      lightPosition: {
+        value: new THREE.Vector3(50, 40, 20)
+      }
+    },
+    vertexShader: cbPlanetVert,
+    fragmentShader: cbPlanetFrag
   });
+
+  // Noise generation shader
+  material.onBeforeCompile = shader => {
+    console.log(shader.fragmentShader);
+    shader.fragmentShader = shader.fragmentShader.replace('#include <noise>', simplexNoise);
+    shader.vertexShader = shader.vertexShader.replace('#include <noise>', simplexNoise);
+    console.log(shader.fragmentShader);
+  };
 
   var sphere = new THREE.Mesh(geometry, material);
 
