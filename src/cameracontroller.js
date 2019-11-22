@@ -47,7 +47,7 @@ class CameraController {
     this._renderer = renderer;
     this._width = width;
     this._height = height;
-    this._maincam = new Camera(width, height);
+    this._maincam = new Camera(width, height, camtype.MAIN);
 
     this._stack = [];
     this._state = new State(this._core, 0);

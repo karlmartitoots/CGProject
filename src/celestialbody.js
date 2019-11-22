@@ -29,7 +29,6 @@ class CelestialBody {
     this._center = new THREE.Group();
 
     // Orbital tilt
-    // TODO
     this.orbitTilt = new THREE.Object3D();
     this.orbitTilt.rotation.z = params.orbitTiltZ || defaults.orbitTiltZ;
     this.orbitTilt.rotation.x = params.orbitTiltX || defaults.orbitTiltX;
@@ -53,12 +52,12 @@ class CelestialBody {
     // Orbit
     this.orbitRadius = params.orbitRadius || defaults.orbitRadius;
     this.ellipticalOrbit = params.ellipticalOrbit || defaults.ellipticalOrbit;
-    this.ellipseX = this.ellipticalOrbit ? (params.ellipseX || defaults.ellipseX) : 1.0;
-    this.ellipseZ = this.ellipticalOrbit ? (params.ellipseZ || defaults.ellipseZ) : 1.0;
+    this.ellipseX = this._ellipticalOrbit ? (params.ellipseX || defaults.ellipseX) : 1.0;
+    this.ellipseZ = this._ellipticalOrbit ? (params.ellipseZ || defaults.ellipseZ) : 1.0;
     this.ellipseFocusDir = params.ellipseFocusDir || defaults.ellipseFocusDir;
     //this.ellipseRotate = this.ellipticalOrbit ? (params.ellipseRotate || defaults.ellipseRotate) : 0.0;
     this.orbit = this.ellipticalOrbit ? new EllipseOrbit(this.orbitRadius, this.ellipseX, this.ellipseZ, this.ellipseFocusDir) : new Orbit(this.orbitRadius);
-    
+
     // Body temporal attributes
     this.rotSpeed = params.rotationsPerUnit || defaults.rotationsPerUnit;
     this.rotUnit = params.rotateUnit || defaults.rotateUnit;
@@ -78,7 +77,7 @@ class CelestialBody {
 
     // Attached camera, set to zero for now
     // TODO: Make width and height configurable somehow
-    this.cam = new Camera(800, 500);
+    this.cam = new Camera(800, 500, camtype.MAIN);
     this.rotationNode.add(this.cam.camera);
   }
 
@@ -87,8 +86,10 @@ class CelestialBody {
     var angle = this.startAngle + setAngle(this.revSpeed, this.revUnit);
     this._root.position.x = this.ellipticalOrbit ? this.ellipseX * this.orbitRadius * Math.cos(angle) : this.orbitRadius * Math.cos(angle);
     this._root.position.z = this.ellipticalOrbit ? this.ellipseZ * this.orbitRadius * Math.sin(angle) : this.orbitRadius * Math.sin(angle);
-    if(this.ellipseX > this.ellipseZ) this._root.position.x += this.ellipseFocusDir * Math.sqrt(Math.pow(this.ellipseX * this.orbitRadius, 2) - Math.pow(this.ellipseZ * this.orbitRadius, 2))
-    else this._root.position.z += this.ellipseFocusDir * Math.sqrt(Math.pow(this.ellipseZ * this.orbitRadius, 2) - Math.pow(this.ellipseX * this.orbitRadius, 2))
+    if(this.ellipseX > this.ellipseZ)
+      this._root.position.x += this.ellipseFocusDir * Math.sqrt(Math.pow(this.ellipseX * this.orbitRadius, 2) - Math.pow(this.ellipseZ * this.orbitRadius, 2))
+    else
+      this._root.position.z += this.ellipseFocusDir * Math.sqrt(Math.pow(this.ellipseZ * this.orbitRadius, 2) - Math.pow(this.ellipseX * this.orbitRadius, 2))
   }
 
   _rotate(delta) {
@@ -112,7 +113,7 @@ class CelestialBody {
     this._root.add(child.root);
     this.children.push(child);
   }
-  
+
   get root() {
     return this._center;
   }
