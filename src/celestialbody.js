@@ -52,8 +52,8 @@ class CelestialBody {
     // Orbit
     this.orbitRadius = params.orbitRadius || defaults.orbitRadius;
     this.ellipticalOrbit = params.ellipticalOrbit || defaults.ellipticalOrbit;
-    this.ellipseX = this._ellipticalOrbit ? (params.ellipseX || defaults.ellipseX) : 1.0;
-    this.ellipseZ = this._ellipticalOrbit ? (params.ellipseZ || defaults.ellipseZ) : 1.0;
+    this.ellipseX = this.ellipticalOrbit ? (params.ellipseX || defaults.ellipseX) : 1.0;
+    this.ellipseZ = this.ellipticalOrbit ? (params.ellipseZ || defaults.ellipseZ) : 1.0;
     this.ellipseFocusDir = params.ellipseFocusDir || defaults.ellipseFocusDir;
     //this.ellipseRotate = this.ellipticalOrbit ? (params.ellipseRotate || defaults.ellipseRotate) : 0.0;
     this.orbit = this.ellipticalOrbit ? new EllipseOrbit(this.orbitRadius, this.ellipseX, this.ellipseZ, this.ellipseFocusDir) : new Orbit(this.orbitRadius);
@@ -84,8 +84,8 @@ class CelestialBody {
   _move(delta) {
     // revolve in polar coords
     var angle = this.startAngle + setAngle(this.revSpeed, this.revUnit);
-    this._root.position.x = this.ellipticalOrbit ? this.ellipseX * this.orbitRadius * Math.cos(angle) : this.orbitRadius * Math.cos(angle);
-    this._root.position.z = this.ellipticalOrbit ? this.ellipseZ * this.orbitRadius * Math.sin(angle) : this.orbitRadius * Math.sin(angle);
+    this._root.position.x = (this.ellipticalOrbit ? this.ellipseX : 1) * this.orbitRadius * Math.cos(angle);
+    this._root.position.z = (this.ellipticalOrbit ? this.ellipseZ : 1) * this.orbitRadius * Math.sin(angle);
     if(this.ellipseX > this.ellipseZ)
       this._root.position.x += this.ellipseFocusDir * Math.sqrt(Math.pow(this.ellipseX * this.orbitRadius, 2) - Math.pow(this.ellipseZ * this.orbitRadius, 2))
     else

@@ -35,6 +35,17 @@ function getRandomFloatInRange(a, b){
   return a + (b - a) * Math.random();
 }
 
+/**
+ * Using Box–Muller transform of a random variable from uniform distribution.
+ * https://en.wikipedia.org/wiki/Box%E2%80%93Muller_transform
+ * 
+ * @param {*} a 
+ * @param {*} b 
+ */
+function getGaussianNoise(mean, sigma){
+    return mean + sigma * Math.cos(2 * Math.PI * Math.random()) * Math.sqrt(-2 * Math.log(Math.random()));
+  }
+
 function getRandomIntInRange(a, b){
     return Math.floor(Math.random() * b) + a;
 }

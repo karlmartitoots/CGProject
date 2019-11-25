@@ -1,4 +1,6 @@
 var renderer, scene, cam;
+var sceneWidth = 800; 
+var sceneHeight = 500;
 var bodies = [];
 var orbits = [];
 var clock = new THREE.Clock();
@@ -32,11 +34,8 @@ function onLoad() {
   var canvas = document.getElementById('canvas');
   var context = canvas.getContext('webgl2', {alpha: false});
 
-  var width = 800;
-  var height = 500;
-
   renderer = new THREE.WebGLRenderer({canvas: canvas, context: context});
-  renderer.setSize(width, height);
+  renderer.setSize(sceneWidth, sceneHeight);
   renderer.shadowMap.enabled = true;//
   renderer.shadowMap.type = THREE.BasicShadowMap;//PCFSoftShadowMap;//
   canvasContainer.appendChild(canvas);
@@ -54,7 +53,7 @@ function onLoad() {
   scene.add(ambientlight);
 
   // Camera config
-  camController = new CameraController(renderer, core, width, height);
+  camController = new CameraController(renderer, core, sceneWidth, sceneHeight);
 
   draw();
 }
@@ -77,17 +76,17 @@ function setCustomConf() {
   customConf.set("minOrbitTiltZ", - Math.PI / 20);
   customConf.set("maxOrbitTiltZ", Math.PI / 20);
   customConf.set("ellipticalOrbit", true);
-  customConf.set("minEllipseX", 0.8);
-  customConf.set("maxEllipseX", 1.5);
-  customConf.set("minEllipseZ", 0.8);
-  customConf.set("maxEllipseZ", 1.5);
+  customConf.set("minEllipseX", 0.9);
+  customConf.set("maxEllipseX", 1.1);
+  customConf.set("minEllipseZ", 0.9);
+  customConf.set("maxEllipseZ", 1.1);
   customConf.set("celBodyRotationsPerUnit", 0.0);
   confMap = new Conf(customConf).confMap;
 }
 
 function generateSimpleStarSystem(){
-  var star = new CelestialBody({orbitRadius: 0.0, size: 4, rotationsPerUnit: 1, revolutionsPerUnit: 1.0, tilt:0.2, light: true});
-  var planet = new CelestialBody({orbitRadius: 20.0, size: 2, rotationsPerUnit: 3, revolutionsPerUnit: 1.0, tilt:0.4,
+  var star = new CelestialBody({orbitRadius: 0.0, size: 4, rotationsPerUnit: 1, revolutionsPerUnit: 1.0, tilt: 0.2, light: true});
+  var planet = new CelestialBody({orbitRadius: 20.0, size: 2, rotationsPerUnit: 3, revolutionsPerUnit: 1.0, tilt: 0.4,
     ellipticalOrbit: true,
     ellipseX: 2,
     ellipseZ: 0.8});
@@ -142,8 +141,8 @@ function generatePlanets(star){
       orbitTiltX: getRandomFloatInRange(confMap.get("minOrbitTiltX"), confMap.get("maxOrbitTiltX")),
       orbitTiltZ: getRandomFloatInRange(confMap.get("minOrbitTiltZ"), confMap.get("minOrbitTiltZ")),
       ellipticalOrbit: confMap.get("ellipticalOrbit"),
-      ellipseX: getRandomFloatInRange(confMap.get("minEllipseX"), confMap.get("maxEllipseX")),
-      ellipseZ: getRandomFloatInRange(confMap.get("minEllipseZ"), confMap.get("maxEllipseZ")),
+      ellipseX: getGaussianNoise(1, 0.01), // mean 1, variance 0.01
+      ellipseZ: getGaussianNoise(1, 0.01),
       ellipseFocusDir: (Math.random() < 0.5 ? -1 : 1)
     });
   }
@@ -194,7 +193,7 @@ function draw() {
 
   // Simple rotation and revolving of bodies
   core.update();
-
+  
   renderer.render(scene, camController.current.camera);
 }
 
@@ -318,8 +317,14 @@ function onKeyUp(event){
 
 function onDocumentMouseMove(event) {
   event.preventDefault();
-  mouse.x = event.clientX;
-  mouse.y = event.clientY;
+  let cx = event.clientX;
+  let cy = event.clientY;
+  if(cx < sceneWidth){
+    mouse.x = event.clientX;
+  }
+  if(cy < sceneHeight){
+    mouse.y = event.clientY;
+  }
 }
 
 function onMouseDown (event) {
