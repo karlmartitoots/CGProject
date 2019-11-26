@@ -18,10 +18,10 @@ function createSphere(colorCode, radius, lsource) {
 
   // Noise generation shader
   material.onBeforeCompile = shader => {
-    console.log(shader.fragmentShader);
+    //console.log(shader.fragmentShader);
     shader.fragmentShader = shader.fragmentShader.replace('#include <noise>', simplexNoise);
     shader.vertexShader = shader.vertexShader.replace('#include <noise>', simplexNoise);
-    console.log(shader.fragmentShader);
+    //console.log(shader.fragmentShader);
   };
 
   var sphere = new THREE.Mesh(geometry, material);

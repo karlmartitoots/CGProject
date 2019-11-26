@@ -44,7 +44,7 @@ function onLoad() {
 
   setCustomConf();
   generateStarSystem();
-
+  
   scene.add(core.root);
 
   const color = 0xFFFFFF;
@@ -54,6 +54,24 @@ function onLoad() {
 
   // Camera config
   camController = new CameraController(renderer, core, sceneWidth, sceneHeight);
+
+  // DAT.GUI Related Stuff
+  var guiObj = {
+    Generate : function(){ 
+      scene.remove(core.root);
+      generateStarSystem();
+      scene.add(core.root);
+    },
+    StarScaleX : core.mesh.children[0].scale.x
+  };
+  console.log(guiObj);
+  var gui = new dat.GUI();
+  gui.add(guiObj, 'Generate');
+  
+  var starFolder = gui.addFolder('Star');
+  starFolder.add(core.mesh.children[0].material, 'wireframe').listen();
+  starFolder.add(core.mesh.children[0].scale, 'x', 1, 10).listen();
+  starFolder.open();
 
   draw();
 }
@@ -100,6 +118,8 @@ function generateSimpleStarSystem(){
   bodies.push(star);
 
   core = star;
+
+  return core;
 }
 
 function generateStarSystem(){
