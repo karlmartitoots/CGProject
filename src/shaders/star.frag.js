@@ -1,16 +1,10 @@
-cbPlanetFrag = `
-uniform vec3 color[3];
-uniform vec3 colora;
-uniform vec3 colorw;
-uniform float seed;
-
+cbStarFrag = `
 uniform float size;
 uniform vec3 lightPosition;
-uniform vec3 viewPosition;
+uniform float seed;
 in vec3 interpolatedLocalPosition;
 in vec3 interpolatedPosition; // We interpolate the position
 in vec3 interpolatedNormal;   // We interpolate the normal
-in vec3 interpolatedLightPosition;
 
 #include <noise>
 
@@ -19,16 +13,14 @@ float shininess = 50.0;
 void main() {
   // Calculate f by combining multiple noise layers using different density
   float f = 0.0;
-  f += 0.55 * noise(3.0 * interpolatedLocalPosition / size, seed);
-  f += 0.15 * noise(7.0 * interpolatedLocalPosition / size, seed);
-  f += 0.3 * noise(17.0 * interpolatedLocalPosition / size, seed);
-  f += 0.5 * noise(4.0 * interpolatedLocalPosition / size, seed);
+  f += 0.5 * (1.0 - abs(noise(3.0 * interpolatedLocalPosition / size, seed)));
+  f += 0.5 * (1.0 - abs(noise(7.0 * interpolatedLocalPosition / size, seed)));
 
   // 1. Find normal
   vec3 n = normalize(interpolatedNormal);
 
   // 3. Find the direction towards the viewer, normalize.
-  vec3 v = normalize(viewPosition - interpolatedPosition);
+  vec3 v = normalize(-interpolatedPosition);
 
   // 4. Find the direction towards the light source, normalize.
   vec3 l = normalize(lightPosition - interpolatedPosition);
@@ -36,20 +28,22 @@ void main() {
   // 4.5 Blinn: Find the half-angle vector h
   vec3 h = normalize(l + v);
 
+  // 5. Find the reflection vector
+  vec3 r = reflect(-l, n);
+
   float specular = 0.0;
   vec3 noiseColor;
-
   if (f > 0.25)
-    noiseColor = color[2];
+    noiseColor = vec3(1.0, 0.0, 0.0);
 
   else if (f > 0.10)
-    noiseColor = color[1];
+    noiseColor = vec3(0.0, 1.0, 0.0);
 
   else if (f > 0.04)
-    noiseColor = color[0];
+    noiseColor = vec3(0.0, 1.0, 1.0);
 
   else {
-    noiseColor = colorw;
+    noiseColor = vec3(0.0, 0.0, 1.0);
     specular = pow(max(0.0, dot(n, h)), 4.0 * shininess);
   }
 
@@ -63,15 +57,12 @@ void main() {
 
   // Calculate the glow
   // Have to make sure that the glow is non-negative
-  vec3 glow = max(colora * glowIntensity * glowDirection, vec3(0.0));
-
-  // Diffuse lighting
-  float diffuse = max(0.0, dot(n, l));
+  vec3 glow = max(vec3(0.0, 0.0, 0.5) * glowIntensity * glowDirection, vec3(0.0));
 
   // Put Diffuse, specular and glow light together to get the end result
-  vec3 interpolatedColor = noiseColor * diffuse + specular + glow;
+  vec3 interpolatedColor = noiseColor * max(0.0, dot(n, l)) + specular + glow;
 
-  gl_FragColor = vec4(interpolatedColor, 1.0);
-  //gl_FragColor = vec4(n, 1.0);
+  //gl_FragColor = vec4(interpolatedColor, 1.0);
+  gl_FragColor = vec4(vec3(f), 1.0);
 }
 `

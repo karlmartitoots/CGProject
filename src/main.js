@@ -212,8 +212,7 @@ function draw() {
     camController.update(direction, mouse);
   }
 
-  // Simple rotation and revolving of bodies
-  core.update();
+  core.update(core.mesh.getWorldPosition(new THREE.Vector3()), camController.current.camera.position);
 
   renderer.render(scene, camController.current.camera);
 }

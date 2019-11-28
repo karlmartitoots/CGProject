@@ -2,7 +2,7 @@ simplexNoise = `
 float F = 1.0 / 3.0;
 float G = 1.0 / 6.0;
 
-vec3 hash(ivec3 internal, ivec3 s) {
+vec3 hash(ivec3 internal, ivec3 s, float seed) {
   vec3 p = vec3(internal) + vec3(s);
   p = vec3(
     dot(p, vec3(127.1,311.7, 74.7)),
@@ -10,10 +10,10 @@ vec3 hash(ivec3 internal, ivec3 s) {
     dot(p, vec3(114.5,271.9,124.6))
   );
 
-  return normalize(-1.0 + 2.0 * fract(sin(p) * 43758.5453123));
+  return normalize(-1.0 + 2.0 * fract(sin(p) * 43758.5453123 + seed));
 }
 
-float noise(in vec3 p) {
+float noise(in vec3 p, in float seed) {
   float sum = p.x + p.y + p.z;
   float skewFactor = sum * F;
 
@@ -79,7 +79,7 @@ float noise(in vec3 p) {
   // Gradients
   vec3 g[4];
   for (int i = 0; i < 4; ++i) {
-    g[i] = hash(internal, s[i]);
+    g[i] = hash(internal, s[i], seed);
   }
 
   // Interpolate

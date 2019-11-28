@@ -1,19 +1,47 @@
-function createSphere(colorCode, radius, lsource) {
-  var geometry = new THREE.SphereBufferGeometry(radius, 150, 150);
+function createSphere(colorCode, radius, lsource, seed) {
+  var geometry = new THREE.SphereBufferGeometry(radius, 50, 50);
   var color = new THREE.Color(colorCode);
+
+  var colorWater = new THREE.Color(0x00aeef);
+  var colorAtmosphere = new THREE.Color(0x66d5ed);
+  var color1 = new THREE.Color(0x197b30);
+  var color2 = new THREE.Color(0x005826);
+  //var color3 = new THREE.Color(0x4e3f32);
+  var color3 = new THREE.Color(0xFFFFFF);
 
   var material = new THREE.ShaderMaterial({
     uniforms: {
       lightPosition: {
-        value: new THREE.Vector3(50, 40, 20)
+        value: new THREE.Vector3(0, 40, 0)
+      },
+
+      viewPosition: {
+        value: new THREE.Vector3(0, 0, 0)
       },
 
       size: {
         value: radius
+      },
+
+      color: {
+        value: [color1, color2, color3]
+      },
+
+      colora: {
+        value: colorAtmosphere
+      },
+
+      colorw: {
+        value: colorWater
+      },
+
+      seed: {
+        value: seed
       }
     },
-    vertexShader: cbPlanetVert,
-    fragmentShader: cbPlanetFrag
+
+    vertexShader: lsource ? cbStarVert : cbPlanetVert,
+    fragmentShader: lsource ? cbStarFrag : cbPlanetFrag
   });
 
   // Noise generation shader

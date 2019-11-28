@@ -21,7 +21,7 @@ class CelestialBody {
   constructor(params) {
     // Object
     this.size = params.size || defaults.size;
-    this.mesh = createSphere(0xccccee, this.size, params.light);
+    this.mesh = createSphere(0xccccee, this.size, params.light, Math.random());
     this.clock = new THREE.Clock();
     this.delta = this.clock.getDelta();
 
@@ -80,9 +80,9 @@ class CelestialBody {
     this._root.position.z += this.ellipseShiftZ;
 
     // Body temporal attributes
-    this.rotSpeed = 0;//params.rotationsPerUnit || defaults.rotationsPerUnit;
+    this.rotSpeed = params.rotationsPerUnit / 10 || defaults.rotationsPerUnit;
     this.rotUnit = 'second'; //params.rotateUnit || defaults.rotateUnit;
-    this.revSpeed = params.revolutionsPerUnit || defaults.revolutionsPerUnit;
+    this.revSpeed = params.revolutionsPerUnit * 5 || defaults.revolutionsPerUnit;
     this.revUnit = 'second'; //params.revolveUnit || defaults.revolveUnit;
 
     // Body children
@@ -100,6 +100,8 @@ class CelestialBody {
     // TODO: Make width and height configurable somehow
     this.cam = new Camera(800, 500, camtype.MAIN);
     this.rotationNode.add(this.cam.camera);
+
+    this.helpIndex = 0;
   }
 
   _move(delta) {
@@ -138,15 +140,26 @@ class CelestialBody {
     this.rotationNode.rotation.y -= this.rotSpeed * delta;
   }
 
-  update() {
+  update(lightSource, cameraPosition) {
     // TODO: Add distance check. If too far, don't update
     this.delta = this.clock.getDelta();
     this._move(delta);
     this._rotate(delta);
+    if (typeof this.mesh.material != 'undefined') {
+      var localSrc = new THREE.Vector3().copy(lightSource).sub(this._root.getWorldPosition(new THREE.Vector3()));
+
+      this.mesh.worldToLocal(localSrc);
+
+      // Cancle the rotation
+      localSrc.applyAxisAngle(new THREE.Vector3(0, 1, 0), this.rotationNode.rotation.y)
+
+      this.mesh.material.uniforms.lightPosition.value = localSrc;
+      this.mesh.material.uniforms.viewPosition.value = cameraPosition;
+    }
 
     // Update recursively
     this.children.forEach((item, index) => {
-      item.update();
+      item.update(lightSource, cameraPosition);
     });
   }
 
