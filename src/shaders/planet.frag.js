@@ -1,8 +1,9 @@
 cbPlanetFrag = `
+uniform float size;
 uniform vec3 lightPosition;
 in vec3 interpolatedLocalPosition;
-in vec3 interpolatedPosition; //We interpolate the position
-in vec3 interpolatedNormal;   //We interpolate the normal
+in vec3 interpolatedPosition; // We interpolate the position
+in vec3 interpolatedNormal;   // We interpolate the normal
 
 #include <noise>
 
@@ -11,13 +12,10 @@ float shininess = 50.0;
 void main() {
   // Calculate f by combining multiple noise layers using different density
   float f = 0.0;
-  f += 0.55 * noise(3.0 * interpolatedLocalPosition);
-  f += 0.15 * noise(7.0 * interpolatedLocalPosition);
-  f += 0.3 * noise(17.0 * interpolatedLocalPosition);
-  f += 0.5 * noise(4.0 * interpolatedLocalPosition);
-  f += 0.2 * noise(11.0 * interpolatedLocalPosition);
-  f += 0.1 * noise(53.0 * interpolatedLocalPosition);
-  f += 0.1 * noise(59.0 * interpolatedLocalPosition);
+  f += 0.55 * noise(3.0 * interpolatedLocalPosition / size);
+  f += 0.15 * noise(7.0 * interpolatedLocalPosition / size);
+  f += 0.3 * noise(17.0 * interpolatedLocalPosition / size);
+  f += 0.5 * noise(4.0 * interpolatedLocalPosition / size);
 
   // 1. Find normal
   vec3 n = normalize(interpolatedNormal);

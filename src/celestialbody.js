@@ -55,14 +55,35 @@ class CelestialBody {
     this.ellipseX = this.ellipticalOrbit ? (params.ellipseX || defaults.ellipseX) : 1.0;
     this.ellipseZ = this.ellipticalOrbit ? (params.ellipseZ || defaults.ellipseZ) : 1.0;
     this.ellipseFocusDir = params.ellipseFocusDir || defaults.ellipseFocusDir;
+    if (this.ellipseX > this.ellipseZ) {
+      this.ellipseShiftX = this.ellipseFocusDir * Math.sqrt(Math.pow(this.ellipseX * this.orbitRadius, 2) -
+                           Math.pow(this.ellipseZ * this.orbitRadius, 2));
+      this.ellipseShiftZ = 0;
+    }
+
+    else {
+      this.ellipseShiftZ = this.ellipseFocusDir * Math.sqrt(Math.pow(this.ellipseZ * this.orbitRadius, 2) -
+                           Math.pow(this.ellipseX * this.orbitRadius, 2));
+      this.ellipseShiftX = 0;
+    }
+
     //this.ellipseRotate = this.ellipticalOrbit ? (params.ellipseRotate || defaults.ellipseRotate) : 0.0;
     this.orbit = this.ellipticalOrbit ? new EllipseOrbit(this.orbitRadius, this.ellipseX, this.ellipseZ, this.ellipseFocusDir) : new Orbit(this.orbitRadius);
 
+    this.orbitAngle = 0;
+
+    // Initial Position
+    this._root.position.x = (this.ellipticalOrbit ? this.ellipseX : 1) * this.orbitRadius * Math.cos(this.orbitAngle);
+    this._root.position.z = (this.ellipticalOrbit ? this.ellipseZ : 1) * this.orbitRadius * Math.sin(this.orbitAngle);
+
+    this._root.position.x += this.ellipseShiftX;
+    this._root.position.z += this.ellipseShiftZ;
+
     // Body temporal attributes
-    this.rotSpeed = params.rotationsPerUnit || defaults.rotationsPerUnit;
-    this.rotUnit = params.rotateUnit || defaults.rotateUnit;
+    this.rotSpeed = 0;//params.rotationsPerUnit || defaults.rotationsPerUnit;
+    this.rotUnit = 'second'; //params.rotateUnit || defaults.rotateUnit;
     this.revSpeed = params.revolutionsPerUnit || defaults.revolutionsPerUnit;
-    this.revUnit = params.revolveUnit || defaults.revolveUnit;
+    this.revUnit = 'second'; //params.revolveUnit || defaults.revolveUnit;
 
     // Body children
     this.children = [];
@@ -82,14 +103,34 @@ class CelestialBody {
   }
 
   _move(delta) {
+    // Get distance from focus
+    var radius = Math.sqrt(
+      Math.pow(this._root.position.x + this.ellipseShiftX, 2) +
+      Math.pow(this._root.position.z + this.ellipseShiftZ, 2)
+    );
+
+    // Get the orbital period (in seconds)
+    // Use Keplers third law
+    var biggest = this.ellipseX > this.ellipseZ ? this.ellipseX : this.ellipseZ;
+    var T = Math.sqrt(Math.pow(biggest, 3)) * 100;// * 0.000007496;
+
+    // Get the mean velocity
+    var n = 2 * Math.PI / T;
+
+    // Get the dphi/dt
+    var angularVelocity = n * this.ellipseX * this.ellipseZ / Math.pow(radius, 2);
+
     // revolve in polar coords
-    var angle = this.startAngle + setAngle(this.revSpeed, this.revUnit);
-    this._root.position.x = (this.ellipticalOrbit ? this.ellipseX : 1) * this.orbitRadius * Math.cos(angle);
-    this._root.position.z = (this.ellipticalOrbit ? this.ellipseZ : 1) * this.orbitRadius * Math.sin(angle);
-    if(this.ellipseX > this.ellipseZ)
-      this._root.position.x += this.ellipseFocusDir * Math.sqrt(Math.pow(this.ellipseX * this.orbitRadius, 2) - Math.pow(this.ellipseZ * this.orbitRadius, 2))
-    else
-      this._root.position.z += this.ellipseFocusDir * Math.sqrt(Math.pow(this.ellipseZ * this.orbitRadius, 2) - Math.pow(this.ellipseX * this.orbitRadius, 2))
+    if (isFinite(angularVelocity)) {
+      this.orbitAngle += angularVelocity * delta * 100 * this.revSpeed;
+      this.orbitAngle %= Math.PI * 2;
+
+      this._root.position.x = (this.ellipticalOrbit ? this.ellipseX : 1) * this.orbitRadius * Math.cos(this.orbitAngle);
+      this._root.position.z = (this.ellipticalOrbit ? this.ellipseZ : 1) * this.orbitRadius * Math.sin(this.orbitAngle);
+
+      this._root.position.x += this.ellipseShiftX;
+      this._root.position.z += this.ellipseShiftZ;
+    }
   }
 
   _rotate(delta) {

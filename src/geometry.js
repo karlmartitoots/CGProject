@@ -1,15 +1,15 @@
 function createSphere(colorCode, radius, lsource) {
-  var geometry = new THREE.SphereBufferGeometry(radius, 15, 15);
+  var geometry = new THREE.SphereBufferGeometry(radius, 150, 150);
   var color = new THREE.Color(colorCode);
 
-  //var material = new THREE.MeshPhongMaterial({
-  //  color: colorCode,
-  //  wireframe: true
-  //});
   var material = new THREE.ShaderMaterial({
     uniforms: {
       lightPosition: {
         value: new THREE.Vector3(50, 40, 20)
+      },
+
+      size: {
+        value: radius
       }
     },
     vertexShader: cbPlanetVert,
@@ -18,27 +18,29 @@ function createSphere(colorCode, radius, lsource) {
 
   // Noise generation shader
   material.onBeforeCompile = shader => {
-    //console.log(shader.fragmentShader);
     shader.fragmentShader = shader.fragmentShader.replace('#include <noise>', simplexNoise);
     shader.vertexShader = shader.vertexShader.replace('#include <noise>', simplexNoise);
-    //console.log(shader.fragmentShader);
   };
+
+  material.depthFunc = THREE.LessEqualDepth;
+  material.blending = THREE.NoBlending;
 
   var sphere = new THREE.Mesh(geometry, material);
 
   if (lsource) {
-    sphere.castShadow = false;
-    sphere.receiveShadow = false;
+ //   sphere.castShadow = false;
+ //   sphere.receiveShadow = false;
 
-    var light = new THREE.PointLight(0xff0040, 2, 1000000);
+ //   var light = new THREE.PointLight(0xff0040, 2, 1000000);
 
+    var light = new THREE.Object3D();
     light.add(sphere);
-    light.castShadow = true;
+ //   light.castShadow = true;
 
-    light.shadow.mapSize.width = 800;
-    light.shadow.mapSize.height = 500;
-    light.shadow.camera.near = 0.5;
-    light.shadow.camera.far = 500;
+ //   light.shadow.mapSize.width = 800;
+ //   light.shadow.mapSize.height = 500;
+ //   light.shadow.camera.near = 0.5;
+ //   light.shadow.camera.far = 500;
 
     return light;
   }

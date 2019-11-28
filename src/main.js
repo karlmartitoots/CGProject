@@ -1,5 +1,5 @@
 var renderer, scene, cam;
-var sceneWidth = 800; 
+var sceneWidth = 800;
 var sceneHeight = 500;
 var bodies = [];
 var orbits = [];
@@ -36,15 +36,16 @@ function onLoad() {
 
   renderer = new THREE.WebGLRenderer({canvas: canvas, context: context});
   renderer.setSize(sceneWidth, sceneHeight);
-  renderer.shadowMap.enabled = true;//
-  renderer.shadowMap.type = THREE.BasicShadowMap;//PCFSoftShadowMap;//
+  renderer.sortObjects = true;
+//  renderer.shadowMap.enabled = true;//
+//  renderer.shadowMap.type = THREE.BasicShadowMap;//PCFSoftShadowMap;//
   canvasContainer.appendChild(canvas);
 
   scene = new THREE.Scene();
 
   setCustomConf();
   generateStarSystem();
-  
+
   scene.add(core.root);
 
   const color = 0xFFFFFF;
@@ -57,7 +58,7 @@ function onLoad() {
 
   // DAT.GUI Related Stuff
   var guiObj = {
-    Generate : function(){ 
+    Generate : function(){
       scene.remove(core.root);
       generateStarSystem();
       scene.add(core.root);
@@ -67,7 +68,7 @@ function onLoad() {
   console.log(guiObj);
   var gui = new dat.GUI();
   gui.add(guiObj, 'Generate');
-  
+
   var starFolder = gui.addFolder('Star');
   starFolder.add(core.mesh.children[0].material, 'wireframe').listen();
   starFolder.add(core.mesh.children[0].scale, 'x', 1, 10).listen();
@@ -83,12 +84,12 @@ function setCustomConf() {
   customConf.set("starSize", 20);
   customConf.set("planetMinSize", 1);
   customConf.set("planetMaxSize", 6);
-  customConf.set("minRevolutionsPerUnit", 0.1);
-  customConf.set("maxRevolutionsPerUnit", 0.1);
+  customConf.set("minRevolutionsPerUnit", 1);
+  customConf.set("maxRevolutionsPerUnit", 2);
   customConf.set("minMoonAmount", 0);
   customConf.set("maxMoonAmount", 4);
-  customConf.set("minMoonRevolutionsPerUnit", 0.0);
-  customConf.set("maxMoonRevolutionsPerUnit", 0.1);
+  customConf.set("minMoonRevolutionsPerUnit", 1.0);
+  customConf.set("maxMoonRevolutionsPerUnit", 2.0);
   customConf.set("minOrbitTiltX", - Math.PI / 20); // 9 degrees
   customConf.set("maxOrbitTiltX", Math.PI / 20);
   customConf.set("minOrbitTiltZ", - Math.PI / 20);
@@ -98,7 +99,7 @@ function setCustomConf() {
   customConf.set("maxEllipseX", 1.1);
   customConf.set("minEllipseZ", 0.9);
   customConf.set("maxEllipseZ", 1.1);
-  customConf.set("celBodyRotationsPerUnit", 0.0);
+  customConf.set("celBodyRotationsPerUnit", 0.1);
   confMap = new Conf(customConf).confMap;
 }
 
@@ -213,7 +214,7 @@ function draw() {
 
   // Simple rotation and revolving of bodies
   core.update();
-  
+
   renderer.render(scene, camController.current.camera);
 }
 
@@ -263,12 +264,12 @@ function onKeyDown(event) {
       break;
 
     case 188: // , -- speed UP
-      camSpeed++;
+      camSpeed += 0.00001;
       console.log(camSpeed);
       break;
 
     case 190: // . -- speed DOWN
-      if(camSpeed > 1) camSpeed--;
+      if(camSpeed > 0) camSpeed -= 0.01;
       console.log(camSpeed);
       break;
 
