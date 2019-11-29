@@ -161,7 +161,6 @@ function generatePlanets(star){
       tilt: getRandomFloatInRange(confMap.get("minTilt"), confMap.get("maxTilt")),
       orbitTiltX: getRandomFloatInRange(confMap.get("minOrbitTiltX"), confMap.get("maxOrbitTiltX")),
       orbitTiltZ: getRandomFloatInRange(confMap.get("minOrbitTiltZ"), confMap.get("minOrbitTiltZ")),
-      ellipticalOrbit: confMap.get("ellipticalOrbit"),
       ellipseX: getGaussianNoise(1, 0.01), // mean 1, variance 0.01
       ellipseZ: getGaussianNoise(1, 0.01),
       ellipseFocusDir: (Math.random() < 0.5 ? -1 : 1)
@@ -356,6 +355,9 @@ function onMouseUp (event) {
 }
 
 function onMouseWheelMove (event) {
-  if(event.deltaY < 0) camSpeed ++;
-  else if(camSpeed > 1)camSpeed --;
+  if(event.deltaY < 0)
+    camSpeed++;
+
+  else if(camSpeed > 1)
+    camSpeed--;
 }
