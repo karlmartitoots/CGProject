@@ -16,13 +16,12 @@ document.addEventListener('mousedown', onMouseDown, false);
 document.addEventListener('mouseup', onMouseUp, false);
 document.addEventListener('wheel', onMouseWheelMove, false);
 
-var direction = new THREE.Vector3(0, 0, 0);
-
 var mouse = new THREE.Vector2();
 var MouseDown = false;
 
 var core;
 var camController;
+var controls;
 
 function onLoad() {
   if (WEBGL.isWebGL2Available() === false ) {
@@ -55,6 +54,13 @@ function onLoad() {
 
   // Camera config
   camController = new CameraController(renderer, core, sceneWidth, sceneHeight);
+
+  controls = new THREE.FlyControls( camController._maincam.camera, renderer.domElement );
+  controls.movementSpeed = 1000;
+  controls.domElement = renderer.domElement;
+  controls.rollSpeed = Math.PI / 24;
+  controls.autoForward = false;
+  controls.dragToLook = false;
 
   // DAT.GUI Related Stuff
   var guiObj = {
@@ -206,144 +212,12 @@ function draw() {
 
   delta = clock.getDelta();
 
-  // Camera control
-  if (movementLock) {
-    camController.update(direction, mouse);
-  }
+  controls.movementSpeed = 10.0 * camSpeed;
+  controls.update( delta );
 
   core.update(core.mesh.getWorldPosition(new THREE.Vector3()), camController.current.camera.position);
 
   renderer.render(scene, camController.current.camera);
-}
-
-function onKeyDown(event) {
-
-  var keyCode = event.which;
-
-  switch (keyCode){
-    case 65: // Left
-      direction.x = -camSpeed;
-      break;
-
-    case 87: // W
-      direction.z = -camSpeed;
-      break;
-
-    case 68: // Right
-      direction.x = camSpeed;
-      break;
-
-    case 83: // S
-      direction.z = camSpeed;
-      break;
-
-    case 81: // Q -- outside
-      direction.y = camSpeed;
-      break;
-
-    case 69: // E -- inside
-      direction.y = -camSpeed;
-      break;
-
-    case 37: // < -- left arrow key
-      camController.translate(new THREE.Vector3(-15, 0, 0));
-      break;
-
-    case 39: // > -- right arrow key
-      camController.translate(new THREE.Vector3(15, 0, 0));
-      break;
-
-    case 38: // ^ -- up arrow key
-      camController.translate(new THREE.Vector3(0, 0, -15));
-      break;
-
-    case 40: // v -- down arrow key
-      camController.translate(new THREE.Vector3(0, 0, 15));
-      break;
-
-    case 188: // , -- speed UP
-      camSpeed += 0.00001;
-      console.log(camSpeed);
-      break;
-
-    case 190: // . -- speed DOWN
-      if(camSpeed > 0) camSpeed -= 0.01;
-      console.log(camSpeed);
-      break;
-
-    case 27: // ESC -- lock/unlock movement
-      movementLock ^= true;
-      break;
-
-    case 84: // t / -- teleport to topview
-      var systemRadius = core.children.map(planet => planet.orbit.radius).reduce((a, b) => {
-        return Math.max(a, b);
-      });
-
-      // A smigeon bigger
-      systemRadius *= 1.05;
-
-      camController.topview(systemRadius);
-
-      break;
-  }
-}
-
-function onKeyUp(event){
-
-  var keyCode = event.which;
-
-  switch (keyCode){
-    case 65: // Left
-      direction.x = 0;
-      break;
-
-    case 87: // W
-      direction.z = 0;
-      break;
-
-    case 68: // Right
-      direction.x = 0;
-      break;
-
-    case 83: // S
-      direction.z = 0;
-      break;
-
-    case 81: // Q -- outside
-      direction.y = 0;
-      break;
-
-    case 69: // E -- inside
-      direction.y = 0;
-      break;
-
-    case 219: // [ -- body explorer up
-      camController.up();
-      break;
-
-    case 221: // ] -- body explorer down
-      camController.down();
-      break;
-
-    case 220: // \ -- body explorer next
-      camController.nextcam();
-      break;
-  }
-}
-
-
-
-function onDocumentMouseMove(event) {
-  event.preventDefault();
-  let cx = event.clientX;
-  let cy = event.clientY;
-  if(cx < sceneWidth){
-    mouse.x = event.clientX;
-  }
-  if(cy < sceneHeight){
-    mouse.y = event.clientY;
-  }
 }
 
 function onMouseDown (event) {
