@@ -276,7 +276,7 @@ function onKeyDown(event) {
       break;
 
     case 84: // t / -- teleport to topview
-      var systemRadius = core.children.map(planet => planet.orbitRadius).reduce((a, b) => {
+      var systemRadius = core.children.map(planet => planet.orbit.radius).reduce((a, b) => {
         return Math.max(a, b);
       });
 
