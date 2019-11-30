@@ -58,7 +58,7 @@ function onLoad() {
   controls = new THREE.FlyControls( camController._maincam.camera, renderer.domElement );
   controls.movementSpeed = 1000;
   controls.domElement = renderer.domElement;
-  controls.rollSpeed = Math.PI / 24;
+  controls.rollSpeed = Math.PI / 6;
   controls.autoForward = false;
   controls.dragToLook = false;
 
@@ -212,7 +212,7 @@ function draw() {
 
   delta = clock.getDelta();
 
-  controls.movementSpeed = 10.0 * camSpeed;
+  controls.movementSpeed = 50.0 * camSpeed;
   controls.update( delta );
 
   core.update(core.mesh.getWorldPosition(new THREE.Vector3()), camController.current.camera.position);
