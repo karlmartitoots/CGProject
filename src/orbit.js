@@ -1,7 +1,5 @@
 class Orbit {
     constructor(axis1, axis2, rotation, revSpeed){
-        console.log(rotation);
-
         if (axis1 > axis2) {
           this.semiMajor = axis1;
           this.semiMinor = axis2;

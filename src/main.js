@@ -30,12 +30,11 @@ function onLoad() {
   setCustomConf();
   generateStarSystem();
 
-  scene.add(core.root);
+  var generator = new Generator(confMap);
 
-  const color = 0xFFFFFF;
-  const intensity = 0.2;
-  const ambientlight = new THREE.AmbientLight(color, intensity);
-  scene.add(ambientlight);
+  core = generator.generate();
+
+  scene.add(core.root);
 
   // Camera config
   camController = new CameraController(renderer, core, sceneWidth, sceneHeight);

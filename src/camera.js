@@ -24,13 +24,13 @@ class Camera {
     this._up = new THREE.Vector3(0, 1, 0);
     switch (type) {
       case camtype.ORTHO:
-        camera = new THREE.OrthographicCamera(-width / 8, width / 8, height / 8, -height / 8, 1, 1000);
+        camera = new THREE.OrthographicCamera(-width / 8, width / 8, height / 8, -height / 8, 1, 10000);
         break;
 
       case camtype.MAIN:
       case camtype.PLANET:
       default:
-        camera = new THREE.PerspectiveCamera(80, width / height, 1, 1000);
+        camera = new THREE.PerspectiveCamera(80, width / height, 1, 10000);
         camera.up = this._up;
         break;
     }
