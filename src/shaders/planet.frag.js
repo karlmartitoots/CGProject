@@ -68,8 +68,12 @@ void main() {
   // Diffuse lighting
   float diffuse = max(0.0, dot(n, l));
 
+  // Get the light density with inverse square law
+  float distanceFromLight = sqrt(pow(interpolatedPosition.x, 2.0) + pow(interpolatedPosition.y, 2.0) + pow(interpolatedPosition.z, 2.0));
+  float luminosity = 350.0 / distanceFromLight;
+
   // Put Diffuse, specular and glow light together to get the end result
-  vec3 interpolatedColor = noiseColor * diffuse + specular + glow;
+  vec3 interpolatedColor = luminosity * (noiseColor * diffuse + specular + glow);
 
   gl_FragColor = vec4(interpolatedColor, 1.0);
   //gl_FragColor = vec4(n, 1.0);

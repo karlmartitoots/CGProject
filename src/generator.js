@@ -166,11 +166,6 @@ class Generator {
     return newState;
   }
 
-  /**
-   * --Task--
-   * Here we want to replace the parameters (currently only "a") with some concrete values.
-   * In a more complex system there would be more parameters, that have dependant values.
-   */
   _replaceRuleParameters(ruleRight, lower, upper) {
     if (typeof lower == 'undefined')
       lower = 0;
