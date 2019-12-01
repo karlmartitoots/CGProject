@@ -36,7 +36,8 @@ defaultConf.set("maxEllipseX", 1);
 defaultConf.set("minEllipseZ", 1);
 defaultConf.set("maxEllipseZ", 1);
 defaultConf.set("ellipseFocusDir", Math.random() < 0.5 ? -1 : 1); // Sets the parent (Sun for planet, planet for moon) at random but consistent focus
- 
+defaultConf.set("orbitYaw", 0.5); // from 0 to 1
+
 class Conf {
     constructor(params) {
         this.confMap = defaultConf; // set to defaults
@@ -45,12 +46,12 @@ class Conf {
             this.setConf(params); // add custom conf options from params
         else
             console.log("No conf.");
-        
+
         var nonNegatives = ["planetAmount", "starAmount", "minMoonAmount", "maxMoonAmount", "planetMinSize", "planetMaxSize",
         "starSize", "minDistanceBetweenOrbits", "minTilt", "maxTilt", "moonMinSize", "moonMaxSize", "moonMinTilt", "moonMaxTilt",
-        "minEllipseX", "maxEllipseX", "minEllipseZ", "maxEllipseZ"];
-        var minMaxs = [["minMoonAmount", "maxMoonAmount"], ["planetMinSize", "planetMaxSize"], ["minTilt", "maxTilt"], 
-            ["moonMinSize", "moonMaxSize"], ["moonMinTilt", "moonMaxTilt"], ["minOrbitTiltX", "maxOrbitTiltX"], 
+        "minEllipseX", "maxEllipseX", "minEllipseZ", "maxEllipseZ", "orbitYaw"];
+        var minMaxs = [["minMoonAmount", "maxMoonAmount"], ["planetMinSize", "planetMaxSize"], ["minTilt", "maxTilt"],
+            ["moonMinSize", "moonMaxSize"], ["moonMinTilt", "moonMaxTilt"], ["minOrbitTiltX", "maxOrbitTiltX"],
             ["minOrbitTiltZ", "maxOrbitTiltZ"], ["minEllipseX", "maxEllipseX"], ["minEllipseZ", "maxEllipseZ"]];
         this.validateConf(nonNegatives, minMaxs); // validate fields
     }

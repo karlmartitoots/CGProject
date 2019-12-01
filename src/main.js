@@ -150,7 +150,7 @@ function generatePlanets(star){
       orbitTiltZ: getRandomFloatInRange(confMap.get("minOrbitTiltZ"), confMap.get("minOrbitTiltZ")),
       ellipseX: getGaussianNoise(1, 0.01), // mean 1, variance 0.01
       ellipseZ: getGaussianNoise(1, 0.01),
-      ellipseFocusDir: (Math.random() < 0.5 ? -1 : 1)
+      orbitYaw: Math.random()
     });
   }
 }
@@ -183,7 +183,7 @@ function generateMoons(planet){
       ellipticalOrbit: confMap.get("ellipticalOrbit"),
       ellipseX: getRandomFloatInRange(confMap.get("minEllipseX"), confMap.get("maxEllipseX")),
       ellipseZ: getRandomFloatInRange(confMap.get("minEllipseZ"), confMap.get("maxEllipseZ")),
-      ellipseFocusDir: (Math.random() < 0.5 ? -1 : 1)
+      orbitYaw: Math.random()
     });
   }
 }

@@ -51,7 +51,7 @@ class CelestialBody {
     this.revSpeed = params.revolutionsPerUnit || defaults.revolutionsPerUnit;
 
     // Orbit
-    this.orbit = new Orbit(params.orbitRadius, params.ellipseX, params.ellipseZ, params.ellipseFocusDir, this.revSpeed * 500);
+    this.orbit = new Orbit(params.orbitRadius * params.ellipseX, params.orbitRadius * params.ellipseZ, params.orbitYaw, this.revSpeed * 500);
 
     // Initial movement with 0 delta
     this.orbit.move(0, this._root);

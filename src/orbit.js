@@ -1,24 +1,19 @@
 class Orbit {
-    constructor(radius, x, z, focusDirection, revSpeed){
-        this.radius = radius;
-        this.xRadius = radius * x;
-        this.zRadius = radius * z;
+    constructor(axis1, axis2, rotation, revSpeed){
+        console.log(rotation);
 
-        // center to focus distance
-        var linearEccentricity = focusDirection * Math.sqrt(Math.abs(Math.pow(this.xRadius, 2) - Math.pow(this.zRadius, 2)));
-        this.xCenter = this.xRadius > this.zRadius ? linearEccentricity : 0;
-        this.zCenter = this.xRadius < this.zRadius ? linearEccentricity : 0;
-
-        // Semi-major and semi-minor
-        if (this.xRadius > this.zRadius) {
-          this.semiMajor = this.xRadius;
-          this.semiMinor = this.zRadius;
+        if (axis1 > axis2) {
+          this.semiMajor = axis1;
+          this.semiMinor = axis2;
         }
 
         else {
-          this.semiMajor = this.zRadius;
-          this.semiMinor = this.xRadius;
+          this.semiMajor = axis2;
+          this.semiMinor = axis1;
         }
+
+        // center to focus distance
+        this.linearEccentricity = Math.sqrt(Math.abs(Math.pow(this.semiMajor, 2) - Math.pow(this.semiMinor, 2)));
 
         // Get orbital period and mean velocity
         // Keplers third law
@@ -29,10 +24,12 @@ class Orbit {
         // Movement control
         this.currentAngle = 0;
         this.orbitSpeed = revSpeed;
+        this.up = new THREE.Vector3(0, 1, 0);
+        this.rotation = rotation * Math.PI * 2;
 
         var curve = new THREE.EllipseCurve(
-          this.xCenter, this.zCenter,
-          this.xRadius, this.zRadius,
+          this.linearEccentricity, 0,
+          this.semiMajor, this.semiMinor,
           0,  2 * Math.PI,  // aStartAngle, aEndAngle
           false,            // aClockwise
           0                 // aRotation
@@ -48,13 +45,14 @@ class Orbit {
         // Create the final object to add to the scene
         this.line = new THREE.Line(geometry, material);
         this.line.rotation.x = Math.PI / 2;
+        this.line.rotation.z = -this.rotation;
     }
 
     move(delta, subject) {
       // Get distance from focus
       var radius = Math.sqrt(
-        Math.pow(subject.position.x + this.xCenter, 2) +
-        Math.pow(subject.position.z + this.zCenter, 2)
+        Math.pow(subject.position.x + this.linearEccentricity, 2) +
+        Math.pow(subject.position.z, 2)
       );
 
       // Get the dphi/dt = abn / r**2
@@ -65,11 +63,12 @@ class Orbit {
         this.currentAngle += angularVelocity * delta * this.orbitSpeed;
         this.currentAngle %= Math.PI * 2;
 
-        subject.position.x = this.xRadius * Math.cos(this.currentAngle);
-        subject.position.z = this.zRadius * Math.sin(this.currentAngle);
+        subject.position.x = this.semiMajor * Math.cos(this.currentAngle);
+        subject.position.z = this.semiMinor * Math.sin(this.currentAngle);
 
-        subject.position.x += this.xCenter;
-        subject.position.z += this.zCenter;
+        subject.position.x += this.linearEccentricity;
+
+        subject.position.applyAxisAngle(this.up, this.rotation);
       }
     }
 }
