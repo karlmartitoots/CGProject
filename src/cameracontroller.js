@@ -47,7 +47,7 @@ class CameraController {
     this._renderer = renderer;
     this._width = width;
     this._height = height;
-    this._maincam = new Camera(width, height, camtype.MAIN);
+    this._maincam = new Camera(width, height, camtype.MAIN, controltype.FLY);
 
     this._stack = [];
     this._state = new State(this._core, 0);
@@ -110,6 +110,8 @@ class CameraController {
   }
 
   _camswitch(cam) {
+    this._currentcam.controls.enabled = false;
+    cam.controls.enabled = true;
     this._currentcam = cam;
   }
 
@@ -134,8 +136,7 @@ class CameraController {
 
   update(direction, mouse) {
     this._delta = this._clock.getDelta();
-    this._currentcam.updatePosition(direction, delta);
-    this._currentcam.updateDirection(mouse, delta);
+    this._currentcam.update(delta);
   }
 
   refreshDelta() {
@@ -148,10 +149,6 @@ class CameraController {
     this._currentcam.position.z = 0;
     this._currentcam.position.y = sysRadius / Math.tan(toRad(this._currentcam.camera.fov / 2));
     this._currentcam.update();
-  }
-
-  translate(vec) {
-    this._currentcam.camera.position.add(vec);
   }
 
   get current() {

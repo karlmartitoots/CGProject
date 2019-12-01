@@ -2,30 +2,17 @@ var renderer, scene, cam;
 var sceneWidth = 800;
 var sceneHeight = 500;
 var bodies = [];
-var orbits = [];
 var clock = new THREE.Clock();
 var delta = clock.getDelta();
-var dt;
-var camSpeed = 1;
-var movementLock = true;
-var confMap = new Conf().confMap;
-document.addEventListener("keydown", onKeyDown, false);
-document.addEventListener("keyup", onKeyUp, false);
-document.addEventListener('mousemove', onDocumentMouseMove, false);
-document.addEventListener('mousedown', onMouseDown, false);
-document.addEventListener('mouseup', onMouseUp, false);
-document.addEventListener('wheel', onMouseWheelMove, false);
 
-var mouse = new THREE.Vector2();
-var MouseDown = false;
+var confMap = new Conf().confMap;
 
 var core;
 var camController;
-var controls;
 
 function onLoad() {
   if (WEBGL.isWebGL2Available() === false ) {
-    document.body.appendChild( WEBGL.getWebGL2ErrorMessage() );
+    document.body.appendChild(WEBGL.getWebGL2ErrorMessage());
     console.log("WebGL2 is not available");
   }
 
@@ -36,8 +23,6 @@ function onLoad() {
   renderer = new THREE.WebGLRenderer({canvas: canvas, context: context});
   renderer.setSize(sceneWidth, sceneHeight);
   renderer.sortObjects = true;
-//  renderer.shadowMap.enabled = true;//
-//  renderer.shadowMap.type = THREE.BasicShadowMap;//PCFSoftShadowMap;//
   canvasContainer.appendChild(canvas);
 
   scene = new THREE.Scene();
@@ -55,12 +40,8 @@ function onLoad() {
   // Camera config
   camController = new CameraController(renderer, core, sceneWidth, sceneHeight);
 
-  controls = new THREE.FlyControls( camController._maincam.camera, renderer.domElement );
-  controls.movementSpeed = 1000;
-  controls.domElement = renderer.domElement;
-  controls.rollSpeed = Math.PI / 6;
-  controls.autoForward = false;
-  controls.dragToLook = false;
+  // Initalize keyboard and mouse controls
+  initializeControls(camController);
 
   // DAT.GUI Related Stuff
   var guiObj = {
@@ -212,26 +193,9 @@ function draw() {
 
   delta = clock.getDelta();
 
-  controls.movementSpeed = 50.0 * camSpeed;
-  controls.update( delta );
+  updateControls(delta);
 
   core.update(core.mesh.getWorldPosition(new THREE.Vector3()), camController.current.camera.position);
 
   renderer.render(scene, camController.current.camera);
-}
-
-function onMouseDown (event) {
-  MouseDown = true;
-}
-
-function onMouseUp (event) {
-  MouseDown = false;
-}
-
-function onMouseWheelMove (event) {
-  if(event.deltaY < 0)
-    camSpeed++;
-
-  else if(camSpeed > 1)
-    camSpeed--;
 }

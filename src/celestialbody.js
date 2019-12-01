@@ -51,7 +51,7 @@ class CelestialBody {
     this.revSpeed = params.revolutionsPerUnit || defaults.revolutionsPerUnit;
 
     // Orbit
-    this.orbit = new EllipseOrbit(params.orbitRadius, params.ellipseX, params.ellipseZ, params.ellipseFocusDir, this.revSpeed * 500);
+    this.orbit = new Orbit(params.orbitRadius, params.ellipseX, params.ellipseZ, params.ellipseFocusDir, this.revSpeed * 500);
 
     // Initial movement with 0 delta
     this.orbit.move(0, this._root);
@@ -69,7 +69,7 @@ class CelestialBody {
 
     // Attached camera, set to zero for now
     // TODO: Make width and height configurable somehow
-    this.cam = new Camera(800, 500, camtype.MAIN);
+    this.cam = new Camera(800, 500, camtype.PLANET, controltype.ORBIT);
     this.rotationNode.add(this.cam.camera);
 
     // For debugging only
