@@ -54,7 +54,6 @@ function setupGui(generator) {
 
   gui.add(guiObj, 'seed');
   gui.add(guiObj, 'Generate');
-  gui.add(guiObj, 'celBodyRotationsPerUnit', 0, 100);
   gui.add(guiObj, 'minRevolutionsPerUnit', 0, 100);
   gui.add(guiObj, 'maxRevolutionsPerUnit', 0, 100);
   gui.add(guiObj, 'minTilt', -Math.PI / 2, Math.PI / 2);
@@ -95,7 +94,6 @@ function createGuiObject(generator) {
   return {
     seed: globalThis.seed,
     starSize: 20,
-    celBodyRotationsPerUnit: 0.1,
     minTilt: 0.0,
     maxTilt: Math.PI / 4,
     planetMinSize: 1,

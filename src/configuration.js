@@ -5,7 +5,6 @@ defaultConf.set("starAmount", 1); // integer from 0 to 2
 defaultConf.set("minMoonAmount", 0); // less or equal to maxMoonAmount
 defaultConf.set("maxMoonAmount", 0); // more or equal to minMoonAmount
 defaultConf.set("visibleOrbits", true); // true or false
-defaultConf.set("celBodyRotationsPerUnit", 0);
 defaultConf.set("rotateUnit", 'second');
 defaultConf.set("minRevolutionsPerUnit", 0);
 defaultConf.set("maxRevolutionsPerUnit", 0);
