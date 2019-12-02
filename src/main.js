@@ -4,6 +4,7 @@ var sceneHeight = 500;
 var bodies = [];
 var clock = new THREE.Clock();
 var delta = clock.getDelta();
+var seed = '2222';
 
 var confMap = new Conf().confMap;
 
@@ -28,11 +29,11 @@ function onLoad() {
   scene = new THREE.Scene();
 
   setCustomConf();
-  generateStarSystem();
+  //generateStarSystem();
 
   var generator = new Generator(confMap);
 
-  core = generator.generate();
+  core = generator.generate(seed);
 
   scene.add(core.root);
 
@@ -46,7 +47,8 @@ function onLoad() {
   var guiObj = {
     Generate : function(){
       scene.remove(core.root);
-      generateStarSystem();
+      core = generator.generate(seed);
+      //generateStarSystem(seed);
       scene.add(core.root);
     },
     StarScaleX : core.mesh.children[0].scale.x
@@ -109,7 +111,8 @@ function generateSimpleStarSystem(){
   return core;
 }
 
-function generateStarSystem(){
+function generateStarSystem(seed){
+  Math.seedrandom(seed);
   // Create star
   var star = new CelestialBody({size: confMap.get("starSize"), rotationsPerUnit: 1, revolutionsPerUnit: 1.0, tilt: 0.2, light: true});
   console.log("Star created");

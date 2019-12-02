@@ -97,7 +97,8 @@ class Generator {
     this.state = '';
   }
 
-  generate() {
+  generate(seed) {
+    Math.seedrandom(seed);
     this.state = this._iterateSystem('S', 5);
 
     return this._generateSystem(this.state);
