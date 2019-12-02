@@ -4,7 +4,7 @@ var sceneHeight = 500;
 var bodies = [];
 var clock = new THREE.Clock();
 var delta = clock.getDelta();
-var seed = '2222';
+var seed = '42';
 
 var confMap = new Conf().confMap;
 
@@ -29,7 +29,6 @@ function onLoad() {
   scene = new THREE.Scene();
 
   setCustomConf();
-  //generateStarSystem();
 
   var generator = new Generator(confMap);
 
@@ -45,16 +44,17 @@ function onLoad() {
 
   // DAT.GUI Related Stuff
   var guiObj = {
-    Generate : function(){
+    seed : globalThis.seed,
+    Generate : function() {
       scene.remove(core.root);
-      core = generator.generate(seed);
-      //generateStarSystem(seed);
+      core = generator.generate(this.seed);
       scene.add(core.root);
     },
     StarScaleX : core.mesh.children[0].scale.x
   };
   console.log(guiObj);
   var gui = new dat.GUI();
+  gui.add(guiObj, 'seed');
   gui.add(guiObj, 'Generate');
 
   var starFolder = gui.addFolder('Star');
@@ -89,105 +89,6 @@ function setCustomConf() {
   customConf.set("maxEllipseZ", 1.1);
   customConf.set("celBodyRotationsPerUnit", 0.1);
   confMap = new Conf(customConf).confMap;
-}
-
-function generateSimpleStarSystem(){
-  var star = new CelestialBody({orbitRadius: 0.0, size: 4, rotationsPerUnit: 1, revolutionsPerUnit: 1.0, tilt: 0.2, light: true});
-  var planet = new CelestialBody({orbitRadius: 20.0, size: 2, rotationsPerUnit: 3, revolutionsPerUnit: 1.0, tilt: 0.4,
-    ellipticalOrbit: true,
-    ellipseX: 2,
-    ellipseZ: 0.8});
-  var moon = new CelestialBody({orbitRadius:4, size: 0.5, rotationsPerUnit:1, revolutionsPerUnit:4, tilt:0.1});
-  star.add(planet);
-  planet.add(moon);
-
-  // Add all the created bodies to an array
-  bodies.push(moon);
-  bodies.push(planet);
-  bodies.push(star);
-
-  core = star;
-
-  return core;
-}
-
-function generateStarSystem(seed){
-  Math.seedrandom(seed);
-  // Create star
-  var star = new CelestialBody({size: confMap.get("starSize"), rotationsPerUnit: 1, revolutionsPerUnit: 1.0, tilt: 0.2, light: true});
-  console.log("Star created");
-  core = star;
-  generatePlanets(star);
-
-  bodies.push(star);
-}
-
-function generatePlanets(star){
-  var orbitsDistance = confMap.get("minDistanceBetweenOrbits");
-  var planetsLeft = confMap.get("planetAmount");
-  var currentRadius = star.size + orbitsDistance * Math.random() + confMap.get("planetMaxSize");
-  // Create random distanced planets
-  while(planetsLeft){
-    var planet = makePlanet();
-    console.log("Planet created with orbit radius ", currentRadius);
-
-    if(confMap.get("maxMoonAmount") > 0) generateMoons(planet);
-
-    bodies.push(planet);
-    star.add(planet);
-
-    currentRadius = currentRadius + 2 * confMap.get("planetMaxSize") + orbitsDistance * Math.random();
-    planetsLeft--;
-  }
-
-  function makePlanet() {
-    return new CelestialBody({
-      orbitRadius: currentRadius,
-      startAngle: 2 * Math.PI * Math.random(),
-      size: getRandomFloatInRange(confMap.get("planetMinSize"), confMap.get("planetMaxSize")),
-      rotationsPerUnit: 3,
-      revolutionsPerUnit: getRandomFloatInRange(confMap.get("minRevolutionsPerUnit"), confMap.get("maxRevolutionsPerUnit")),
-      tilt: getRandomFloatInRange(confMap.get("minTilt"), confMap.get("maxTilt")),
-      orbitTiltX: getRandomFloatInRange(confMap.get("minOrbitTiltX"), confMap.get("maxOrbitTiltX")),
-      orbitTiltZ: getRandomFloatInRange(confMap.get("minOrbitTiltZ"), confMap.get("minOrbitTiltZ")),
-      ellipseX: getGaussianNoise(1, 0.01), // mean 1, variance 0.01
-      ellipseZ: getGaussianNoise(1, 0.01),
-      orbitYaw: Math.random()
-    });
-  }
-}
-
-function generateMoons(planet){
-  var moonsLeft = getRandomIntInRange(confMap.get("minMoonAmount"), confMap.get("maxMoonAmount"));
-  var moonRevPerUnit = getRandomFloatInRange(confMap.get("minMoonRevolutionsPerUnit"), confMap.get("maxMoonRevolutionsPerUnit"));
-  var angles = range(0, moonsLeft).map(i => i * 2 * Math.PI / moonsLeft); // avoid collisions
-  while(moonsLeft){
-    var moonSize = getRandomFloatInRange(confMap.get("moonMinSize"), confMap.get("moonMaxSize"));
-    var moon = makeMoon();
-
-    console.log("Moon created for planet.");
-    bodies.push(moon);
-    planet.add(moon);
-
-    moonsLeft--;
-  }
-
-  function makeMoon() {
-    return new CelestialBody({
-      startAngle: angles[moonsLeft - 1],
-      orbitRadius: planet.size + moonSize + 3.0,
-      size: moonSize,
-      rotationsPerUnit: 1,
-      revolutionsPerUnit: moonRevPerUnit,
-      tilt: getRandomFloatInRange(confMap.get("minMoonTilt"), confMap.get("maxMoonTilt")),
-      orbitTiltX: getRandomFloatInRange(confMap.get("minOrbitTiltX"), confMap.get("maxOrbitTiltX")),
-      orbitTiltZ: getRandomFloatInRange(confMap.get("minOrbitTiltZ"), confMap.get("minOrbitTiltZ")),
-      ellipticalOrbit: confMap.get("ellipticalOrbit"),
-      ellipseX: getRandomFloatInRange(confMap.get("minEllipseX"), confMap.get("maxEllipseX")),
-      ellipseZ: getRandomFloatInRange(confMap.get("minEllipseZ"), confMap.get("maxEllipseZ")),
-      orbitYaw: Math.random()
-    });
-  }
 }
 
 function draw() {
