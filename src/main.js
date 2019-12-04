@@ -17,6 +17,10 @@ var direction = new THREE.Vector3(0, 0, 0);
 var mouse = new THREE.Vector2();
 var MouseDown = false;
 
+var planet;
+var star;
+var lgt;
+
 function onLoad() {
   var canvasContainer = document.getElementById('myCanvasContainer');
   var width = 800;
@@ -34,7 +38,7 @@ function onLoad() {
   scene.add(cam.camera);
 
   // Make a light ball
-  var lgt = new Lighting(0.5, 6, -2, -15);
+  lgt = new Lighting(0.5, 6, -2, -15);
   scene.add(lgt.light);
   //var lgt2 = new Lighting(0.5, -10, 5, 0);
   //scene.add(lgt2.light);
@@ -44,8 +48,8 @@ function onLoad() {
   orbits.push(orb);
   orbits.push(orb2);
 
-  var star = new CelestialBody({orbit : orb, rotationsPerUnit : 0.05, revolutionsPerUnit : 1.0});
-  var planet = new CelestialBody({size : 3, orbit : orb2, rotationsPerUnit : 0.2, revolutionsPerUnit : 1.0});
+  star = new CelestialBody({orbit : orb, rotationsPerUnit : 0.05, revolutionsPerUnit : 1.0});
+  planet = new CelestialBody({size : 3, orbit : orb2, rotationsPerUnit : 0.2, revolutionsPerUnit : 1.0});
   bodies.push(star);
   bodies.push(planet);
 
@@ -61,6 +65,8 @@ function onLoad() {
 }
 
 var counter = 0;
+var lock = false;
+var spherePos = new THREE.Vector3();
 
 function draw() {
   requestAnimationFrame(draw);
@@ -68,22 +74,27 @@ function draw() {
   delta = clock.getDelta();
 
   // Camera control
-  cam.updatePosition(direction, delta);
-  cam.updateDirection(mouse, delta);
+  if (!lock) {
+    cam.updatePosition(direction, delta);
+    cam.updateDirection(mouse, delta);
+  }
 
-  // Simple rotation and revolving of bodies
-  bodies.forEach((item, index) => {
-    // TODO: Rotate according to the speed, which is specified in Body class
-    // TODO: Add a 'rotate' function to the body
+  var angle;
+  // Update planet
+  angle = setAngle(planet.revSpeed * 10, planet.revUnit);
+  planet.mesh.position.x = planet.orbit.radius * Math.cos(angle);
+  planet.mesh.position.z = planet.orbit.radius * Math.sin(angle);
 
-    // revolve in polar coords
-    var angle = setAngle(item.revSpeed, item.revUnit)
-    item.mesh.position.x = item.orbit.radius * Math.cos(angle);
-    item.mesh.position.z = item.orbit.radius * Math.sin(angle);
+  // Update star
+  angle = setAngle(star.revSpeed, star.revUnit);
+  star.mesh.position.x = star.orbit.radius * Math.cos(angle);
+  star.mesh.position.z = star.orbit.radius * Math.sin(angle);
 
-    // rotation
-    item.mesh.rotation.set(0, setAngle(item.rotSpeed, item.rotUnit), 0);
-  });
+  // Update the position of camera and position of shadow-caster
+  planet.mesh.getWorldPosition(spherePos);
+  star.mesh.material.uniforms._SpherePosition.value = spherePos;
+  star.mesh.material.uniforms._WorldSpaceCameraPos.value = cam.camera.position;
+  star.mesh.material.uniforms._WorldSpaceLightPos0.value = lgt.light.position;
 
   renderer.render(scene, cam.camera);
 }
@@ -140,7 +151,11 @@ function onKeyDown(event) {
 
     case 190: // . -- speed DOWN
       if(camSpeed > 1)camSpeed --;
-	  console.log(camSpeed);
+	    console.log(camSpeed);
+      break;
+
+    case 27:
+      lock ^= true;
       break;
   }
 }

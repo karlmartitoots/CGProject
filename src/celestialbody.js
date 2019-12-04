@@ -1,9 +1,9 @@
 const defaults = {
-  celBodies : [], 
+  celBodies : [],
   orbit : null,
-  rotationsPerUnit : 0, 
-  rotateUnit : 'second', 
-  revolutionsPerUnit : 0, 
+  rotationsPerUnit : 0,
+  rotateUnit : 'second',
+  revolutionsPerUnit : 0,
   revolveUnit : 'minute',
   size : 3
 }
@@ -15,7 +15,6 @@ class CelestialBody {
     this.mesh = createSphere(0xccccee);
     this.size = params.size || defaults.size;
     this.mesh.scale.set(this.size, this.size, this.size);
-    this.mesh.position.y = -this.size;
     this.rotSpeed = params.rotationsPerUnit || defaults.rotationsPerUnit;
     this.rotUnit = params.rotateUnit || defaults.rotateUnit;
     this.revSpeed = params.revolutionsPerUnit || defaults.revolutionsPerUnit;
@@ -49,11 +48,11 @@ class CelestialBody {
   get revSpeed() {
     return this._revSpeed
   }
-  
+
   get rotSpeed() {
     return this._rotSpeed
   }
-  
+
   set rotSpeed(newSpeed) {
     this._rotSpeed = newSpeed
   }
@@ -61,21 +60,21 @@ class CelestialBody {
   set revSpeed(newSpeed) {
     this._revSpeed = newSpeed
   }
-  
+
   get rotUnit() {
     return this._rotUnit
   }
-  
+
   set rotUnit(u) {
     this._rotUnit = u
   }
-  
+
   get revUnit() {
     return this._revUnit
   }
-  
+
   set revUnit(u) {
     this._revUnit = u
   }
-  
+
 }

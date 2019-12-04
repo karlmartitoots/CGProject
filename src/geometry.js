@@ -6,7 +6,7 @@ function createSphere(colorCode) {
     color: colorCode,
     wireframe: false
   });*/
-  
+
   /*var material = new THREE.ShaderMaterial({
     //color: colorCode,
     wireframe: false,
@@ -21,35 +21,52 @@ function createSphere(colorCode) {
     vertexShader: cbPlanetVert,
     vertexShader: cbPlanetFrag
   });*/
-  
+
+  var planetColor = new THREE.Color(colorCode);
+  var specularColor = new THREE.Color(0xFFFFFF);
+  var lightColor = new THREE.Color(0xAABBCC);
+
   var material = new THREE.ShaderMaterial({
-	uniforms: {
-		_Color :{
-			value: color
-		},
-		
-		_SpecColor :{
-			value: color
-		},
-		
-		_Shininess :{
-			value: 10.0
-		},
-			
-		_SpherePosition :{
-			value: new THREE.Vector4(3, 6, -2, -15)
-		},
-		
-		_SphereRadius :{
-			value: 0.5
-		},
-		
-		_LightSourceRadius :{
-			value: 0.5
-		}
-	}
-	//vertexShader: 
-	//vertexShader:
+    uniforms: {
+    	_Color: {
+    		value: planetColor
+    	},
+
+    	_SpecColor: {
+    		value: specularColor
+    	},
+
+      _LightColor0: {
+        value: lightColor
+      },
+
+      _WorldSpaceCameraPos: {
+        value: new THREE.Vector3(0, 0, 0)
+      },
+
+      _WorldSpaceLightPos0: {
+        value: new THREE.Vector3(0, 0, 0)
+      },
+
+    	_SpherePosition: {
+    		value: new THREE.Vector3(0, 0, 0)
+    	},
+
+    	_Shininess: {
+    		value: 10.0
+    	},
+
+    	_SphereRadius: {
+    		value: 3
+    	},
+
+    	_LightSourceRadius: {
+    		value: 13
+    	}
+    },
+
+    vertexShader: ssVert,
+    fragmentShader: ssP1Frag
   });
 
   var sphere = new THREE.Mesh(geometry, material);
