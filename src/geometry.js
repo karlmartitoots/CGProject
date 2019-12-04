@@ -61,7 +61,7 @@ function createSphere(colorCode) {
     	},
 
     	_LightSourceRadius: {
-    		value: 13
+    		value: 3
     	}
     },
 
