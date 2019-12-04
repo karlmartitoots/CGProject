@@ -1,10 +1,24 @@
 cbPlanetFrag = `
 uniform vec3 lightPosition;
+uniform vec3 color;
+in vec3 interpolatedPosition;
+in vec3 interpolatedNormal;
+float shininess= 10.0;
+
+void main() {
+	
+	vec3 l = normalize(lightPosition - interpolatedPosition);
+	vec3 v = normalize(- interpolatedPosition);
+	vec3 n = normalize(interpolatedNormal);
+	vec3 r = reflect(-l, n);
+	gl_FragColor = vec4(color * (0.1 + max(0.0, dot(n,l))) + pow(max(0.0, dot(v, r)), shininess), 1.0);
+}
+`
+/*`
+uniform vec3 lightPosition;
 in vec3 interpolatedLocalPosition;
 in vec3 interpolatedPosition; //We interpolate the position
 in vec3 interpolatedNormal;   //We interpolate the normal
-
-#include <noise>
 
 float shininess = 50.0;
 
@@ -68,4 +82,4 @@ void main() {
   gl_FragColor = vec4(interpolatedColor, 1.0);
   //gl_FragColor = vec4(vec3(f), 1.0);
 }
-`
+`*/

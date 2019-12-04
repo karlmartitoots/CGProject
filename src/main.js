@@ -5,8 +5,6 @@ var clock = new THREE.Clock();
 var delta = clock.getDelta();
 var dt;
 var camSpeed = 1;
-var movementLock = true;
-var confMap = new Conf().confMap;
 document.addEventListener("keydown", onKeyDown, false);
 document.addEventListener("keyup", onKeyUp, false);
 document.addEventListener('mousemove', onDocumentMouseMove, false);
@@ -19,168 +17,50 @@ var direction = new THREE.Vector3(0, 0, 0);
 var mouse = new THREE.Vector2();
 var MouseDown = false;
 
-var core;
-var camController;
-
 function onLoad() {
-  if (WEBGL.isWebGL2Available() === false ) {
-    document.body.appendChild( WEBGL.getWebGL2ErrorMessage() );
-    console.log("WebGL2 is not available");
-  }
-
   var canvasContainer = document.getElementById('myCanvasContainer');
-  var canvas = document.getElementById('canvas');
-  var context = canvas.getContext('webgl2', {alpha: false});
-
   var width = 800;
   var height = 500;
 
-  renderer = new THREE.WebGLRenderer({canvas: canvas, context: context});
+  renderer = new THREE.WebGLRenderer();
   renderer.setSize(width, height);
   renderer.shadowMap.enabled = true;//
   renderer.shadowMap.type = THREE.BasicShadowMap;//PCFSoftShadowMap;//
-  canvasContainer.appendChild(canvas);
+  canvasContainer.appendChild(renderer.domElement);
 
   scene = new THREE.Scene();
 
-  setCustomConf();
-  generateStarSystem();
+  cam = new Camera(width, height);
+  scene.add(cam.camera);
 
-  scene.add(core.root);
+  // Make a light ball
+  var lgt = new Lighting(0.5, 6, -2, -15);
+  scene.add(lgt.light);
+  //var lgt2 = new Lighting(0.5, -10, 5, 0);
+  //scene.add(lgt2.light);
+
+  var orb = new Orbit(2.0);
+  var orb2 = new Orbit(10.0);
+  orbits.push(orb);
+  orbits.push(orb2);
+
+  var star = new CelestialBody({orbit : orb, rotationsPerUnit : 0.05, revolutionsPerUnit : 1.0});
+  var planet = new CelestialBody({size : 3, orbit : orb2, rotationsPerUnit : 0.2, revolutionsPerUnit : 1.0});
+  bodies.push(star);
+  bodies.push(planet);
+
+  var system = new System(bodies, orbits);
+  scene.add(system.getObject3D());
 
   const color = 0xFFFFFF;
-  const intensity = 0.2;
+  const intensity = 0.3;
   const ambientlight = new THREE.AmbientLight(color, intensity);
   scene.add(ambientlight);
-
-  // Camera config
-  camController = new CameraController(renderer, core, width, height);
 
   draw();
 }
 
 var counter = 0;
-
-function setCustomConf() {
-  var customConf = new Map();
-  customConf.set("starSize", 20);
-  customConf.set("planetMinSize", 1);
-  customConf.set("planetMaxSize", 6);
-  customConf.set("minRevolutionsPerUnit", 0.1);
-  customConf.set("maxRevolutionsPerUnit", 0.1);
-  customConf.set("minMoonAmount", 0);
-  customConf.set("maxMoonAmount", 4);
-  customConf.set("minMoonRevolutionsPerUnit", 0.0);
-  customConf.set("maxMoonRevolutionsPerUnit", 0.1);
-  customConf.set("minOrbitTiltX", - Math.PI / 20); // 9 degrees
-  customConf.set("maxOrbitTiltX", Math.PI / 20);
-  customConf.set("minOrbitTiltZ", - Math.PI / 20);
-  customConf.set("maxOrbitTiltZ", Math.PI / 20);
-  customConf.set("ellipticalOrbit", true);
-  customConf.set("minEllipseX", 0.8);
-  customConf.set("maxEllipseX", 1.5);
-  customConf.set("minEllipseZ", 0.8);
-  customConf.set("maxEllipseZ", 1.5);
-  customConf.set("celBodyRotationsPerUnit", 0.0);
-  confMap = new Conf(customConf).confMap;
-}
-
-function generateSimpleStarSystem(){
-  var star = new CelestialBody({orbitRadius: 0.0, size: 4, rotationsPerUnit: 1, revolutionsPerUnit: 1.0, tilt:0.2, light: true});
-  var planet = new CelestialBody({orbitRadius: 20.0, size: 2, rotationsPerUnit: 3, revolutionsPerUnit: 1.0, tilt:0.4,
-    ellipticalOrbit: true,
-    ellipseX: 2,
-    ellipseZ: 0.8});
-  var moon = new CelestialBody({orbitRadius:4, size: 0.5, rotationsPerUnit:1, revolutionsPerUnit:4, tilt:0.1});
-  star.add(planet);
-  planet.add(moon);
-
-  // Add all the created bodies to an array
-  bodies.push(moon);
-  bodies.push(planet);
-  bodies.push(star);
-
-  core = star;
-}
-
-function generateStarSystem(){
-  // Create star
-  var star = new CelestialBody({size: confMap.get("starSize"), rotationsPerUnit: 1, revolutionsPerUnit: 1.0, tilt: 0.2, light: true});
-  console.log("Star created");
-  core = star;
-  generatePlanets(star);
-
-  bodies.push(star);
-}
-
-function generatePlanets(star){
-  var orbitsDistance = confMap.get("minDistanceBetweenOrbits");
-  var planetsLeft = confMap.get("planetAmount");
-  var currentRadius = star.size + orbitsDistance * Math.random() + confMap.get("planetMaxSize");
-  // Create random distanced planets
-  while(planetsLeft){
-    var planet = makePlanet();
-    console.log("Planet created with orbit radius ", currentRadius);
-
-    if(confMap.get("maxMoonAmount") > 0) generateMoons(planet);
-
-    bodies.push(planet);
-    star.add(planet);
-
-    currentRadius = currentRadius + 2 * confMap.get("planetMaxSize") + orbitsDistance * Math.random();
-    planetsLeft--;
-  }
-
-  function makePlanet() {
-    return new CelestialBody({
-      orbitRadius: currentRadius,
-      startAngle: 2 * Math.PI * Math.random(),
-      size: getRandomFloatInRange(confMap.get("planetMinSize"), confMap.get("planetMaxSize")),
-      rotationsPerUnit: 3,
-      revolutionsPerUnit: getRandomFloatInRange(confMap.get("minRevolutionsPerUnit"), confMap.get("maxRevolutionsPerUnit")),
-      tilt: getRandomFloatInRange(confMap.get("minTilt"), confMap.get("maxTilt")),
-      orbitTiltX: getRandomFloatInRange(confMap.get("minOrbitTiltX"), confMap.get("maxOrbitTiltX")),
-      orbitTiltZ: getRandomFloatInRange(confMap.get("minOrbitTiltZ"), confMap.get("minOrbitTiltZ")),
-      ellipticalOrbit: confMap.get("ellipticalOrbit"),
-      ellipseX: getRandomFloatInRange(confMap.get("minEllipseX"), confMap.get("maxEllipseX")),
-      ellipseZ: getRandomFloatInRange(confMap.get("minEllipseZ"), confMap.get("maxEllipseZ")),
-      ellipseFocusDir: (Math.random() < 0.5 ? -1 : 1)
-    });
-  }
-}
-
-function generateMoons(planet){
-  var moonsLeft = getRandomIntInRange(confMap.get("minMoonAmount"), confMap.get("maxMoonAmount"));
-  var moonRevPerUnit = getRandomFloatInRange(confMap.get("minMoonRevolutionsPerUnit"), confMap.get("maxMoonRevolutionsPerUnit"));
-  var angles = range(0, moonsLeft).map(i => i * 2 * Math.PI / moonsLeft); // avoid collisions
-  while(moonsLeft){
-    var moonSize = getRandomFloatInRange(confMap.get("moonMinSize"), confMap.get("moonMaxSize"));
-    var moon = makeMoon();
-
-    console.log("Moon created for planet.");
-    bodies.push(moon);
-    planet.add(moon);
-
-    moonsLeft--;
-  }
-
-  function makeMoon() {
-    return new CelestialBody({
-      startAngle: angles[moonsLeft - 1],
-      orbitRadius: planet.size + moonSize + 3.0,
-      size: moonSize,
-      rotationsPerUnit: 1,
-      revolutionsPerUnit: moonRevPerUnit,
-      tilt: getRandomFloatInRange(confMap.get("minMoonTilt"), confMap.get("maxMoonTilt")),
-      orbitTiltX: getRandomFloatInRange(confMap.get("minOrbitTiltX"), confMap.get("maxOrbitTiltX")),
-      orbitTiltZ: getRandomFloatInRange(confMap.get("minOrbitTiltZ"), confMap.get("minOrbitTiltZ")),
-      ellipticalOrbit: confMap.get("ellipticalOrbit"),
-      ellipseX: getRandomFloatInRange(confMap.get("minEllipseX"), confMap.get("maxEllipseX")),
-      ellipseZ: getRandomFloatInRange(confMap.get("minEllipseZ"), confMap.get("maxEllipseZ")),
-      ellipseFocusDir: (Math.random() < 0.5 ? -1 : 1)
-    });
-  }
-}
 
 function draw() {
   requestAnimationFrame(draw);
@@ -188,14 +68,24 @@ function draw() {
   delta = clock.getDelta();
 
   // Camera control
-  if (movementLock) {
-    camController.update(direction, mouse);
-  }
+  cam.updatePosition(direction, delta);
+  cam.updateDirection(mouse, delta);
 
   // Simple rotation and revolving of bodies
-  core.update();
+  bodies.forEach((item, index) => {
+    // TODO: Rotate according to the speed, which is specified in Body class
+    // TODO: Add a 'rotate' function to the body
 
-  renderer.render(scene, camController.current.camera);
+    // revolve in polar coords
+    var angle = setAngle(item.revSpeed, item.revUnit)
+    item.mesh.position.x = item.orbit.radius * Math.cos(angle);
+    item.mesh.position.z = item.orbit.radius * Math.sin(angle);
+
+    // rotation
+    item.mesh.rotation.set(0, setAngle(item.rotSpeed, item.rotUnit), 0);
+  });
+
+  renderer.render(scene, cam.camera);
 }
 
 function onKeyDown(event) {
@@ -228,45 +118,29 @@ function onKeyDown(event) {
       break;
 
     case 37: // < -- left arrow key
-      camController.translate(new THREE.Vector3(-15, 0, 0));
+      cam.position.x -= 15;
       break;
 
     case 39: // > -- right arrow key
-      camController.translate(new THREE.Vector3(15, 0, 0));
+      cam.position.x += 15;
       break;
 
     case 38: // ^ -- up arrow key
-      camController.translate(new THREE.Vector3(0, 0, -15));
+      cam.position.z -= 15;
       break;
 
     case 40: // v -- down arrow key
-      camController.translate(new THREE.Vector3(0, 0, 15));
+      cam.position.z += 15;
       break;
 
     case 188: // , -- speed UP
-      camSpeed++;
-      console.log(camSpeed);
+      camSpeed ++;
+	  console.log(camSpeed);
       break;
 
     case 190: // . -- speed DOWN
-      if(camSpeed > 1) camSpeed--;
-      console.log(camSpeed);
-      break;
-
-    case 27: // ESC -- lock/unlock movement
-      movementLock ^= true;
-      break;
-
-    case 84: // t / -- teleport to topview
-      var systemRadius = core.children.map(planet => planet.orbitRadius).reduce((a, b) => {
-        return Math.max(a, b);
-      });
-
-      // A smigeon bigger
-      systemRadius *= 1.05;
-
-      camController.topview(systemRadius);
-
+      if(camSpeed > 1)camSpeed --;
+	  console.log(camSpeed);
       break;
   }
 }
@@ -299,18 +173,6 @@ function onKeyUp(event){
     case 69: // E -- inside
       direction.y = 0;
       break;
-
-    case 219: // [ -- body explorer up
-      camController.up();
-      break;
-
-    case 221: // ] -- body explorer down
-      camController.down();
-      break;
-
-    case 220: // \ -- body explorer next
-      camController.nextcam();
-      break;
   }
 }
 
@@ -333,4 +195,5 @@ function onMouseUp (event) {
 function onMouseWheelMove (event) {
   if(event.deltaY < 0) camSpeed ++;
   else if(camSpeed > 1)camSpeed --;
+  console.log(camSpeed);
 }

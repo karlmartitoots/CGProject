@@ -5,13 +5,11 @@ class System {
 
     var sys = new THREE.Object3D();
     this.celestialBodies.forEach(celBody => {
-      sys.add(celBody.root)
+      sys.add(celBody.mesh)
     });
-
     this.orbits.forEach(o => {
-      sys.add(o.line)
+      sys.add(o.lineloop)
     });
-
     this.system = sys;
   }
 

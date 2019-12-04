@@ -3,25 +3,22 @@
   <head>
     <title>CG Project - Space Generator</title>
     <meta charset="UTF-8">
-    <script type="text/javascript" src="src/shaders/noise.js"></script>
+	
     <script type="text/javascript" src="src/shaders/planet.vert.js"></script>
     <script type="text/javascript" src="src/shaders/planet.frag.js"></script>
-
-    <script type="text/javascript" src="lib/WebGL.js"></script>
+    <script type="text/javascript" src="src/shaders/deferredShading.js"></script>
+	
     <script type="text/javascript" src="lib/three.r108.js"></script>
-    <script type="text/javascript" src="src/configuration.js"></script>
     <script type="text/javascript" src="src/math2.js"></script>
     <script type="text/javascript" src="src/geometry.js"></script>
     <script type="text/javascript" src="src/celestialbody.js"></script>
     <script type="text/javascript" src="src/orbit.js"></script>
-    <script type="text/javascript" src="src/ellipseorbit.js"></script>
     <script type="text/javascript" src="src/system.js"></script>
     <script type="text/javascript" src="src/camera.js"></script>
-    <script type="text/javascript" src="src/cameracontroller.js"></script>
     <script type="text/javascript" src="src/main.js"></script>
+    <script type="text/javascript" src="src/lighting.js"></script>
   </head>
   <body onload="onLoad()">
     <div id="myCanvasContainer"></div>
-    <canvas id="canvas"></canvas>
   </body>
 </html>
