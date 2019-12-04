@@ -9,19 +9,19 @@ class Generator {
       'S': [
         {
           probability: 0.3,
-          value: 's[P][P][P][P][P][P][P][P][P][P]'
+          value: 's[R][R][R][R][R][G][G][R][G][G]'
         },
         {
           probability: 0.3,
-          value: 's[P][P][P][P][P][P][P][P]'
+          value: 's[R][R][R][R][G][G][G][G]'
         },
         {
           probability: 0.3,
-          value: 's[P][P][P][P][P][P]'
+          value: 's[R][R][R][R][G][G]'
         },
         {
           probability: 0.1,
-          value: 's[P][P][P][P][P][P][P]'
+          value: 's[R][R][R][R][G][G][G]'
         }
       ],
 
