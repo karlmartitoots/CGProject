@@ -22,15 +22,15 @@ var onKeyDown = event => {
       movementLock ^= true;
       break;
 
-    case "[":
+    case "u":
       camman.up();
       break;
 
-    case "]":
+    case "i":
       camman.down();
       break;
 
-    case "\\":
+    case "o":
       camman.nextcam();
       break;
 
