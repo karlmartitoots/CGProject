@@ -45,7 +45,7 @@ function createSphere(colorCode) {
       },
 
       _WorldSpaceLightPos0: {
-        value: new THREE.Vector3(0, 0, 0)
+        value: new THREE.Vector3(6, -2, -15)
       },
 
     	_SpherePosition: {
@@ -61,7 +61,7 @@ function createSphere(colorCode) {
     	},
 
     	_LightSourceRadius: {
-    		value: 3
+    		value: 0.5
     	}
     },
 
