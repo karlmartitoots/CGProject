@@ -187,7 +187,6 @@ class Generator {
   }
 
   _generateSystem(state) {
-    var currentScale = this.confMap.get("starSize");
     var current;
     var currentDistance = 3800.0;
 
@@ -200,7 +199,7 @@ class Generator {
       switch (state[i]) {
       case ('s'):
         current = new CelestialBody({
-          size: Math.min(confMap.get("minStarSize"), getGaussianNoise(confMap.get("starSizeMean"), confMap.get("starSizeVariance"))),
+          size: Math.max(confMap.get("minStarSize"), getGaussianNoise(confMap.get("starSizeMean"), confMap.get("starSizeVariance"))),
           rotationsPerUnit: 1, 
           revolutionsPerUnit: getRandomFloatInRange(confMap.get("minRevPerUnit"), confMap.get("maxRevPerUnit")), 
           tilt: getRandomFloatInRange(confMap.get("minTilt"), confMap.get("maxTilt")), 
@@ -218,7 +217,7 @@ class Generator {
         current = new CelestialBody({
           orbitRadius: currentDistance,
           startAngle: 2 * Math.PI * Math.random(),
-          size: Math.min(confMap.get("minPlanetSize"), getGaussianNoise(confMap.get("starSizeMean") / confMap.get("starPlanetSizeRatio"), confMap.get("planetSizeVariance"))),
+          size: Math.max(confMap.get("minPlanetSize"), getGaussianNoise(confMap.get("starSizeMean") / confMap.get("starPlanetSizeRatio"), confMap.get("planetSizeVariance"))),
           density: 4.0,
           rotationsPerUnit: 3,
           revolutionsPerUnit: getRandomFloatInRange(confMap.get("minRevPerUnit"), confMap.get("maxRevPerUnit")),
@@ -245,7 +244,7 @@ class Generator {
         current = new CelestialBody({
           orbitRadius: currentDistance,
           startAngle: 2 * Math.PI * Math.random(),
-          size: Math.min(confMap.get("minPlanetSize"), getGaussianNoise(confMap.get("starSizeMean") / confMap.get("starPlanetSizeRatio"), confMap.get("planetSizeVariance"))),
+          size: Math.max(confMap.get("minPlanetSize"), getGaussianNoise(confMap.get("starSizeMean") / confMap.get("starPlanetSizeRatio"), confMap.get("planetSizeVariance"))),
           density: 1.0, 
           rotationsPerUnit: 3,
           revolutionsPerUnit: getRandomFloatInRange(confMap.get("minRevPerUnit"), confMap.get("maxRevPerUnit")),
@@ -272,7 +271,7 @@ class Generator {
         current = new CelestialBody({
           orbitRadius: currentDistance,
           startAngle: 2 * Math.PI * Math.random(),
-          size: Math.min(confMap.get("minMoonSize"), getGaussianNoise(confMap.get("starSizeMean") / confMap.get("starPlanetSizeRatio") / confMap.get("planetMoonSizeRatio"), confMap.get("moonSizeVariance"))),
+          size: Math.max(confMap.get("minMoonSize"), getGaussianNoise(confMap.get("starSizeMean") / confMap.get("starPlanetSizeRatio") / confMap.get("planetMoonSizeRatio"), confMap.get("moonSizeVariance"))),
           density: 4.0,
           rotationsPerUnit: 3,
           revolutionsPerUnit: getRandomFloatInRange(confMap.get("minRevPerUnit"), confMap.get("maxRevPerUnit")),
@@ -287,7 +286,7 @@ class Generator {
         if (parents.length > 0)
           parents[parents.length - 1].add(current);
 
-        // Change the porent's current distance
+        // Change the parent's current distance
         distance[parents.length - 1] *= 1.7;
 
         break;
@@ -295,10 +294,8 @@ class Generator {
       case ('['):
 
         parents.push(current);
-        scales.push(currentScale);
         distance.push(currentDistance);
 
-        currentScale /= 5;
         currentDistance = Math.pow(currentDistance, 0.55) + current.size;
 
         break;
@@ -306,7 +303,6 @@ class Generator {
       case (']'):
 
         current = parents.pop();
-        currentScale = scales.pop();
         currentDistance = distance.pop();
 
         break;
