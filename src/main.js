@@ -18,6 +18,7 @@ var mouse = new THREE.Vector2();
 var MouseDown = false;
 
 var planet;
+//var planet2;
 var star;
 var lgt;
 
@@ -45,11 +46,13 @@ function onLoad() {
 
   var orb = new Orbit(2.0);
   var orb2 = new Orbit(10.0);
+  //var orb3 = new Orbit(50.0);
   orbits.push(orb);
   orbits.push(orb2);
+  //orbits.push(orb3);
 
   star = new CelestialBody({orbit : orb, rotationsPerUnit : 0.05, revolutionsPerUnit : 1.0});
-  planet = new CelestialBody({size : 3, orbit : orb2, rotationsPerUnit : 0.2, revolutionsPerUnit : 1.0});
+  planet = new CelestialBody({size : 2, orbit : orb2, rotationsPerUnit : 0.2, revolutionsPerUnit : 1.0});
   bodies.push(star);
   bodies.push(planet);
 
@@ -84,7 +87,7 @@ function draw() {
   angle = setAngle(planet.revSpeed * 10, planet.revUnit);
   planet.mesh.position.x = planet.orbit.radius * Math.cos(angle);
   planet.mesh.position.z = planet.orbit.radius * Math.sin(angle);
-
+  
   // Update star
   angle = setAngle(star.revSpeed, star.revUnit);
   star.mesh.position.x = star.orbit.radius * Math.cos(angle);
