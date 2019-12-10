@@ -69,45 +69,45 @@ void main() {
   
   float Rs = _LightSourceRadius / lightDistance; // Apparent radious of the sun 
   float Rp = _SphereRadius / sphereDistance; // Apparent radious of the planet 
-  //float Da = radians( acos( dot(lightDirection, sphereDirection) /(lightDistance * sphereDistance)) ); // Angular Distance ( Sun - Fragment - Planet ): acos( dpt(S,P) / (|S|*|P|)
-  float Da = acos( dot(lightDirection, sphereDirection) /(lightDistance * sphereDistance)) ; // Angular Distance ( Sun - Fragment - Planet ): acos( dpt(S,P) / (|S|*|P|)
-  float Sv ; // Volume of the sun
-  float Iv; // Volume of the intersection
+  float Da = acos( dot(normalize(lightDirection), normalize(sphereDirection))); // Angular Distance ( Sun - Fragment - Planet ): acos( dpt(S,P) / (|S|*|P|)
+  //vec3 D = normalize(sphereDirection) - normalize(lightDirection);
+  //float Da = sqrt(D.x * D.x + D.y * D.y + D.z * D.z);
   
-  float lightPercent = 300.0;
-  //delete = 100.0 from above after done intersection
+  float Sarea = M_PI * pow(Rs, 2.0);
+  float Area;
 
-
-  if(Rs + Rp >= Da){ // not overlaping
-  //if(Rs + Rp <= Da){ // not overlaping
+  if(Rs + Rp <= Da){ // not overlaping
   
-	lightPercent = 300.0;
+	Area = Sarea;
 	
-  }else if(Rs - Rp <= Da){ // full overlaping 
-  //}else if(Rs - Rp >= Da){ // full overlaping 
+  }else if(abs(Rs - Rp) >= Da){ // full overlaping 
   
-	lightPercent = 300.0 * (M_PI * pow(Rs, 2.0)) / (M_PI * pow(Rp, 2.0));
+	Area = max(Sarea - M_PI * pow(Rp, 2.0), 0.0);
 	
-  }else if(Rs + Rp < Da){ // partial overlapin
-  //}else if(Rs + Rp > Da){ // partial overlapin
+  }else if(Rs + Rp > Da){ // partial overlapin
 	
-		/**/
-		
-		//sun volume
-		Sv = (4.0 / 3.0) * M_PI * pow(Rs, 3.0);
-		
-		//Intersection volume ( 2 * Spherical cap )
-		
-		float h = ( Rs + Rp - Da ) / 2.0 ;
-		Iv = 2.0 * (M_PI * pow(h, 2.0) / 3.0) * (3.0 * Rs - h);
-		
-		lightPercent = 300.0 * Sv / Iv ;
-		/**/
+	float Rs2 = pow(Rs, 2.0);
+	float Rp2 = pow(Rp, 2.0);
+	float Da2 = pow(Da, 2.0);
+	
+	float Salph = 2.0 * acos((Rs2 + Da2 - Rp2) / (2.0 * Rs * Da));
+	float Palph = 2.0 * acos((Rp2 + Da2 - Rs2) / (2.0 * Rp * Da));
+	
+	float Pseg = Rp2 * (Palph - sin(Palph)) / 2.0 ;
+	float Sseg = Rs2 * (Salph - sin(Salph)) / 2.0 ;
+	
+	float OverlapA = Pseg + Sseg ;
+	
+	Area =  Sarea - OverlapA ; 
   }
+
+  Area *= 3000.0;
+  Area /= M_PI * pow (_LightSourceRadius, 2.0);
+  
 	
   //gl_FragColor = vec4(100.0 * (1.0 - w) * (diffuseReflection + specularReflection), 1.0);//web result
   
-  gl_FragColor = vec4(lightPercent * (diffuseReflection), 1.0);
+  gl_FragColor = vec4(Area * (diffuseReflection), 1.0);
 }
 `;
 
