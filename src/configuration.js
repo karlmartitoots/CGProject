@@ -1,30 +1,47 @@
 const defaultConf = new Map();
 
-defaultConf.set("planetAmount", 10); // integer from 0 to undetermined
-defaultConf.set("starAmount", 1); // integer from 0 to 2
-defaultConf.set("minMoonAmount", 0); // less or equal to maxMoonAmount
-defaultConf.set("maxMoonAmount", 0); // more or equal to minMoonAmount
-defaultConf.set("visibleOrbits", true); // true or false
+// general settings
 defaultConf.set("rotateUnit", 'second');
-defaultConf.set("minRevolutionsPerUnit", 0);
-defaultConf.set("maxRevolutionsPerUnit", 0);
 defaultConf.set("revolveUnit", 'minute');
-defaultConf.set("planetMinSize", 2); // less or equal to planetMaxSize
-defaultConf.set("planetMaxSize", 2); // more or equal to planetMinSize
-defaultConf.set("starSize", 5);
-defaultConf.set("minDistanceBetweenOrbits", 30.0);
+defaultConf.set("minRevPerUnit", -1.0);
+defaultConf.set("maxRevPerUnit", 1.0);
 defaultConf.set("minTilt", 0.0);
 defaultConf.set("maxTilt", Math.PI / 180 * 45);
 
+// star settings
+defaultConf.set("starAmount", 1); // integer from 0 to 2
+defaultConf.set("starSizeMean", 5);
+defaultConf.set("starSizeVariance", 1.0);
+defaultConf.set("minStarSize", 5);
+
+// planet settings
+defaultConf.set("planetDensityMean", 3.0); // integer from 0 to undetermined
+defaultConf.set("planetDensityVariance", 1.0); // integer from 0 to undetermined
+defaultConf.set("minPlanetDensity", 0.5); 
+defaultConf.set("minPlanetAmount", 10); // integer from 0 to undetermined
+defaultConf.set("maxPlanetAmount", 10); // integer from 0 to undetermined
+defaultConf.set("planetSizeVariance", 0.5); // determines how much planet size varies according to gamma distribution
+defaultConf.set("minPlanetSize", 1.0);
+defaultConf.set("minDistanceBetweenPlanetOrbits", 30.0);
+defaultConf.set("starPlanetSizeRatio", 5.0);
+
 // moon settings
-defaultConf.set("minMoonRevolutionsPerUnit", 0);
-defaultConf.set("maxMoonRevolutionsPerUnit", 0); // these go for each planet not each moon
-defaultConf.set("moonMinSize", 0.1); // less or equal to moonMaxSize
-defaultConf.set("moonMaxSize", 1.0); // more or equal to moonMinSize
-defaultConf.set("moonMinTilt", 0.0);
-defaultConf.set("moonMaxTilt", Math.PI / 180 * 45);
+defaultConf.set("moonDensityMean", 3.0); // integer from 0 to undetermined
+defaultConf.set("moonDensityVariance", 1.0); // integer from 0 to undetermined
+defaultConf.set("minMoonDensity", 1.0);
+defaultConf.set("minPlanetMoonSizeRatio", 1.0);
+defaultConf.set("maxPlanetMoonSizeRatio", 100.0);
+defaultConf.set("moonSizeVariance", 1.0);
+defaultConf.set("minMoonSize", 1.0);
+defaultConf.set("minMoonAmount", 0); // less or equal to maxMoonAmount
+defaultConf.set("maxMoonAmount", 0); // more or equal to minMoonAmount
+defaultConf.set("minMoonRevPerUnit", 0);
+defaultConf.set("maxMoonRevPerUnit", 0); // these go for each planet not each moon
+defaultConf.set("minMoonTilt", 0.0);
+defaultConf.set("maxMoonTilt", Math.PI / 180 * 45);
 
 // orbit settings
+defaultConf.set("visibleOrbits", true); // true or false
 defaultConf.set("ellipticalOrbit", false);
 defaultConf.set("minOrbitTiltX", 0);
 defaultConf.set("maxOrbitTiltX", 0);
@@ -46,12 +63,15 @@ class Conf {
         else
             console.log("No conf.");
 
-        var nonNegatives = ["planetAmount", "starAmount", "minMoonAmount", "maxMoonAmount", "planetMinSize", "planetMaxSize",
-        "starSize", "minDistanceBetweenOrbits", "minTilt", "maxTilt", "moonMinSize", "moonMaxSize", "moonMinTilt", "moonMaxTilt",
+        var nonNegatives = ["minTilt", "maxTilt", 
+        "starAmount", "starSizeMean", "starSizeVariance", "minStarSize", 
+        "minPlanetDensity", "planetDensityMean", "planetDensityVariance", "minPlanetAmount", "minPlanetSize", "planetSizeVariance", "minDistanceBetweenPlanetOrbits", "starPlanetSizeRatio", 
+        "minMoonAmount", "minMoonSize", "moonDensityMean", "moonDensityVariance", "minMoonDensity", "planetMoonSizeRatio", "moonSizeVariance",
         "minEllipseX", "maxEllipseX", "minEllipseZ", "maxEllipseZ", "orbitYaw"];
-        var minMaxs = [["minMoonAmount", "maxMoonAmount"], ["planetMinSize", "planetMaxSize"], ["minTilt", "maxTilt"],
-            ["moonMinSize", "moonMaxSize"], ["moonMinTilt", "moonMaxTilt"], ["minOrbitTiltX", "maxOrbitTiltX"],
-            ["minOrbitTiltZ", "maxOrbitTiltZ"], ["minEllipseX", "maxEllipseX"], ["minEllipseZ", "maxEllipseZ"]];
+        var minMaxs = [["minMoonAmount", "maxMoonAmount"], ["minTilt", "maxTilt"],
+            ["minMoonTilt", "maxMoonTilt"], ["minOrbitTiltX", "maxOrbitTiltX"], ["minRevPerUnit", "maxRevPerUnit"],
+            ["minOrbitTiltZ", "maxOrbitTiltZ"], ["minEllipseX", "maxEllipseX"], ["minEllipseZ", "maxEllipseZ"],
+            ["minMoonRevPerUnit", "maxMoonRevPerUnit"]];
         this.validateConf(nonNegatives, minMaxs); // validate fields
     }
 

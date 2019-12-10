@@ -199,7 +199,12 @@ class Generator {
     for (var i = 0; i < state.length; i++) {
       switch (state[i]) {
       case ('s'):
-        current = new CelestialBody({size: currentScale, rotationsPerUnit: 1, revolutionsPerUnit: 1.0, tilt: 0.2, light: true});
+        current = new CelestialBody({
+          size: Math.min(confMap.get("minStarSize"), getGaussianNoise(confMap.get("starSizeMean"), confMap.get("starSizeVariance"))),
+          rotationsPerUnit: 1, 
+          revolutionsPerUnit: getRandomFloatInRange(confMap.get("minRevPerUnit"), confMap.get("maxRevPerUnit")), 
+          tilt: getRandomFloatInRange(confMap.get("minTilt"), confMap.get("maxTilt")), 
+          light: true});
 
         if (parents.length > 0)
           parents[parents.length - 1].add(current);
@@ -213,9 +218,10 @@ class Generator {
         current = new CelestialBody({
           orbitRadius: currentDistance,
           startAngle: 2 * Math.PI * Math.random(),
-          size: currentScale + getRandomFloatInRange(confMap.get("planetMinSize"), confMap.get("planetMaxSize")) / 3,
+          size: Math.min(confMap.get("minPlanetSize"), getGaussianNoise(confMap.get("starSizeMean") / confMap.get("starPlanetSizeRatio"), confMap.get("planetSizeVariance"))),
+          density: 4.0,
           rotationsPerUnit: 3,
-          revolutionsPerUnit: getRandomFloatInRange(confMap.get("minRevolutionsPerUnit"), confMap.get("maxRevolutionsPerUnit")),
+          revolutionsPerUnit: getRandomFloatInRange(confMap.get("minRevPerUnit"), confMap.get("maxRevPerUnit")),
           tilt: getRandomFloatInRange(confMap.get("minTilt"), confMap.get("maxTilt")),
           orbitTiltX: getRandomFloatInRange(confMap.get("minOrbitTiltX"), confMap.get("maxOrbitTiltX")),
           orbitTiltZ: getRandomFloatInRange(confMap.get("minOrbitTiltZ"), confMap.get("minOrbitTiltZ")),
@@ -239,9 +245,10 @@ class Generator {
         current = new CelestialBody({
           orbitRadius: currentDistance,
           startAngle: 2 * Math.PI * Math.random(),
-          size: currentScale * 3 + getRandomFloatInRange(confMap.get("planetMinSize"), confMap.get("planetMaxSize")) / 3,
+          size: Math.min(confMap.get("minPlanetSize"), getGaussianNoise(confMap.get("starSizeMean") / confMap.get("starPlanetSizeRatio"), confMap.get("planetSizeVariance"))),
+          density: 1.0, 
           rotationsPerUnit: 3,
-          revolutionsPerUnit: getRandomFloatInRange(confMap.get("minRevolutionsPerUnit"), confMap.get("maxRevolutionsPerUnit")),
+          revolutionsPerUnit: getRandomFloatInRange(confMap.get("minRevPerUnit"), confMap.get("maxRevPerUnit")),
           tilt: getRandomFloatInRange(confMap.get("minTilt"), confMap.get("maxTilt")),
           orbitTiltX: getRandomFloatInRange(confMap.get("minOrbitTiltX"), confMap.get("maxOrbitTiltX")),
           orbitTiltZ: getRandomFloatInRange(confMap.get("minOrbitTiltZ"), confMap.get("minOrbitTiltZ")),
@@ -253,7 +260,7 @@ class Generator {
         if (parents.length > 0)
           parents[parents.length - 1].add(current);
 
-        // Change the porent's current distance
+        // Change the parent's current distance
         distance[parents.length - 1] *= 2.6;
 
         break;
@@ -265,9 +272,10 @@ class Generator {
         current = new CelestialBody({
           orbitRadius: currentDistance,
           startAngle: 2 * Math.PI * Math.random(),
-          size: currentScale + getRandomFloatInRange(confMap.get("planetMinSize"), confMap.get("planetMaxSize")) / 3,
+          size: Math.min(confMap.get("minMoonSize"), getGaussianNoise(confMap.get("starSizeMean") / confMap.get("starPlanetSizeRatio") / confMap.get("planetMoonSizeRatio"), confMap.get("moonSizeVariance"))),
+          density: 4.0,
           rotationsPerUnit: 3,
-          revolutionsPerUnit: getRandomFloatInRange(confMap.get("minRevolutionsPerUnit"), confMap.get("maxRevolutionsPerUnit")),
+          revolutionsPerUnit: getRandomFloatInRange(confMap.get("minRevPerUnit"), confMap.get("maxRevPerUnit")),
           tilt: getRandomFloatInRange(confMap.get("minTilt"), confMap.get("maxTilt")),
           orbitTiltX: getRandomFloatInRange(confMap.get("minOrbitTiltX"), confMap.get("maxOrbitTiltX")),
           orbitTiltZ: getRandomFloatInRange(confMap.get("minOrbitTiltZ"), confMap.get("minOrbitTiltZ")),
