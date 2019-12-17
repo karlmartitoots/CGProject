@@ -6,14 +6,14 @@ var camman;
 
 var onMouseWheelMove = event => {
   return;
-  console.log(event.deltaY);
-  console.log(camSpeed);
-
-  camSpeed += -event.deltaY / 1000;
-
-  // Clamp
-  if(camSpeed < 0.2)
-    camSpeed = 0.2;
+ // console.log(event.deltaY);
+ // console.log(camSpeed);
+ //
+ // camSpeed += -event.deltaY / 1000;
+ //
+ // // Clamp
+ // if(camSpeed < 0.2)
+ //   camSpeed = 0.2;
 }
 
 var onKeyDown = event => {

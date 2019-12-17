@@ -3,16 +3,21 @@ uniform vec3 color[3];
 uniform vec3 colora;
 uniform vec3 colorw;
 uniform float seed;
+uniform int bodycount;
+uniform int id;
+
+uniform sampler2D locs;
 
 uniform float size;
 uniform vec3 lightPosition;
 uniform vec3 viewPosition;
 in vec3 interpolatedLocalPosition;
-in vec3 interpolatedPosition; // We interpolate the position
-in vec3 interpolatedNormal;   // We interpolate the normal
+in vec3 interpolatedPosition;
+in vec3 interpolatedNormal;
 in vec3 interpolatedLightPosition;
 
-#include <noise>
+#include <noise.comp>
+#include <lighting.comp>
 
 float shininess = 50.0;
 
@@ -69,13 +74,33 @@ void main() {
   float diffuse = max(0.0, dot(n, l));
 
   // Get the light density with inverse square law
-  float distanceFromLight = sqrt(pow(interpolatedPosition.x, 2.0) + pow(interpolatedPosition.y, 2.0) + pow(interpolatedPosition.z, 2.0));
-  float luminosity = 350.0 / distanceFromLight;
+  //float distanceFromLight = sqrt(pow(interpolatedPosition.x, 2.0) + pow(interpolatedPosition.y, 2.0) + pow(interpolatedPosition.z, 2.0));
+  //float luminosity = 350.0 / distanceFromLight;
+
+  // Luminosity, get from texture
+  float luminosity = 0.0;
+  vec4 cposr;
+  vec4 lposr = texture2D(locs, vec2(0.5 / float(bodycount), 0.5));
+  int i;
+
+  // Bodies before self
+  for (i = 1; i < id; ++i) {
+    cposr = texture2D(locs, vec2((float(i) + 0.5) / float(bodycount), 0.5));
+    luminosity += softShadow(lposr.xyz, lposr.w, cposr.xyz, cposr.w, interpolatedPosition);
+  }
+
+  // Bodies after self
+  for (i = id + 1; i < bodycount; ++i) {
+    cposr = texture2D(locs, vec2((float(i) + 0.5) / float(bodycount), 0.5));
+    luminosity += softShadow(lposr.xyz, lposr.w, cposr.xyz, cposr.w, interpolatedPosition);
+  }
+
+  // Sun is bright
+  luminosity *= 20000.0;
 
   // Put Diffuse, specular and glow light together to get the end result
   vec3 interpolatedColor = luminosity * (noiseColor * diffuse + specular + glow);
 
   gl_FragColor = vec4(interpolatedColor, 1.0);
-  //gl_FragColor = vec4(n, 1.0);
 }
 `

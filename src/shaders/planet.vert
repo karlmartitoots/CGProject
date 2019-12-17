@@ -8,7 +8,7 @@ out vec3 interpolatedNormal;   //We interpolate the normal
 out vec3 interpolatedLocalPosition;
 out vec3 interpolatedLightPosition;
 
-#include <noise>
+#include <noise.comp>
 
 void main() {
   interpolatedLocalPosition = position;

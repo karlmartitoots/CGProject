@@ -1,4 +1,4 @@
-function createSphere(colorCode, radius, lsource, seed) {
+function createSphere(colorCode, radius, lsource, seed, id) {
   var geometry = new THREE.SphereBufferGeometry(radius, 50, 50);
   var color = new THREE.Color(colorCode);
 
@@ -37,6 +37,18 @@ function createSphere(colorCode, radius, lsource, seed) {
 
       seed: {
         value: seed
+      },
+
+      locs: {
+        value: null
+      },
+
+      bodycount: {
+        value: 0
+      },
+
+      id: {
+        value: id
       }
     },
 
@@ -46,8 +58,13 @@ function createSphere(colorCode, radius, lsource, seed) {
 
   // Noise generation shader
   material.onBeforeCompile = shader => {
-    shader.fragmentShader = shader.fragmentShader.replace('#include <noise>', simplexNoise);
-    shader.vertexShader = shader.vertexShader.replace('#include <noise>', simplexNoise);
+    // Noise
+    shader.fragmentShader = shader.fragmentShader.replace('#include <noise.comp>', noiseComp);
+    shader.vertexShader = shader.vertexShader.replace('#include <noise.comp>', noiseComp);
+
+    // Lighting
+    shader.fragmentShader = shader.fragmentShader.replace('#include <lighting.comp>', lightComp);
+    shader.vertexShader = shader.vertexShader.replace('#include <lighting.comp>', lightComp);
   };
 
   material.depthFunc = THREE.LessEqualDepth;
@@ -70,7 +87,10 @@ function createSphere(colorCode, radius, lsource, seed) {
  //   light.shadow.camera.near = 0.5;
  //   light.shadow.camera.far = 500;
 
-    return light;
+    light.name = "LIGHT";
+
+    //return light;
+    return sphere;
   }
 
   else {

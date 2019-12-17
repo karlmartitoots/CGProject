@@ -6,7 +6,7 @@ in vec3 interpolatedLocalPosition;
 in vec3 interpolatedPosition; // We interpolate the position
 in vec3 interpolatedNormal;   // We interpolate the normal
 
-#include <noise>
+#include <noise.comp>
 
 float shininess = 50.0;
 

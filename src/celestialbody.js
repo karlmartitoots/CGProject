@@ -14,11 +14,17 @@ const defaults = {
   ellipseFocusDir: Math.random() < 0.5 ? -1 : 1 // 1 or -1
 }
 
+var counter = 0;
+
 class CelestialBody {
   constructor(params) {
+    // ID
+    this.id = counter;
+    ++counter;
+
     // Object
     this.size = params.size || defaults.size;
-    this.mesh = createSphere(0xccccee, this.size, params.light, Math.random());
+    this.mesh = createSphere(0xccccee, this.size, params.light, Math.random(), this.id);
     this.clock = new THREE.Clock();
     this.delta = this.clock.getDelta();
 
@@ -74,6 +80,8 @@ class CelestialBody {
 
     // For debugging only
     this.helpIndex = 0;
+
+    this.worldPosition = new THREE.Vector3();
   }
 
   _move(delta) {
@@ -85,16 +93,22 @@ class CelestialBody {
     this.rotationNode.rotation.y -= this.rotSpeed * delta;
   }
 
-  update(lightSource, cameraPosition) {
+  update(lightSource, cameraPosition, system) {
     // TODO: Add distance check. If too far, don't update
     this.delta = this.clock.getDelta();
     this._move(delta);
     this._rotate(delta);
 
+    // World position of the object
+    this.worldPosition = this.mesh.getWorldPosition(this.worldPosition);
+
+    // Update world position texture
+    system.update(this.id, this.worldPosition, this.size);
+
     // Update uniforms
     if (typeof this.mesh.material != 'undefined') {
       // Get the vector from light source to current celestial body
-      var localSrc = new THREE.Vector3().copy(lightSource).sub(this._root.getWorldPosition(new THREE.Vector3()));
+      var localSrc = new THREE.Vector3().copy(lightSource).sub(this.worldPosition);
 
       // Convert the vector from world-space to object-space
       this.mesh.worldToLocal(localSrc);
@@ -108,7 +122,7 @@ class CelestialBody {
 
     // Update recursively
     this.children.forEach((item, index) => {
-      item.update(lightSource, cameraPosition);
+      item.update(lightSource, cameraPosition, system);
     });
   }
 

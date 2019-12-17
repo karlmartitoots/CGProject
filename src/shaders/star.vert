@@ -4,7 +4,7 @@ out vec3 interpolatedPosition; //We interpolate the position
 out vec3 interpolatedNormal;   //We interpolate the normal
 out vec3 interpolatedLocalPosition;
 
-#include <noise>
+#include <noise.comp>
 
 void main() {
   interpolatedLocalPosition = position;

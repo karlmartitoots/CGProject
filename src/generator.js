@@ -7,21 +7,25 @@ class Generator {
     this.rules = {
       // Star
       'S': [
+        //{
+        //  probability: 0.3,
+        //  value: 's[R][R][R][R][R][G][G][R][G][G]'
+        //},
+        //{
+        //  probability: 0.3,
+        //  value: 's[R][R][R][R][G][G][G][G]'
+        //},
+        //{
+        //  probability: 0.3,
+        //  value: 's[R][R][R][R][G][G]'
+        //},
+        //{
+        //  probability: 0.1,
+        //  value: 's[R][R][R][R][G][G][G]'
+        //},
         {
-          probability: 0.3,
-          value: 's[R][R][R][R][R][G][G][R][G][G]'
-        },
-        {
-          probability: 0.3,
-          value: 's[R][R][R][R][G][G][G][G]'
-        },
-        {
-          probability: 0.3,
-          value: 's[R][R][R][R][G][G]'
-        },
-        {
-          probability: 0.1,
-          value: 's[R][R][R][R][G][G][G]'
+          probability: 1.0,
+          value: 's[r[m]]'
         }
       ],
 
@@ -114,7 +118,7 @@ class Generator {
     }
 
     //This outputs the final system:
-    console.log(state);
+    console.log("The celestial system has this tree structure: " + state);
 
     return state;
   }
@@ -200,9 +204,9 @@ class Generator {
       case ('s'):
         current = new CelestialBody({
           size: Math.max(confMap.get("minStarSize"), getGaussianNoise(confMap.get("starSizeMean"), confMap.get("starSizeVariance"))),
-          rotationsPerUnit: 1, 
-          revolutionsPerUnit: getRandomFloatInRange(confMap.get("minRevPerUnit"), confMap.get("maxRevPerUnit")), 
-          tilt: getRandomFloatInRange(confMap.get("minTilt"), confMap.get("maxTilt")), 
+          rotationsPerUnit: 1,
+          revolutionsPerUnit: getRandomFloatInRange(confMap.get("minRevPerUnit"), confMap.get("maxRevPerUnit")),
+          tilt: getRandomFloatInRange(confMap.get("minTilt"), confMap.get("maxTilt")),
           light: true});
 
         if (parents.length > 0)
@@ -212,8 +216,6 @@ class Generator {
 
       case ('r'):
 
-        console.log(distance);
-        console.log(currentDistance);
         current = new CelestialBody({
           orbitRadius: currentDistance,
           startAngle: 2 * Math.PI * Math.random(),
@@ -239,13 +241,11 @@ class Generator {
 
       case ('g'):
 
-        console.log(distance);
-        console.log(currentDistance);
         current = new CelestialBody({
           orbitRadius: currentDistance,
           startAngle: 2 * Math.PI * Math.random(),
           size: Math.max(confMap.get("minPlanetSize"), getGaussianNoise(confMap.get("starSizeMean") / confMap.get("starPlanetSizeRatio"), confMap.get("planetSizeVariance"))),
-          density: 1.0, 
+          density: 1.0,
           rotationsPerUnit: 3,
           revolutionsPerUnit: getRandomFloatInRange(confMap.get("minRevPerUnit"), confMap.get("maxRevPerUnit")),
           tilt: getRandomFloatInRange(confMap.get("minTilt"), confMap.get("maxTilt")),
@@ -266,8 +266,6 @@ class Generator {
 
       case ('m'):
 
-        console.log(distance);
-        console.log(currentDistance);
         current = new CelestialBody({
           orbitRadius: currentDistance,
           startAngle: 2 * Math.PI * Math.random(),
