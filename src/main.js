@@ -41,9 +41,57 @@ function onLoad() {
 
   // Initalize keyboard and mouse controls
   initializeControls(camController);
+  
+  /*
+	TEST SKYBOX
+	###########  
+	
+	1) maybe try with a sphere instead of a box 
+	2) determine points with noise (?)
+	
+  */
+  var skyBox = new THREE.BoxGeometry(10000.0, 10000.0, 10000.0, 120, 120, 120);
+  var skyBoxMaterial = new THREE.MeshBasicMaterial({
+    map: getRandomStarField(8000, 2048 , 2048),
+	side: THREE.BackSide
+  });
+  var sky = new THREE.Mesh(skyBox, skyBoxMaterial);
+  scene.add(sky);
 
   draw();
 }
+
+/*
+	TEST SKYBOX
+	###########  
+  */
+function getRandomStarField(numberOfStars, width, height) {
+    var canvas = document.createElement('CANVAS');
+
+	canvas.width = width;
+	canvas.height = height;
+
+	var ctx = canvas.getContext('2d');
+
+	ctx.fillStyle="black";
+	ctx.fillRect(0, 0, width, height);
+
+	for (var i = 0; i < numberOfStars; ++i) {
+		var radius = Math.random() * 2;
+		var x = Math.floor(Math.random() * width);
+		var y = Math.floor(Math.random() * height);
+
+		ctx.beginPath();
+		ctx.arc(x, y, radius, 0, 2 * Math.PI, false);
+		ctx.fillStyle = 'white';
+		ctx.fill();
+	}
+
+	var texture = new THREE.Texture(canvas);
+	texture.needsUpdate = true;
+	return texture;
+};
+
 
 var counter = 0;
 
