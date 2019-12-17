@@ -21,27 +21,6 @@ in vec3 interpolatedLightPosition;
 
 float shininess = 50.0;
 
-float Lambert( in vec3 l, in vec3 n )
-{
-    float nl = dot(n, l);
-	
-    return max(0.0,nl);
-}
-
-float OrenNayar( in vec3 l, in vec3 n, in vec3 v, float r ){
-	
-    float r2 = r*r;
-    float a = 1.0 - 0.5*(r2/(r2+0.33));
-    float b = 0.45*(r2/(r2+0.09));
-
-    float nl = dot(n, l);
-    float nv = dot(n, v);
-
-    float ga = dot(v-n*nv,n-n*nl);
-
-	return max(0.0,nl) * (a + b*max(0.0,ga) * sqrt((1.0-nv*nv)*(1.0-nl*nl)) / max(nl, nv));
-}
-
 void main() {
   // Calculate f by combining multiple noise layers using different density
   float f = 0.0;
@@ -92,11 +71,7 @@ void main() {
   vec3 glow = max(colora * glowIntensity * glowDirection, vec3(0.0));
 
   // Diffuse lighting
-  float diffuse = OrenNayar( l, n, v, 0.3);
-
-  // Get the light density with inverse square law
-  //float distanceFromLight = sqrt(pow(interpolatedPosition.x, 2.0) + pow(interpolatedPosition.y, 2.0) + pow(interpolatedPosition.z, 2.0));
-  //float luminosity = 350.0 / distanceFromLight;
+  float diffuse = orenNayar(l, n, v, 0.3);
 
   // Luminosity, get from texture
   float luminosity = 0.0;
