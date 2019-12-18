@@ -107,16 +107,6 @@ class CelestialBody {
 
     // Update uniforms
     if (typeof this.mesh.material != 'undefined') {
-      // Get the vector from light source to current celestial body
-      var localSrc = new THREE.Vector3().copy(lightSource).sub(this.worldPosition);
-
-      // Convert the vector from world-space to object-space
-      this.mesh.worldToLocal(localSrc);
-
-      // Cancle the rotation
-      localSrc.applyAxisAngle(new THREE.Vector3(0, 1, 0), this.rotationNode.rotation.y)
-
-      this.mesh.material.uniforms.lightPosition.value = localSrc;
       this.mesh.material.uniforms.viewPosition.value = cameraPosition;
     }
 

@@ -11,10 +11,6 @@ function createSphere(colorCode, radius, lsource, seed, id) {
 
   var material = new THREE.ShaderMaterial({
     uniforms: {
-      lightPosition: {
-        value: new THREE.Vector3(0, 40, 0)
-      },
-
       viewPosition: {
         value: new THREE.Vector3(0, 0, 0)
       },

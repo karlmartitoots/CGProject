@@ -19,7 +19,7 @@ in vec3 interpolatedLightPosition;
 #include <noise.comp>
 #include <lighting.comp>
 
-float shininess = 50.0;
+float shininess = 250.0;
 
 void main() {
   // Calculate f by combining multiple noise layers using different density
@@ -29,6 +29,24 @@ void main() {
   f += 0.3 * noise(17.0 * interpolatedLocalPosition / size, seed);
   f += 0.5 * noise(4.0 * interpolatedLocalPosition / size, seed);
 
+  // Luminosity, get from texture
+  float luminosity = 1.0;
+  vec4 cposr;
+  vec4 lposr = texture2D(locs, vec2(0.5 / float(bodycount), 0.5));
+
+  // Bodies before self
+  int i;
+  for (i = 1; i < id; ++i) {
+    cposr = texture2D(locs, vec2((float(i) + 0.5) / float(bodycount), 0.5));
+    luminosity *= softShadow(lposr.xyz, lposr.w, cposr.xyz, cposr.w, interpolatedPosition);
+  }
+
+  // Bodies after self
+  for (i = id + 1; i < bodycount; ++i) {
+    cposr = texture2D(locs, vec2((float(i) + 0.5) / float(bodycount), 0.5));
+    luminosity *= softShadow(lposr.xyz, lposr.w, cposr.xyz, cposr.w, interpolatedPosition);
+  }
+
   // 1. Find normal
   vec3 n = normalize(interpolatedNormal);
 
@@ -36,11 +54,12 @@ void main() {
   vec3 v = normalize(viewPosition - interpolatedPosition);
 
   // 4. Find the direction towards the light source, normalize.
-  vec3 l = normalize(lightPosition - interpolatedPosition);
+  vec3 l = normalize(lposr.xyz - interpolatedPosition);
 
-  // 4.5 Blinn: Find the half-angle vector h
+  // 5. Blinn: Find the half-angle vector h
   vec3 h = normalize(l + v);
 
+  // Surface colors, specular highlight
   float specular = 0.0;
   vec3 noiseColor;
 
@@ -72,32 +91,6 @@ void main() {
 
   // Diffuse lighting
   float diffuse = orenNayar(l, n, v, 0.3);
-
-  // Luminosity, get from texture
-  float luminosity = 1.0;
-  vec4 cposr;
-  vec4 lposr = texture2D(locs, vec2(0.5 / float(bodycount), 0.5));
-  int i;
-
-  // Bodies before self
-  for (i = 1; i < id; ++i) {
-    cposr = texture2D(locs, vec2((float(i) + 0.5) / float(bodycount), 0.5));
-    luminosity *= softShadow(lposr.xyz, lposr.w, cposr.xyz, cposr.w, interpolatedPosition);
-  }
-
-  // Bodies after self
-  for (i = id + 1; i < bodycount; ++i) {
-    cposr = texture2D(locs, vec2((float(i) + 0.5) / float(bodycount), 0.5));
-    luminosity *= softShadow(lposr.xyz, lposr.w, cposr.xyz, cposr.w, interpolatedPosition);
-  }
-
-#define M_PI 3.1415926535897932384626433832795
-
-  // Inverse square law
-  luminosity /= M_PI * pow(lposr.w, 2.0);
-
-  // Sun is bright
-  luminosity *= 1500.0;
 
   // Put Diffuse, specular and glow light together to get the end result
   vec3 interpolatedColor = luminosity * (noiseColor * diffuse + specular + glow);

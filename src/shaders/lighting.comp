@@ -23,7 +23,10 @@ float orenNayar(in vec3 l, in vec3 n, in vec3 v, float r) {
 
 /**
  * Calculates the percentage of the lighting, when the position and radiai of light and shadow caster is known
- * The value returned is in (0, 1]
+ * The value returned is in (0, 1]. Does not take inverse square law into account. Because of that, this function
+ * can be called multiple times and the results can be multiplied together to get the lighting value with
+ * multiple shadow casters. When all the shadows are multiplied into a product, by dividing the product with the
+ * actual distance squared
  * @param lpos Light position in world coordinates
  * @param lsize Light source radius
  * @parem cpos Shadow caster position in world coordinates
@@ -35,7 +38,6 @@ float softShadow(vec3 lpos, float lsize, vec3 cpos, float csize, vec3 fpos) {
   vec3 l = lpos - fpos;
   vec3 ldir = normalize(l);
   float ldist = length(l);
-  float larea = M_PI * pow(lsize, 2.0);
 
   // Shadow caster
   vec3 c = cpos - fpos;
@@ -93,3 +95,4 @@ float softShadow(vec3 lpos, float lsize, vec3 cpos, float csize, vec3 fpos) {
   return rapp;
 }
 `
+

@@ -203,7 +203,7 @@ class Generator {
       switch (state[i]) {
       case ('s'):
         current = new CelestialBody({
-          size: Math.max(confMap.get("minStarSize"), getGaussianNoise(confMap.get("starSizeMean"), confMap.get("starSizeVariance"))),
+          size: 3 * Math.max(confMap.get("minStarSize"), getGaussianNoise(confMap.get("starSizeMean"), confMap.get("starSizeVariance"))),
           rotationsPerUnit: 1,
           revolutionsPerUnit: getRandomFloatInRange(confMap.get("minRevPerUnit"), confMap.get("maxRevPerUnit")),
           tilt: getRandomFloatInRange(confMap.get("minTilt"), confMap.get("maxTilt")),
