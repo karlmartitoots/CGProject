@@ -7,26 +7,26 @@ class Generator {
     this.rules = {
       // Star
       'S': [
-        //{
-        //  probability: 0.3,
-        //  value: 's[R][R][R][R][R][G][G][R][G][G]'
-        //},
-        //{
-        //  probability: 0.3,
-        //  value: 's[R][R][R][R][G][G][G][G]'
-        //},
-        //{
-        //  probability: 0.3,
-        //  value: 's[R][R][R][R][G][G]'
-        //},
-        //{
-        //  probability: 0.1,
-        //  value: 's[R][R][R][R][G][G][G]'
-        //},
         {
-          probability: 1.0,
-          value: 's[r[m]]'
+          probability: 0.3,
+          value: 's[R][R][R][R][R][G][G][R][G][G]'
+        },
+        {
+          probability: 0.3,
+          value: 's[R][R][R][R][G][G][G][G]'
+        },
+        {
+          probability: 0.3,
+          value: 's[R][R][R][R][G][G]'
+        },
+        {
+          probability: 0.1,
+          value: 's[R][R][R][R][G][G][G]'
         }
+        //{
+        //  probability: 1.0,
+        //  value: 's[r[m]]'
+        //}
       ],
 
       // Planets

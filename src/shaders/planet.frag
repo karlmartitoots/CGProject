@@ -74,7 +74,7 @@ void main() {
   float diffuse = orenNayar(l, n, v, 0.3);
 
   // Luminosity, get from texture
-  float luminosity = 0.0;
+  float luminosity = 1.0;
   vec4 cposr;
   vec4 lposr = texture2D(locs, vec2(0.5 / float(bodycount), 0.5));
   int i;
@@ -82,17 +82,22 @@ void main() {
   // Bodies before self
   for (i = 1; i < id; ++i) {
     cposr = texture2D(locs, vec2((float(i) + 0.5) / float(bodycount), 0.5));
-    luminosity += softShadow(lposr.xyz, lposr.w, cposr.xyz, cposr.w, interpolatedPosition);
+    luminosity *= softShadow(lposr.xyz, lposr.w, cposr.xyz, cposr.w, interpolatedPosition);
   }
 
   // Bodies after self
   for (i = id + 1; i < bodycount; ++i) {
     cposr = texture2D(locs, vec2((float(i) + 0.5) / float(bodycount), 0.5));
-    luminosity += softShadow(lposr.xyz, lposr.w, cposr.xyz, cposr.w, interpolatedPosition);
+    luminosity *= softShadow(lposr.xyz, lposr.w, cposr.xyz, cposr.w, interpolatedPosition);
   }
 
+#define M_PI 3.1415926535897932384626433832795
+
+  // Inverse square law
+  luminosity /= M_PI * pow(lposr.w, 2.0);
+
   // Sun is bright
-  luminosity *= 20000.0;
+  luminosity *= 1500.0;
 
   // Put Diffuse, specular and glow light together to get the end result
   vec3 interpolatedColor = luminosity * (noiseColor * diffuse + specular + glow);

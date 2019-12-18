@@ -65,8 +65,8 @@ function draw() {
   //system.locTexture.dispose();
   system.locTexture.needsUpdate = true;
 
-  if (c == 0)
-    console.log(system.locations);
+  //if (c == 0)
+  //  console.log(system.locations);
 
   c = ++c % 60;
 
