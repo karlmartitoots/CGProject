@@ -6,12 +6,14 @@ const defaults = {
   startAngle : 0,
   revolutionsPerUnit : 0,
   size : 3,
+  density : 1.0,
   ellipticalOrbit : false,
   orbitTiltX : 0,
   orbitTiltZ : 0,
   ellipseX: 1,
   ellipseZ: 1,
-  ellipseFocusDir: Math.random() < 0.5 ? -1 : 1 // 1 or -1
+  ellipseFocusDir: Math.random() < 0.5 ? -1 : 1, // 1 or -1
+  planetType: "terra",
 }
 
 var counter = 0;
@@ -24,7 +26,11 @@ class CelestialBody {
 
     // Object
     this.size = params.size || defaults.size;
-    this.mesh = createSphere(0xccccee, this.size, params.light, Math.random(), this.id);
+    this.density = params.density || defaults.density;
+    this.mass = 4 * Math.PI * Math.pow(this.size, 3) * this.density;
+    this.planetType = params.planetType ||defaults.planetType;
+    this.mesh = createSphere(0xccccee, this.size, params.light, Math.random(), this.id, params.planetType);
+    
     this.clock = new THREE.Clock();
     this.delta = this.clock.getDelta();
 

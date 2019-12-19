@@ -1,9 +1,16 @@
-function createSphere(colorCode, radius, lsource, seed, id) {
+function createSphere(colorCode, radius, lsource, seed, id, planetType = 'terra') {
   var geometry = new THREE.SphereBufferGeometry(radius, 50, 50);
   var color = new THREE.Color(colorCode);
 
   var colorWater = new THREE.Color(0x00aeef);
+  var colorDeepWater = new THREE.Color(0x383c80);
   var colorAtmosphere = new THREE.Color(0x66d5ed);
+  var colorDeepLava = new THREE.Color(0xfcdb1e);
+  var colorLava = new THREE.Color(0xff8921);
+  var colorBurnedGround = new THREE.Color(0x6e3d13);
+  var colorAsh = new THREE.Color(0x3d240e);
+  var colorGrey = new THREE.Color(0x81858c);
+  var colorDarkGrey = new THREE.Color(0x403e3d);
   var color1 = new THREE.Color(0x197b30);
   var color2 = new THREE.Color(0x005826);
   //var color3 = new THREE.Color(0x4e3f32);
@@ -31,6 +38,10 @@ function createSphere(colorCode, radius, lsource, seed, id) {
         value: colorWater
       },
 
+      colordw: {
+        value: colorDeepWater
+      },
+
       seed: {
         value: seed
       },
@@ -49,8 +60,100 @@ function createSphere(colorCode, radius, lsource, seed, id) {
     },
 
     vertexShader: lsource ? cbStarVert : cbPlanetVert,
-    fragmentShader: lsource ? cbStarFrag : cbPlanetFrag
+    fragmentShader: lsource ? cbStarFrag : terraPlanetFrag
   });
+
+  var lavaplanetMaterial = new THREE.ShaderMaterial({
+    uniforms: {
+      viewPosition: {
+        value: new THREE.Vector3(0, 0, 0)
+      },
+
+      size: {
+        value: radius
+      },
+
+      color: {
+        value: [colorBurnedGround, colorAsh, colorAsh]
+      },
+
+      colora: {
+        value: colorAtmosphere
+      },
+
+      colorw: {
+        value: colorLava
+      },
+
+      colordw: {
+        value: colorDeepLava
+      },
+
+      seed: {
+        value: seed
+      },
+
+      locs: {
+        value: null
+      },
+
+      bodycount: {
+        value: 0
+      },
+
+      id: {
+        value: id
+      }
+    },
+
+    vertexShader: cbPlanetVert,
+    fragmentShader: lavaPlanetFrag
+  });
+
+  var moonMaterial = new THREE.ShaderMaterial({
+    uniforms: {
+      viewPosition: {
+        value: new THREE.Vector3(0, 0, 0)
+      },
+
+      size: {
+        value: radius
+      },
+
+      colorgrey: {
+        value: colorGrey
+      },
+
+      colordarkgrey: {
+        value: colorDarkGrey
+      },
+
+      seed: {
+        value: seed
+      },
+
+      locs: {
+        value: null
+      },
+
+      bodycount: {
+        value: 0
+      },
+
+      id: {
+        value: id
+      }
+    },
+
+    vertexShader: cbPlanetVert,
+    fragmentShader: moonFrag
+  });
+
+  if(planetType == 'lava'){
+    material = lavaplanetMaterial;
+  } else if(planetType == 'moon'){
+    material = moonMaterial;
+  }
 
   // Noise generation shader
   material.onBeforeCompile = shader => {
