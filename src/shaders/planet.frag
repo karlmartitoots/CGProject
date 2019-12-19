@@ -68,37 +68,27 @@ void main() {
   // Surface colors, specular highlight
   float specular = 0.0;
   vec3 noiseColor;
+  vec3 lavaglow = vec3(0.0);
 
-  if (f > 0.2)
+  if (f > 0.2){
     noiseColor = color[2];//mix(color[2], color[1], min(1.0, (f - 0.5)) );
 
-  else if (f > 0.05)
-    noiseColor = color[1];//mix(color[0], color[1], (f - 0.05) / 0.15 );
+  } else if (f > -0.2)
+    noiseColor = mix(color[0], color[1], (f + 0.2) / 0.4 );
 
   else if (f > -0.3)
-    noiseColor = mix(colorw, color[0], (f + 0.3) / 0.35 );
+    noiseColor = mix(colorw, color[0], (f + 0.3) / 0.1 );
 
   else {
     noiseColor = mix(colorw, colordw, min(1.0, -(f + 0.3)) );
+    lavaglow = color[2];
   }
-
-  // Atmosphere glow
-  // Get dot profuct between planet surface normal and vector to viewer
-  // Then power it with a number to get it closer to the edge
-  float glowIntensity = pow(1.0 - abs(dot(v, n)), 4.0);
-
-  // Only show glow where the light is
-  float glowDirection = dot(n, l);
-
-  // Calculate the glow
-  // Have to make sure that the glow is non-negative
-  vec3 glow = max(colora * glowIntensity * glowDirection, vec3(0.0));
 
   // Diffuse lighting
   float diffuse = orenNayar(l, n, v, 0.3);
 
   // Put Diffuse, specular and glow light together to get the end result
-  vec3 interpolatedColor = luminosity * (noiseColor * diffuse + glow);
+  vec3 interpolatedColor = luminosity * (noiseColor * diffuse) + lavaglow;
 
   gl_FragColor = vec4(interpolatedColor, 1.0);
 }
