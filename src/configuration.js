@@ -29,8 +29,7 @@ defaultConf.set("starPlanetSizeRatio", 5.0);
 defaultConf.set("moonDensityMean", 3.0); // integer from 0 to undetermined
 defaultConf.set("moonDensityVariance", 1.0); // integer from 0 to undetermined
 defaultConf.set("minMoonDensity", 1.0);
-defaultConf.set("minPlanetMoonSizeRatio", 1.0);
-defaultConf.set("maxPlanetMoonSizeRatio", 100.0);
+defaultConf.set("planetMoonSizeRatio", 4.0);
 defaultConf.set("moonSizeVariance", 1.0);
 defaultConf.set("minMoonSize", 1.0);
 defaultConf.set("minMoonAmount", 0); // less or equal to maxMoonAmount
@@ -41,7 +40,7 @@ defaultConf.set("minMoonTilt", 0.0);
 defaultConf.set("maxMoonTilt", Math.PI / 180 * 45);
 
 // orbit settings
-defaultConf.set("visibleOrbits", true); // true or false
+defaultConf.set("visibleOrbit", false); // true or false
 defaultConf.set("ellipticalOrbit", false);
 defaultConf.set("minOrbitTiltX", 0);
 defaultConf.set("maxOrbitTiltX", 0);

@@ -1,6 +1,7 @@
 const defaults = {
   orbit : null,
   orbitRadius : 0,
+  visibleOrbit: false,
   tilt : 0,
   rotationsPerUnit : 0,
   startAngle : 0,
@@ -77,7 +78,10 @@ class CelestialBody {
 
     // Orbit line
     this.orbitLine = this.orbit.line;
-    this.orbitTilt.add(this.orbitLine);
+    
+    // Show orbit line if configured
+    if (params.visibleOrbit || defaults.visibleOrbit)
+      this.orbitTilt.add(this.orbitLine);
 
     // Attached camera, set to zero for now
     // TODO: Make width and height configurable somehow

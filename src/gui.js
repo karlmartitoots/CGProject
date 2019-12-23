@@ -36,7 +36,7 @@ function setupGui(generator) {
 
   var orbitsConfFolder = gui.addFolder('Orbits Configuration');
   orbitsConfFolder.add(guiObj, 'minDistanceBetweenPlanetOrbits', 10, 100);
-  orbitsConfFolder.add(guiObj, 'visibleOrbits');
+  orbitsConfFolder.add(guiObj, 'visibleOrbit');
   orbitsConfFolder.add(guiObj, 'ellipticalOrbit');
   orbitsConfFolder.add(guiObj, 'minOrbitTiltX', - Math.PI / 2, Math.PI / 2);
   orbitsConfFolder.add(guiObj, 'maxOrbitTiltX', - Math.PI / 2, Math.PI / 2);
@@ -75,7 +75,7 @@ function createGuiObject(generator) {
     maxMoonRevPerUnit: 2,
     minMoonTilt: 0.0,
     maxMoonTilt: Math.PI / 4,
-    visibleOrbits: true,
+    visibleOrbit: true,
     ellipticalOrbit: true,
     minDistanceBetweenPlanetOrbits: 30,
     minOrbitTiltX: - Math.PI / 20,

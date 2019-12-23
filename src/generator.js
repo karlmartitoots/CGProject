@@ -236,7 +236,8 @@ class Generator {
           orbitTiltZ: getRandomFloatInRange(confMap.get("minOrbitTiltZ"), confMap.get("minOrbitTiltZ")),
           ellipseX: getGaussianNoise(1, 0.01), // mean 1, variance 0.01
           ellipseZ: getGaussianNoise(1, 0.01),
-          orbitYaw: Math.random()
+          orbitYaw: Math.random(),
+          visibleOrbit: confMap.get("visibleOrbit")
         });
 
         if (parents.length > 0)
@@ -262,7 +263,8 @@ class Generator {
           ellipseX: getGaussianNoise(1, 0.01), // mean 1, variance 0.01
           ellipseZ: getGaussianNoise(1, 0.01),
           orbitYaw: Math.random(),
-          planetType: "lava"
+          planetType: "lava",
+          visibleOrbit: confMap.get("visibleOrbit")
         });
 
         if (parents.length > 0)
@@ -287,7 +289,8 @@ class Generator {
           orbitTiltZ: getRandomFloatInRange(confMap.get("minOrbitTiltZ"), confMap.get("minOrbitTiltZ")),
           ellipseX: getGaussianNoise(1, 0.01), // mean 1, variance 0.01
           ellipseZ: getGaussianNoise(1, 0.01),
-          orbitYaw: Math.random()
+          orbitYaw: Math.random(),
+          visibleOrbit: confMap.get("visibleOrbit")
         });
 
         if (parents.length > 0)
@@ -313,7 +316,8 @@ class Generator {
           ellipseX: getGaussianNoise(1, 0.01), // mean 1, variance 0.01
           ellipseZ: getGaussianNoise(1, 0.01),
           orbitYaw: Math.random(),
-          planetType: "moon"
+          planetType: "moon",
+          visibleOrbit: confMap.get("visibleOrbit")
         });
 
         if (parents.length > 0)
