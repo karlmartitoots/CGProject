@@ -194,7 +194,6 @@ class Generator {
       resultStr += splitStr[i];
     }
 
-    //Return the "resultStr", when you are done.
     return resultStr;
   }
 
@@ -210,12 +209,7 @@ class Generator {
     for (var i = 0; i < state.length; i++) {
       switch (state[i]) {
       case ('s'):
-        current = new CelestialBody({
-          size: Math.max(confMap.get("minStarSize"), getGaussianNoise(confMap.get("starSizeMean"), confMap.get("starSizeVariance"))),
-          rotationsPerUnit: 1, 
-          revolutionsPerUnit: getRandomFloatInRange(confMap.get("minRevPerUnit"), confMap.get("maxRevPerUnit")), 
-          tilt: getRandomFloatInRange(confMap.get("minTilt"), confMap.get("maxTilt")), 
-          light: true});
+        current = new Star(this.confMap);
 
         if (parents.length > 0)
           parents[parents.length - 1].add(current);
@@ -224,21 +218,7 @@ class Generator {
 
       case ('r'):
 
-        current = new CelestialBody({
-          orbitRadius: currentDistance,
-          startAngle: 2 * Math.PI * Math.random(),
-          size: Math.max(confMap.get("minPlanetSize"), getGaussianNoise(confMap.get("starSizeMean") / confMap.get("starPlanetSizeRatio"), confMap.get("planetSizeVariance"))),
-          density: 4.0,
-          rotationsPerUnit: 3,
-          revolutionsPerUnit: getRandomFloatInRange(confMap.get("minRevPerUnit"), confMap.get("maxRevPerUnit")),
-          tilt: getRandomFloatInRange(confMap.get("minTilt"), confMap.get("maxTilt")),
-          orbitTiltX: getRandomFloatInRange(confMap.get("minOrbitTiltX"), confMap.get("maxOrbitTiltX")),
-          orbitTiltZ: getRandomFloatInRange(confMap.get("minOrbitTiltZ"), confMap.get("minOrbitTiltZ")),
-          ellipseX: getGaussianNoise(1, 0.01), // mean 1, variance 0.01
-          ellipseZ: getGaussianNoise(1, 0.01),
-          orbitYaw: Math.random(),
-          visibleOrbit: confMap.get("visibleOrbit")
-        });
+        current = new TerraPlanet(this.confMap, currentDistance);
 
         if (parents.length > 0)
           parents[parents.length - 1].add(current);
@@ -250,22 +230,7 @@ class Generator {
 
       case ('l'):
 
-        current = new CelestialBody({
-          orbitRadius: currentDistance,
-          startAngle: 2 * Math.PI * Math.random(),
-          size: Math.max(confMap.get("minPlanetSize"), getGaussianNoise(confMap.get("starSizeMean") / confMap.get("starPlanetSizeRatio"), confMap.get("planetSizeVariance"))),
-          density: 4.0,
-          rotationsPerUnit: 3,
-          revolutionsPerUnit: getRandomFloatInRange(confMap.get("minRevPerUnit"), confMap.get("maxRevPerUnit")),
-          tilt: getRandomFloatInRange(confMap.get("minTilt"), confMap.get("maxTilt")),
-          orbitTiltX: getRandomFloatInRange(confMap.get("minOrbitTiltX"), confMap.get("maxOrbitTiltX")),
-          orbitTiltZ: getRandomFloatInRange(confMap.get("minOrbitTiltZ"), confMap.get("minOrbitTiltZ")),
-          ellipseX: getGaussianNoise(1, 0.01), // mean 1, variance 0.01
-          ellipseZ: getGaussianNoise(1, 0.01),
-          orbitYaw: Math.random(),
-          planetType: "lava",
-          visibleOrbit: confMap.get("visibleOrbit")
-        });
+        current = new LavaPlanet(this.confMap, currentDistance);
 
         if (parents.length > 0)
           parents[parents.length - 1].add(current);
@@ -277,21 +242,7 @@ class Generator {
 
       case ('g'):
 
-        current = new CelestialBody({
-          orbitRadius: currentDistance,
-          startAngle: 2 * Math.PI * Math.random(),
-          size: Math.max(confMap.get("minPlanetSize"), getGaussianNoise(confMap.get("starSizeMean") / confMap.get("starPlanetSizeRatio"), confMap.get("planetSizeVariance"))),
-          density: 1.0, 
-          rotationsPerUnit: 3,
-          revolutionsPerUnit: getRandomFloatInRange(confMap.get("minRevPerUnit"), confMap.get("maxRevPerUnit")),
-          tilt: getRandomFloatInRange(confMap.get("minTilt"), confMap.get("maxTilt")),
-          orbitTiltX: getRandomFloatInRange(confMap.get("minOrbitTiltX"), confMap.get("maxOrbitTiltX")),
-          orbitTiltZ: getRandomFloatInRange(confMap.get("minOrbitTiltZ"), confMap.get("minOrbitTiltZ")),
-          ellipseX: getGaussianNoise(1, 0.01), // mean 1, variance 0.01
-          ellipseZ: getGaussianNoise(1, 0.01),
-          orbitYaw: Math.random(),
-          visibleOrbit: confMap.get("visibleOrbit")
-        });
+        current = new TerraPlanet(this.confMap, currentDistance);
 
         if (parents.length > 0)
           parents[parents.length - 1].add(current);
@@ -303,22 +254,7 @@ class Generator {
 
       case ('m'):
 
-        current = new CelestialBody({
-          orbitRadius: currentDistance,
-          startAngle: 2 * Math.PI * Math.random(),
-          size: Math.max(confMap.get("minMoonSize"), getGaussianNoise(confMap.get("starSizeMean") / confMap.get("starPlanetSizeRatio") / confMap.get("planetMoonSizeRatio"), confMap.get("moonSizeVariance"))),
-          density: 4.0,
-          rotationsPerUnit: 3,
-          revolutionsPerUnit: getRandomFloatInRange(confMap.get("minRevPerUnit"), confMap.get("maxRevPerUnit")),
-          tilt: getRandomFloatInRange(confMap.get("minTilt"), confMap.get("maxTilt")),
-          orbitTiltX: getRandomFloatInRange(confMap.get("minOrbitTiltX"), confMap.get("maxOrbitTiltX")),
-          orbitTiltZ: getRandomFloatInRange(confMap.get("minOrbitTiltZ"), confMap.get("minOrbitTiltZ")),
-          ellipseX: getGaussianNoise(1, 0.01), // mean 1, variance 0.01
-          ellipseZ: getGaussianNoise(1, 0.01),
-          orbitYaw: Math.random(),
-          planetType: "moon",
-          visibleOrbit: confMap.get("visibleOrbit")
-        });
+        current = new Moon(this.confMap, currentDistance);
 
         if (parents.length > 0)
           parents[parents.length - 1].add(current);

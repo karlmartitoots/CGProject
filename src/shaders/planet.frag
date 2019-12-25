@@ -1,8 +1,8 @@
 lavaPlanetFrag = `
-uniform vec3 color[3];
-uniform vec3 colora;
-uniform vec3 colorw;
-uniform vec3 colordw;
+uniform vec3 colorLava;
+uniform vec3 colorDeepLava;
+uniform vec3 colorBurnedGround;
+uniform vec3 colorAsh;
 uniform float seed;
 uniform int bodycount;
 uniform int id;
@@ -71,17 +71,17 @@ void main() {
   vec3 lavaglow = vec3(0.0);
 
   if (f > 0.2){
-    noiseColor = color[2];//mix(color[2], color[1], min(1.0, (f - 0.5)) );
+    noiseColor = colorAsh;//mix(color[2], color[1], min(1.0, (f - 0.5)) );
 
   } else if (f > -0.2)
-    noiseColor = mix(color[0], color[1], (f + 0.2) / 0.4 );
+    noiseColor = mix(colorBurnedGround, colorAsh, (f + 0.2) / 0.4 );
 
   else if (f > -0.3)
-    noiseColor = mix(colorw, color[0], (f + 0.3) / 0.1 );
+    noiseColor = mix(colorLava, colorBurnedGround, (f + 0.3) / 0.1 );
 
   else {
-    noiseColor = mix(colorw, colordw, min(1.0, -(f + 0.3)) );
-    lavaglow = color[2];
+    noiseColor = mix(colorLava, colorDeepLava, min(1.0, -(f + 0.3)) );
+    lavaglow = colorDeepLava;
   }
 
   // Diffuse lighting
@@ -96,9 +96,9 @@ void main() {
 
 terraPlanetFrag = `
 uniform vec3 color[3];
-uniform vec3 colora;
-uniform vec3 colorw;
-uniform vec3 colordw;
+uniform vec3 colorAtm;
+uniform vec3 colorWater;
+uniform vec3 colorDeepWater;
 uniform float seed;
 uniform int bodycount;
 uniform int id;
@@ -168,10 +168,10 @@ void main() {
     noiseColor = mix(color[0], color[1], (f - 0.1) / 0.4 );
 
   else if (f > 0.0)
-    noiseColor = mix(colorw, color[0], f / 0.1 );
+    noiseColor = mix(colorWater, color[0], f / 0.1 );
 
   else {
-    noiseColor = mix(colorw, colordw, min(1.0, -f) );
+    noiseColor = mix(colorWater, colorDeepWater, min(1.0, -f) );
     specular = pow(max(0.0, dot(n, h)), 3.0 * shininess);
   }
 
@@ -185,7 +185,7 @@ void main() {
 
   // Calculate the glow
   // Have to make sure that the glow is non-negative
-  vec3 glow = max(colora * glowIntensity * glowDirection, vec3(0.0));
+  vec3 glow = max(colorAtm * glowIntensity * glowDirection, vec3(0.0));
 
   // Diffuse lighting
   float diffuse = orenNayar(l, n, v, 0.3);
@@ -199,8 +199,8 @@ void main() {
 
 moonFrag = `
 uniform float size;
-uniform vec3 colorgrey;
-uniform vec3 colordarkgrey;
+uniform vec3 colorGrey;
+uniform vec3 colorDarkGrey;
 uniform vec3 lightPosition;
 uniform float seed;
 in vec3 interpolatedLocalPosition;
@@ -237,13 +237,13 @@ void main() {
   float specular = 0.0;
   vec3 noiseColor;
   if (f > 1.0)
-    noiseColor = colorgrey;
+    noiseColor = colorGrey;
 
   else if (f > 0.1)
-    noiseColor = mix(colordarkgrey, colorgrey, f / 0.5 );
+    noiseColor = mix(colorDarkGrey, colorGrey, f / 0.5 );
 
   else {
-    noiseColor = colordarkgrey;
+    noiseColor = colorDarkGrey;
   }
 
   vec3 interpolatedColor = noiseColor * max(0.0, orenNayar(l, n, v, 1.0));

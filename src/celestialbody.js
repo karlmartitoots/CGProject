@@ -30,7 +30,6 @@ class CelestialBody {
     this.density = params.density || defaults.density;
     this.mass = 4 * Math.PI * Math.pow(this.size, 3) * this.density;
     this.planetType = params.planetType ||defaults.planetType;
-    this.mesh = createSphere(0xccccee, this.size, params.light, Math.random(), this.id, params.planetType);
     
     this.clock = new THREE.Clock();
     this.delta = this.clock.getDelta();
@@ -56,7 +55,6 @@ class CelestialBody {
 
     // Rotation node
     this.rotationNode = new THREE.Object3D();
-    this.rotationNode.add(this.mesh);
     this.tiltNode.add(this.rotationNode);
 
     // Body temporal attributes

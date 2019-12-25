@@ -38,6 +38,8 @@ function onLoad() {
 
   scene.add(core.root);
 
+  console.log(core);
+
   // System controller. Is for shadows
   system = new System(core);
 
