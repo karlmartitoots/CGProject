@@ -10,7 +10,7 @@ const controltype = {
 };
 
 class Camera {
-  constructor(width, height, type = camtype.MAIN, control = controltype.FLY, target) {
+  constructor(width, height, type = camtype.MAIN, control = controltype.FLY, size = 10) {
     // Initialize variables
     this.width = width;
     this.height = height;
@@ -41,7 +41,7 @@ class Camera {
         controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
         controls.dampingFactor = 0.05;
         controls.screenSpacePanning = false;
-        controls.minDistance = 10;
+        controls.minDistance = size * 2;
         controls.maxDistance = 300;
         controls.enabled = false;
 

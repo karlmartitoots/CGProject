@@ -2,12 +2,14 @@ noiseComp = `
 float F = 1.0 / 3.0;
 float G = 1.0 / 6.0;
 
+// Source: https://www.shadertoy.com/view/Xsl3Dl
+// Has been modified for our needs
 vec3 hash(ivec3 internal, ivec3 s, float seed) {
   vec3 p = vec3(internal) + vec3(s);
   p = vec3(
-    dot(p, vec3(127.1,311.7, 74.7)),
-    dot(p, vec3(269.5,163.3,226.1)),
-    dot(p, vec3(114.5,271.9,124.6))
+    dot(p, vec3(127.1, 311.7, 74.7)),
+    dot(p, vec3(269.5, 163.3, 226.1)),
+    dot(p, vec3(113.5, 271.9, 124.6))
   );
 
   return normalize(-1.0 + 2.0 * fract(sin(p) * 43758.5453123 + seed));

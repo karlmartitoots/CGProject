@@ -56,13 +56,13 @@ void main() {
     noiseColor = colorAsh;//mix(color[2], color[1], min(1.0, (f - 0.5)) );
 
   } else if (f > -0.2)
-    noiseColor = mix(colorBurnedGround, colorAsh, (f + 0.2) / 0.4 );
+    noiseColor = mix(colorBurnedGround, colorAsh, (f + 0.2) / 0.4);
 
   else if (f > -0.3)
-    noiseColor = mix(colorLava, colorBurnedGround, (f + 0.3) / 0.1 );
+    noiseColor = mix(colorLava, colorBurnedGround, (f + 0.3) / 0.1);
 
   else {
-    noiseColor = mix(colorLava, colorDeepLava, min(1.0, -(f + 0.3)) );
+    noiseColor = mix(colorLava, colorDeepLava, min(1.0, -(f + 0.3)));
     lavaglow = colorDeepLava;
   }
 
