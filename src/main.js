@@ -38,12 +38,7 @@ function onLoad() {
 
   scene.add(core.root);
 
-  var skyBox = new THREE.BoxGeometry(12000, 12000, 12000);
-  var skyBoxMaterial = new THREE.MeshBasicMaterial({
-      map: getRandomStarField(600, 2048, 2048),
-    side: THREE.BackSide
-  });
-  var sky = new THREE.Mesh(skyBox, skyBoxMaterial);
+  var sky = createSky();
   scene.add(sky);
 
   // System controller. Is for shadows
@@ -59,6 +54,16 @@ function onLoad() {
 }
 
 var c = 0;
+
+function createSky() {
+  var skyBox = new THREE.BoxGeometry(12000, 12000, 12000);
+  var skyBoxMaterial = new THREE.MeshBasicMaterial({
+    map: getRandomStarField(600, 2048, 2048),
+    side: THREE.BackSide
+  });
+  var sky = new THREE.Mesh(skyBox, skyBoxMaterial);
+  return sky;
+}
 
 function draw() {
   requestAnimationFrame(draw);
@@ -84,7 +89,7 @@ function getRandomStarField(numberOfStars, width, height) {
 
   var ctx = canvas.getContext('2d');
 
-  ctx.fillStyle="black";
+  ctx.fillStyle = "black";
   ctx.fillRect(0, 0, width, height);
 
   for (var i = 0; i < numberOfStars; ++i) {
