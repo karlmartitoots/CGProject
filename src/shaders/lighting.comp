@@ -94,5 +94,25 @@ float softShadow(vec3 lpos, float lsize, vec3 cpos, float csize, vec3 fpos) {
 
   return rapp;
 }
-`
 
+float luminosity(sampler2D locations, int ideentity, int total, vec3 fragPosition, vec4 lposr) {
+  // Luminosity, get from texture
+  float lum = 1.0;
+  vec4 cposr;
+
+  // Bodies before self
+  int i;
+  for (i = 1; i < ideentity; ++i) {
+    cposr = texture2D(locations, vec2((float(i) + 0.5) / float(total), 0.5));
+    lum *= softShadow(lposr.xyz, lposr.w, cposr.xyz, cposr.w, fragPosition);
+  }
+
+  // Bodies after self
+  for (i = ideentity + 1; i < total; ++i) {
+    cposr = texture2D(locations, vec2((float(i) + 0.5) / float(total), 0.5));
+    lum *= softShadow(lposr.xyz, lposr.w, cposr.xyz, cposr.w, fragPosition);
+  }
+
+  return lum;
+}
+`

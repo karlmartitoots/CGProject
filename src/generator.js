@@ -146,12 +146,6 @@ class Generator {
         //Currently we just assign the first matching rule's value (right side).
         value = this.rules[state[i]][0].value;
 
-        /**
-         * You should pick one of the matching rule's right sides and assign it using the probability.
-         * Math.random() gives a random number from [0, 1) range.
-         * You might need to also account for floating point precision (eg, if the rule probabilities are 0.33, 0.33, 0.33 and you roll a 0.991).
-         */
-
         probability = Math.random();
         runningProbability = 0;
         for (var rule of this.rules[state[i]]) {

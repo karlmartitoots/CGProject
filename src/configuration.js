@@ -17,7 +17,7 @@ defaultConf.set("minStarSize", 5);
 // planet settings
 defaultConf.set("planetDensityMean", 3.0); // integer from 0 to undetermined
 defaultConf.set("planetDensityVariance", 1.0); // integer from 0 to undetermined
-defaultConf.set("minPlanetDensity", 0.5); 
+defaultConf.set("minPlanetDensity", 0.5);
 defaultConf.set("minPlanetAmount", 10); // integer from 0 to undetermined
 defaultConf.set("maxPlanetAmount", 10); // integer from 0 to undetermined
 defaultConf.set("planetSizeVariance", 0.5); // determines how much planet size varies according to gamma distribution
@@ -62,9 +62,9 @@ class Conf {
         else
             console.log("No conf.");
 
-        var nonNegatives = ["minTilt", "maxTilt", 
-        "starAmount", "starSizeMean", "starSizeVariance", "minStarSize", 
-        "minPlanetDensity", "planetDensityMean", "planetDensityVariance", "minPlanetAmount", "minPlanetSize", "planetSizeVariance", "minDistanceBetweenPlanetOrbits", "starPlanetSizeRatio", 
+        var nonNegatives = ["minTilt", "maxTilt",
+        "starAmount", "starSizeMean", "starSizeVariance", "minStarSize",
+        "minPlanetDensity", "planetDensityMean", "planetDensityVariance", "minPlanetAmount", "minPlanetSize", "planetSizeVariance", "minDistanceBetweenPlanetOrbits", "starPlanetSizeRatio",
         "minMoonAmount", "minMoonSize", "moonDensityMean", "moonDensityVariance", "minMoonDensity", "planetMoonSizeRatio", "moonSizeVariance",
         "minEllipseX", "maxEllipseX", "minEllipseZ", "maxEllipseZ", "orbitYaw"];
         var minMaxs = [["minMoonAmount", "maxMoonAmount"], ["minTilt", "maxTilt"],
@@ -81,7 +81,7 @@ class Conf {
     setConf(p){
         for (var [key, value] of p.entries()) {
             if(defaultConf.has(key) && (typeof defaultConf.get(key)) == (typeof value)) this.confMap.set(key, value);
-            else console.log("Tryin to set unknown parameter in Conf: ", key);
+            else console.log("Trying to set unknown parameter in Conf: ", key);
         }
     }
 

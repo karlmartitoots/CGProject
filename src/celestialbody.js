@@ -30,7 +30,7 @@ class CelestialBody {
     this.density = params.density || defaults.density;
     this.mass = 4 * Math.PI * Math.pow(this.size, 3) * this.density;
     this.planetType = params.planetType ||defaults.planetType;
-    
+
     this.clock = new THREE.Clock();
     this.delta = this.clock.getDelta();
 
@@ -76,7 +76,7 @@ class CelestialBody {
 
     // Orbit line
     this.orbitLine = this.orbit.line;
-    
+
     // Show orbit line if configured
     if (params.visibleOrbit || defaults.visibleOrbit)
       this.orbitTilt.add(this.orbitLine);
@@ -131,5 +131,9 @@ class CelestialBody {
 
   get root() {
     return this._center;
+  }
+
+  reset() {
+    counter = 0;
   }
 }

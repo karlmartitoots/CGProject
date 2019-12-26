@@ -88,20 +88,27 @@ function createGuiObject(generator) {
     maxEllipseZ: 1.1,
     orbitYaw: 0.5,
     Generate: function () {
+      core.reset();
+
       scene.remove(core.root);
       setCustomConf(this);
       core = generator.generate(this.seed);
       scene.add(core.root);
+
+      // System controller. Is for shadows
+      system.setCore(core);
     }
   };
 }
 
 function setCustomConf(guiObject) {
   var customConf = new Map();
-  for( prop in guiObject ){
-    if(prop == 'seed' || prop == 'Generate') continue;
+  for(prop in guiObject) {
+    if(prop == 'seed' || prop == 'Generate')
+      continue;
+
     customConf.set(prop, guiObject[prop]);
   }
+
   confMap = new Conf(customConf).confMap;
 }
-

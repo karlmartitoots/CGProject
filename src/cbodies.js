@@ -15,7 +15,7 @@ class TerraPlanet extends CelestialBody {
             orbitYaw: Math.random(),
             visibleOrbit: confMap.get("visibleOrbit")
           });
-  
+
         var color1 = new THREE.Color(0x197b30);
         var color2 = new THREE.Color(0x005826);
         //var color3 = new THREE.Color(0x4e3f32);
@@ -26,9 +26,11 @@ class TerraPlanet extends CelestialBody {
                 viewPosition: {
                     value: new THREE.Vector3(0, 0, 0)
                 },
+
                 locs: {
                     value: null
                 },
+
                 bodycount: {
                     value: 0
                 },
@@ -36,28 +38,32 @@ class TerraPlanet extends CelestialBody {
                 size: {
                     value: this.size
                 },
-            
+
                 seed: {
                     value: Math.random()
                 },
-        
+
                 id: {
                     value: this.id
                 },
-                
+
                 colorAtm: {
                     value: new THREE.Color(0x66d5ed)
                 },
+
                 colorWater: {
                     value: new THREE.Color(0x00aeef)
                 },
+
                 colorDeepWater: {
                     value: new THREE.Color(0x383c80)
                 },
+
                 color: {
                     value: [color1, color2, color3]
                 }
             },
+
             fragmentShader: terraPlanetFrag,
             vertexShader: cbPlanetVert
         });
@@ -91,9 +97,11 @@ class LavaPlanet extends CelestialBody {
                 viewPosition: {
                     value: new THREE.Vector3(0, 0, 0)
                 },
+
                 locs: {
                     value: null
                 },
+
                 bodycount: {
                     value: 0
                 },
@@ -101,28 +109,32 @@ class LavaPlanet extends CelestialBody {
                 size: {
                     value: this.size
                 },
-            
+
                 seed: {
                     value: Math.random()
                 },
-        
+
                 id: {
                     value: this.id
                 },
-                
+
                 colorDeepLava: {
                     value: new THREE.Color(0xfcdb1e)
                 },
+
                 colorLava: {
                     value: new THREE.Color(0xff8921)
                 },
+
                 colorBurnedGround: {
                     value: new THREE.Color(0x6e3d13)
                 },
+
                 colorAsh: {
                     value: new THREE.Color(0x3d240e)
                 }
             },
+
             fragmentShader: lavaPlanetFrag,
             vertexShader: cbPlanetVert
         });
@@ -156,9 +168,11 @@ class Moon extends CelestialBody {
                 viewPosition: {
                     value: new THREE.Vector3(0, 0, 0)
                 },
+
                 locs: {
                     value: null
                 },
+
                 bodycount: {
                     value: 0
                 },
@@ -166,28 +180,32 @@ class Moon extends CelestialBody {
                 size: {
                     value: this.size
                 },
-            
+
                 seed: {
                     value: Math.random()
                 },
-        
+
                 id: {
                     value: this.id
                 },
-                
+
                 colorGrey: {
                     value: new THREE.Color(0x81858c)
                 },
+
                 colorDarkGrey: {
                     value: new THREE.Color(0x403e3d)
                 },
+
                 colorBurnedGround: {
                     value: new THREE.Color(0x6e3d13)
                 },
+
                 colorAsh: {
                     value: new THREE.Color(0x3d240e)
                 }
             },
+
             fragmentShader: moonFrag,
             vertexShader: cbPlanetVert
         });
@@ -201,9 +219,9 @@ class Star extends CelestialBody {
     constructor(confMap) {
         super({
             size: Math.max(confMap.get("minStarSize"), getGaussianNoise(confMap.get("starSizeMean"), confMap.get("starSizeVariance"))),
-            rotationsPerUnit: 1, 
-            revolutionsPerUnit: getRandomFloatInRange(confMap.get("minRevPerUnit"), confMap.get("maxRevPerUnit")), 
-            tilt: getRandomFloatInRange(confMap.get("minTilt"), confMap.get("maxTilt")), 
+            rotationsPerUnit: 1,
+            revolutionsPerUnit: getRandomFloatInRange(confMap.get("minRevPerUnit"), confMap.get("maxRevPerUnit")),
+            tilt: getRandomFloatInRange(confMap.get("minTilt"), confMap.get("maxTilt")),
             light: true});
 
         this.shaderMaterial = new THREE.ShaderMaterial({
@@ -211,9 +229,11 @@ class Star extends CelestialBody {
                 viewPosition: {
                     value: new THREE.Vector3(0, 0, 0)
                 },
+
                 locs: {
                     value: null
                 },
+
                 bodycount: {
                     value: 0
                 },
@@ -221,24 +241,27 @@ class Star extends CelestialBody {
                 size: {
                     value: this.size
                 },
-            
+
                 seed: {
                     value: Math.random()
                 },
-        
+
                 id: {
                     value: this.id
                 },
-                
+
                 colorGrey: {
                     value: new THREE.Color(0x81858c)
                 },
+
                 colorDarkGrey: {
                     value: new THREE.Color(0x403e3d)
                 },
+
                 colorBurnedGround: {
                     value: new THREE.Color(0x6e3d13)
                 },
+                
                 colorAsh: {
                     value: new THREE.Color(0x3d240e)
                 }

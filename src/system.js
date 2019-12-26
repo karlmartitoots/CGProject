@@ -1,5 +1,9 @@
 class System {
   constructor(root) {
+    this.setCore(root);
+  }
+
+  setCore(root) {
     // Determine the number of celestial bodies
     // Determine the number of light sources
     var bl = this.countNodes(root);

@@ -14,7 +14,7 @@ var core;
 var camController;
 
 function onLoad() {
-  if (WEBGL.isWebGL2Available() === false ) {
+  if (WEBGL.isWebGL2Available() === false) {
     document.body.appendChild(WEBGL.getWebGL2ErrorMessage());
     console.log("WebGL2 is not available");
   }
@@ -38,8 +38,6 @@ function onLoad() {
 
   scene.add(core.root);
 
-  console.log(core);
-
   // System controller. Is for shadows
   system = new System(core);
 
@@ -52,7 +50,6 @@ function onLoad() {
   draw();
 }
 
-
 var c = 0;
 
 function draw() {
@@ -64,13 +61,9 @@ function draw() {
 
   core.update(core.mesh.getWorldPosition(new THREE.Vector3()), camController.current.camera.position, system);
 
-  //system.locTexture.dispose();
   system.locTexture.needsUpdate = true;
 
-  //if (c == 0)
-  //  console.log(system.locations);
-
-  c = ++c % 60;
+  c = ++c % 144;
 
   renderer.render(scene, camController.current.camera);
 }
