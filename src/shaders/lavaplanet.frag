@@ -32,22 +32,8 @@ void main() {
   f += 0.2 * noise(11.0 * interpolatedLocalPosition / size, seed);
 
   // Luminosity, get from texture
-  float luminosity = 1.0;
-  vec4 cposr;
   vec4 lposr = texture2D(locs, vec2(0.5 / float(bodycount), 0.5));
-
-  // Bodies before self
-  int i;
-  for (i = 1; i < id; ++i) {
-    cposr = texture2D(locs, vec2((float(i) + 0.5) / float(bodycount), 0.5));
-    luminosity *= softShadow(lposr.xyz, lposr.w, cposr.xyz, cposr.w, interpolatedPosition);
-  }
-
-  // Bodies after self
-  for (i = id + 1; i < bodycount; ++i) {
-    cposr = texture2D(locs, vec2((float(i) + 0.5) / float(bodycount), 0.5));
-    luminosity *= softShadow(lposr.xyz, lposr.w, cposr.xyz, cposr.w, interpolatedPosition);
-  }
+  float lum = luminosity(locs, id, bodycount, interpolatedPosition, lposr);
 
   // 1. Find normal
   vec3 n = normalize(interpolatedNormal);
@@ -84,7 +70,7 @@ void main() {
   float diffuse = orenNayar(l, n, v, 0.3);
 
   // Put Diffuse, specular and glow light together to get the end result
-  vec3 interpolatedColor = luminosity * (noiseColor * diffuse) + lavaglow;
+  vec3 interpolatedColor = lum * (noiseColor * diffuse) + lavaglow;
 
   gl_FragColor = vec4(interpolatedColor, 1.0);
 }
