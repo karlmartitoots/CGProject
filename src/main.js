@@ -56,7 +56,47 @@ function onLoad() {
 	side: THREE.BackSide
   });
   var sky = new THREE.Mesh(skyBox, skyBoxMaterial);
-  scene.add(sky);
+  //scene.add(sky);
+  
+  var skybox2 = new THREE.BoxGeometry(10.0, 10.0, 10.0, 10, 10, 10); 
+  var skyBoxMaterial2 = new THREE.ShaderMaterial({
+    uniforms: {
+      
+      iTime: {
+        value: 4.0
+      }, 
+	  
+	  resolution: {
+		  value: [800, 500]
+	  }
+      /*iResolution: {
+        value: new THREE.Vector3(800, 500, 0)
+      },
+	  
+	  iTimeDelta: {
+        value: 0.5
+      },
+	  
+	  iFrame: {
+        value: 100
+      },
+
+      iChannelTime[4]: { // 1 float
+        value: 10.0
+      },
+
+      iChannelResolution[4]: { //vec 3
+        value: [800, 500, 0]
+      },
+
+      */
+    },
+
+    vertexShader: skyboxVert,
+    fragmentShader: skyboxFrag
+  });
+  var sky2 = new THREE.Mesh(skybox2, skyBoxMaterial2);
+  scene.add(sky2);
 
   draw();
 }
