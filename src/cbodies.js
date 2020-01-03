@@ -16,10 +16,15 @@ class TerraPlanet extends CelestialBody {
             visibleOrbit: confMap.get("visibleOrbit")
           });
 
+        // Temperate
         var color1 = new THREE.Color(0x197b30);
         var color2 = new THREE.Color(0x005826);
-        //var color3 = new THREE.Color(0x4e3f32);
         var color3 = new THREE.Color(0xFFFFFF);
+
+        // Hot
+        var color4 = new THREE.Color(0xEFDEC2);
+        var color5 = new THREE.Color(0xDAC27C);
+        var color6 = new THREE.Color(0xA8651E);
 
         this.shaderMaterial = new THREE.ShaderMaterial({
             uniforms: {
@@ -60,7 +65,11 @@ class TerraPlanet extends CelestialBody {
                 },
 
                 color: {
-                    value: [color1, color2, color3]
+                    value: [color1, color2, color3, color4, color5, color6]
+                },
+
+                obliquity: {
+                  value: 0
                 }
             },
 
@@ -119,7 +128,7 @@ class LavaPlanet extends CelestialBody {
                 },
 
                 colorDeepLava: {
-                    value: new THREE.Color(0xfcdb1e)
+                    value: new THREE.Color(0xfceb1e)
                 },
 
                 colorLava: {
@@ -132,6 +141,10 @@ class LavaPlanet extends CelestialBody {
 
                 colorAsh: {
                     value: new THREE.Color(0x3d240e)
+                },
+
+                obliquity: {
+                    value: 0
                 }
             },
 
@@ -203,6 +216,10 @@ class Moon extends CelestialBody {
 
                 colorAsh: {
                     value: new THREE.Color(0x3d240e)
+                },
+
+                obliquity: {
+                    value: 0
                 }
             },
 
@@ -261,9 +278,13 @@ class Star extends CelestialBody {
                 colorBurnedGround: {
                     value: new THREE.Color(0x6e3d13)
                 },
-                
+
                 colorAsh: {
                     value: new THREE.Color(0x3d240e)
+                },
+
+                obliquity: {
+                    value: 0
                 }
             },
             fragmentShader: cbStarFrag,

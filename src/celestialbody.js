@@ -62,7 +62,13 @@ class CelestialBody {
     this.revSpeed = params.revolutionsPerUnit || defaults.revolutionsPerUnit;
 
     // Orbit
-    this.orbit = new Orbit(params.orbitRadius * params.ellipseX, params.orbitRadius * params.ellipseZ, params.orbitYaw, this.revSpeed * 500);
+    this.orbit = new Orbit(
+      params.orbitRadius * params.ellipseX,
+      params.orbitRadius * params.ellipseZ,
+      params.orbitYaw,
+      this.revSpeed * 500,
+      this.tiltNode.rotation.z
+    );
 
     // Initial movement with 0 delta
     this.orbit.move(0, this._root);
@@ -119,6 +125,7 @@ class CelestialBody {
     // Update uniforms
     if (typeof this.mesh.material != 'undefined') {
       this.mesh.material.uniforms.viewPosition.value = cameraPosition;
+      this.mesh.material.uniforms.obliquity.value = this.orbit.axialtilt;
     }
 
     // Update recursively

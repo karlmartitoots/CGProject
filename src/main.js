@@ -30,6 +30,9 @@ function onLoad() {
 
   scene = new THREE.Scene();
 
+  // Preprocess shaders
+  preprocessShaders();
+
   var generator = new Generator(confMap);
 
   setupGui(generator);

@@ -16,35 +16,7 @@ function createCBody(radius, lsource, material) {
   material.depthFunc = THREE.LessEqualDepth;
   material.blending = THREE.NoBlending;
 
-  var sphere = new THREE.Mesh(geometry, material);
-
-  if (lsource) {
- //   sphere.castShadow = false;
- //   sphere.receiveShadow = false;
-
- //   var light = new THREE.PointLight(0xff0040, 2, 1000000);
-
-    var light = new THREE.Object3D();
-    light.add(sphere);
- //   light.castShadow = true;
-
- //   light.shadow.mapSize.width = 800;
- //   light.shadow.mapSize.height = 500;
- //   light.shadow.camera.near = 0.5;
- //   light.shadow.camera.far = 500;
-
-    light.name = "LIGHT";
-
-    //return light;
-    return sphere;
-  }
-
-  else {
-    sphere.castShadow = true;
-    sphere.receiveShadow = true;
-
-    return sphere;
-  }
+  return new THREE.Mesh(geometry, material);
 }
 
 function createLine(point1, point2) {
