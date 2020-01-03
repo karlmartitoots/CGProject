@@ -1,4 +1,4 @@
-cbStarFrag = `
+starFrag = `
 uniform float size;
 uniform vec3 lightPosition;
 uniform float seed;

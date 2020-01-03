@@ -291,8 +291,8 @@ class Star extends CelestialBody {
                     value: 0
                 }
             },
-            fragmentShader: cbStarFrag,
-            vertexShader: cbStarVert
+            fragmentShader: starFrag,
+            vertexShader: starVert
         });
 
         this.mesh = createCBody(this.size, true, this.shaderMaterial);
