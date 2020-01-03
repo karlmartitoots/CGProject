@@ -60,7 +60,7 @@ class Orbit {
 
     // revolve in polar coords
     if (isFinite(angularVelocity)) {
-      this.currentAngle += angularVelocity * delta * this.orbitSpeed * 10.0;
+      this.currentAngle += angularVelocity * delta * this.orbitSpeed;
       this.currentAngle %= Math.PI * 2;
 
       subject.position.x = this.semiMajor * Math.cos(this.currentAngle);

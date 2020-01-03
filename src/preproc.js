@@ -1,5 +1,5 @@
 function preprocessShaders() {
-  var shaders = [noiseComp, lightComp, lavaPlanetFrag, moonFrag, cbPlanetVert, cbStarFrag, cbStarVert, terraPlanetFrag];
+  var shaders = [noiseComp, lightComp, lavaPlanetFrag, moonFrag, cbPlanetVert, cbStarFrag, cbStarVert, terraPlanetFrag, terraPlanetVert, lavaPlanetVert, moonVert];
 
   shaders.forEach((item) => {
     // Noise

@@ -74,7 +74,7 @@ class TerraPlanet extends CelestialBody {
             },
 
             fragmentShader: terraPlanetFrag,
-            vertexShader: cbPlanetVert
+            vertexShader: terraPlanetVert
         });
 
         this.mesh = createCBody(this.size, false, this.shaderMaterial);
@@ -149,7 +149,7 @@ class LavaPlanet extends CelestialBody {
             },
 
             fragmentShader: lavaPlanetFrag,
-            vertexShader: cbPlanetVert
+            vertexShader: lavaPlanetVert
         });
 
         this.mesh = createCBody(this.size, false, this.shaderMaterial);
@@ -210,6 +210,10 @@ class Moon extends CelestialBody {
                     value: new THREE.Color(0x403e3d)
                 },
 
+                colorLightGrey: {
+                    value: new THREE.Color(0xd3d3d3)
+                },
+
                 colorBurnedGround: {
                     value: new THREE.Color(0x6e3d13)
                 },
@@ -224,7 +228,7 @@ class Moon extends CelestialBody {
             },
 
             fragmentShader: moonFrag,
-            vertexShader: cbPlanetVert
+            vertexShader: moonVert
         });
 
         this.mesh = createCBody(this.size, false, this.shaderMaterial);

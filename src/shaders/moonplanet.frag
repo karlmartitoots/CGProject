@@ -2,6 +2,7 @@ moonFrag = `
 uniform float size;
 uniform vec3 colorGrey;
 uniform vec3 colorDarkGrey;
+uniform vec3 colorLightGrey;
 uniform float seed;
 uniform int bodycount;
 uniform int id;
@@ -19,15 +20,31 @@ in vec3 interpolatedNormal;
 float shininess = 50.0;
 
 void main() {
-  // Calculate f by combining multiple noise layers using different density
-  float f = 0.0;
-  f += 0.5 * (1.0 - abs(noise(3.0 * interpolatedLocalPosition / size, seed)));
-  f += 0.5 * (1.0 - abs(noise(7.0 * interpolatedLocalPosition / size, seed)));
-  f += 0.063 * noise(11.0 * interpolatedLocalPosition / size, seed);
-
   // Luminosity, get from texture
   vec4 lposr = texture2D(locs, vec2(0.5 / float(bodycount), 0.5));
+  vec4 pposr = texture2D(locs, vec2((0.5 + float(id)) / float(bodycount), 0.5));
   float lum = luminosity(locs, id, bodycount, interpolatedPosition, lposr);
+
+  vec3 normalPosition = interpolatedLocalPosition / pposr.w;
+
+  // Calculate f by combining multiple noise layers using different density
+  float f = 0.0;
+  f += 2.5 * fnoise(0.5 * normalPosition, seed, 10, 0.7);
+  f += 2.3 * fnoise(1.0 * normalPosition, seed, 8, 0.6);
+  f += 2.7 * fnoise(2.0 * normalPosition, seed, 5, 0.2);
+  f += 1.5 * fnoise(5.0 * normalPosition, seed, 5, 0.5);
+  f += 1.1 * fnoise(8.0 * normalPosition, seed, 5, 0.8);
+
+  // Craters
+  float crater = (1.0 - voronoi(normalPosition * 1.6, seed));
+  crater = pow(crater, 19.5);
+
+  float c;
+  if (crater > 0.001 && crater < 0.01)
+    c = 1.017;
+
+  else
+    c = max(mix(1.0, 1.0 - pposr.w / 2.0, crater), 1.0 - pposr.w / 50.0);
 
   // 1. Find normal
   vec3 n = normalize(interpolatedNormal);
@@ -44,17 +61,19 @@ void main() {
   // 5. Find the reflection vector
   vec3 r = reflect(-l, n);
 
-  float specular = 0.0;
+  if (0.995 < c)
+    f /= 1.5;
+
   vec3 noiseColor;
-  if (f > 1.0)
-    noiseColor = colorGrey;
 
-  else if (f > 0.1)
-    noiseColor = mix(colorDarkGrey, colorGrey, f / 0.5 );
+  // 3-way interpolation
+  float nf = (f + 1.0) / 2.0;
+  float w1 = nf * nf;
+  float w2 = -2.0 * (nf - 1.0) * nf;
+  float w3 = (nf - 1.0) * (nf - 1.0);
 
-  else {
-    noiseColor = colorDarkGrey;
-  }
+  vec3 dust = vec3(1.7) * max(noise(0.6 * normalPosition, seed), 0.0) / (2.0 - c);
+  noiseColor = w1 * colorLightGrey + w2 * colorGrey + w3 * colorDarkGrey + dust;
 
   // Diffuse lighting
   float diffuse = orenNayar(l, n, v, 0.3);

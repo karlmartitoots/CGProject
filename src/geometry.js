@@ -1,5 +1,5 @@
 function createCBody(radius, lsource, material) {
-  var geometry = new THREE.SphereBufferGeometry(radius, 50, 50);
+  var geometry = new THREE.SphereBufferGeometry(radius, 70, 70);
 
   // Noise generation shader
   //console.log(material);
