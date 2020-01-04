@@ -5,6 +5,8 @@ function setupGui(generator) {
 
   gui.add(guiObj, 'seed');
   gui.add(guiObj, 'Generate');
+  gui.add(guiObj, 'Lines');
+  gui.add(guiObj, 'Freeze');
   gui.add(guiObj, 'minRevPerUnit', 0, 100);
   gui.add(guiObj, 'maxRevPerUnit', 0, 100);
   gui.add(guiObj, 'minTilt', -Math.PI / 2, Math.PI / 2);
@@ -97,6 +99,12 @@ function createGuiObject(generator) {
 
       // System controller. Is for shadows
       system.setCore(core);
+    },
+    Lines: function() {
+      core.toggleLines();
+    },
+    Freeze: function() {
+      core.pause();
     }
   };
 }

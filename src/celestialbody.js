@@ -33,6 +33,7 @@ class CelestialBody {
 
     this.clock = new THREE.Clock();
     this.delta = this.clock.getDelta();
+    this.progression = true;
 
     // Hierarchy
     this._center = new THREE.Group();
@@ -90,7 +91,7 @@ class CelestialBody {
     // Attached camera, set to zero for now
     // TODO: Make width and height configurable somehow
     this.cam = new Camera(800, 500, camtype.PLANET, controltype.ORBIT, this.size);
-    this.rotationNode.add(this.cam.camera);
+    this.tiltNode.add(this.cam.camera);
 
     // Scale the camera
     //this.cam.camera.scale.multiplyScalar(this.size / 20.0);
@@ -113,14 +114,17 @@ class CelestialBody {
   update(lightSource, cameraPosition, system) {
     // TODO: Add distance check. If too far, don't update
     this.delta = this.clock.getDelta();
-    this._move(delta);
-    this._rotate(delta);
 
-    // World position of the object
-    this.worldPosition = this.mesh.getWorldPosition(this.worldPosition);
+    if (this.progression) {
+      this._move(delta);
+      this._rotate(delta);
 
-    // Update world position texture
-    system.update(this.id, this.worldPosition, this.size);
+      // World position of the object
+      this.worldPosition = this.mesh.getWorldPosition(this.worldPosition);
+
+      // Update world position texture
+      system.update(this.id, this.worldPosition, this.size);
+    }
 
     // Update uniforms
     if (typeof this.mesh.material != 'undefined') {
@@ -145,5 +149,24 @@ class CelestialBody {
 
   reset() {
     counter = 0;
+  }
+
+  toggleLines() {
+    this.tiltline.visible = !this.tiltline.visible;
+    this.orbit.toggle();
+
+    // Toggle recursively
+    this.children.forEach((item) => {
+      item.toggleLines();
+    });
+  }
+
+  pause() {
+    this.progression = !this.progression;
+
+    // Pause recursively
+    this.children.forEach((item) => {
+      item.pause();
+    });
   }
 }

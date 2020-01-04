@@ -72,6 +72,10 @@ class Orbit {
     }
   }
 
+  toggle() {
+    this.line.visible = !this.line.visible;
+  }
+
   get axialtilt() {
     var t = /*(this.tilt / (Math.PI / 2.0)) **/ Math.sin(this.currentAngle - this.rotation + Math.PI / 2.0);
     return t;

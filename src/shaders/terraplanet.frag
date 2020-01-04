@@ -45,9 +45,11 @@ void main() {
   f *= 1.8;
 
   // Biomes
-  float height = interpolatedLocalPosition.y + fnoise(3.5 * normalPosition, seed, 6, 0.45);
+  float height = interpolatedLocalPosition.y + fnoise(15.0 * normalPosition, seed, 6, 0.45) + 3.0 * noise(1.5 * normalPosition, seed);
   float theight = (height - obliquity) / pposr.w;
   height / pposr.w;
+
+  float iciness = abs(theight) + max(f, 0.005) * ldist / 800.0 + ldist / 6400.0;
 
   // 1. Find normal
   vec3 n = normalize(interpolatedNormal);
@@ -65,20 +67,20 @@ void main() {
   float specular = 0.0;
   vec3 noiseColor;
 
+  // Biomes
+  // Ice
+  if (iciness > 0.9)
+    noiseColor = vec3(1.0);
 
-  if (f <= 0.0) {
+  // Water
+  else if (f <= 0.0) {
     f = f * f * f;
     noiseColor = mix(colorWater, colorDeepWater, min(1.0, -f));
     specular = pow(max(0.0, dot(n, h)), 3.0 * shininess);
   }
 
-  // Biomes
-  // Ice
-  else if (abs(theight) + max(f, 0.005) * ldist / 800.0 + ldist / 6400.0 > 0.9)
-    noiseColor = vec3(1.0);
-
   // Hot
-  else if (abs(height) + ldist / 800.0 + fnoise(32.2 * normalPosition, seed, 4, 0.85) < 2.0 && f > 0.02 + ldist / 3200.0) {
+  else if (abs(height) + ldist / 800.0 + fnoise(32.2 * normalPosition, seed, 4, 0.85) < 2.0 && f > 0.02 + ldist / 3200.0 + height * height / 80.0) {
     if (f > 0.3)
       noiseColor = mix(color[4], color[5], min(1.0, (f - 0.3)));
 
