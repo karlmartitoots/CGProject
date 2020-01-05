@@ -1,5 +1,5 @@
 function createCBody(radius, lsource, material) {
-  var geometry = new THREE.SphereBufferGeometry(radius, 70, 70);
+  var geometry = new THREE.SphereBufferGeometry(radius, 50, 50);
   return new THREE.Mesh(geometry, material);
 }
 

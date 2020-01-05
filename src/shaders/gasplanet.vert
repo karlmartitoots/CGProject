@@ -7,8 +7,8 @@ out vec3 interpolatedLightPosition;
 
 void main() {
   interpolatedLocalPosition = position;
-  interpolatedPosition = (modelViewMatrix * vec4(position, 1.0)).xyz;
-  interpolatedNormal = normalize(normalMatrix * normal).xyz;
+  interpolatedPosition = (modelMatrix * vec4(position, 1.0)).xyz;
+  interpolatedNormal = normalize(mat3(transpose(inverse(modelMatrix))) * normal).xyz;
 
   gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
 }

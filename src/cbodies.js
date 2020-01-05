@@ -311,8 +311,61 @@ class GasGiantPlanet extends CelestialBody {
       vertexShader: gasPlanetVert
     });
 
+    this.ucb = (delta, cameraPosition) => {
+      this.shaderMaterial.uniforms.time.value += delta / 50.0;
+    };
+
     this.mesh = createCBody(this.size, false, this.shaderMaterial);
     this.rotationNode.add(this.mesh);
+
+    // Rings
+    this.ringGeometry = new THREE.PlaneBufferGeometry(this.size * 8, this.size * 8, 1, 1);
+
+    this.ringMaterial = new THREE.ShaderMaterial({
+      uniforms: {
+        size: {
+          value: this.size * 8.0
+        },
+
+        seed: {
+          value: Math.random()
+        },
+
+        primaryColor: {
+          value: new THREE.Color(0x989890)
+        },
+
+        secondaryColor: {
+          value: new THREE.Color(0xEADDC7)
+        },
+
+        locs: {
+          value: null
+        },
+
+        bodycount: {
+          value: 0
+        }
+      },
+
+      fragmentShader: ringFrag,
+      vertexShader: ringVert,
+
+      transparent: true,
+      blending: THREE.NormalBlending,
+
+      side: THREE.DoubleSide
+    });
+
+    this.ring = new THREE.Mesh(this.ringGeometry, this.ringMaterial);
+    this.ring.rotateX(Math.PI / 2.0);
+
+    this.mesh.add(this.ring);
+
+    this.ucb = (delta, cameraPosition) => {
+      this.ringMaterial.uniforms.locs.value = this.shaderMaterial.uniforms.locs.value;
+      this.ringMaterial.uniforms.bodycount.value = this.shaderMaterial.uniforms.bodycount.value;
+    };
   }
 }
 
@@ -399,7 +452,7 @@ class GasDwarfPlanet extends CelestialBody {
     this.rotationNode.add(this.mesh);
 
     this.ucb = (delta, cameraPosition) => {
-      
+      this.shaderMaterial.uniforms.time.value += delta / 50.0;
     };
   }
 }
@@ -542,7 +595,7 @@ class Star extends CelestialBody {
     this.rotationNode.add(this.mesh);
 
     // Corona
-    this.coronaGeometry = new THREE.PlaneBufferGeometry(this.size * 32, this.size * 32, 1, 1);
+    this.coronaGeometry = new THREE.PlaneBufferGeometry(this.size * 8, this.size * 8, 1, 1);
 
     this.coronaMaterial = new THREE.ShaderMaterial({
       uniforms: {

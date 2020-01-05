@@ -21,9 +21,9 @@ defaultConf.set("minPlanetDensity", 0.5);
 defaultConf.set("minPlanetAmount", 10); // integer from 0 to undetermined
 defaultConf.set("maxPlanetAmount", 10); // integer from 0 to undetermined
 defaultConf.set("planetSizeVariance", 0.5); // determines how much planet size varies according to gamma distribution
-defaultConf.set("minPlanetSize", 0.0);
+defaultConf.set("minPlanetSize", 1.0);
 defaultConf.set("minDistanceBetweenPlanetOrbits", 30.0);
-defaultConf.set("starPlanetSizeRatio", 100.0);
+defaultConf.set("starPlanetSizeRatio", 8.0);
 
 // specific planet settings
 defaultConf.set("C1GasGiantTerraSizeRatio", 12.0);
@@ -36,7 +36,7 @@ defaultConf.set("moonDensityVariance", 1.0); // integer from 0 to undetermined
 defaultConf.set("minMoonDensity", 1.0);
 defaultConf.set("planetMoonSizeRatio", 4.0);
 defaultConf.set("moonSizeVariance", 1.0);
-defaultConf.set("minMoonSize", 0.0);
+defaultConf.set("minMoonSize", 0.3);
 defaultConf.set("minMoonAmount", 0); // less or equal to maxMoonAmount
 defaultConf.set("maxMoonAmount", 0); // more or equal to minMoonAmount
 defaultConf.set("minMoonRevPerUnit", 0);

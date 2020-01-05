@@ -52,12 +52,12 @@ void main() {
   else
     c = max(mix(1.0, 1.0 - pposr.w / 2.0, crater), 1.0 - pposr.w / 50.0);
 
-  // Biomes
-  float height = interpolatedLocalPosition.y + fnoise(15.0 * normalPosition, seed, 6, 0.45) + 3.0 * noise(1.5 * normalPosition, seed);
-  float theight = (height - obliquity) / pposr.w;
-  height / pposr.w;
+    // Biomes
+    float height = interpolatedLocalPosition.y + (fnoise(12.0 * normalPosition, seed, 6, 0.55) + max(1.2 * noise(4.5 * normalPosition, seed), 0.0)) / 10.0;
+    float theight = (height - obliquity) / pposr.w;
+    height / pposr.w;
 
-  float iciness = abs(theight) + ldist / 8000.0 + ldist / 64000.0;
+    float iciness = abs(theight) * 1.4 + max(f, 0.005) * ldist / 400.0 + ldist / 3200.0;
 
   // 1. Find normal
   vec3 n = normalize(interpolatedNormal);
@@ -73,7 +73,7 @@ void main() {
 
   // Biomes
   // Ice
-  if (iciness > 0.98) {
+  if (iciness > 2.6) {
     noiseColor = vec3(0.88, 0.9, 0.9);
 
     // Very minor color variation

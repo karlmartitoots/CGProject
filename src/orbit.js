@@ -35,7 +35,7 @@ class Orbit {
         0                 // aRotation
       );
 
-      var points = curve.getPoints(150);
+      var points = curve.getPoints(600);
       var geometry = new THREE.BufferGeometry().setFromPoints(points);
 
       var material = new THREE.LineBasicMaterial({
@@ -60,7 +60,7 @@ class Orbit {
 
     // revolve in polar coords
     if (isFinite(angularVelocity)) {
-      this.currentAngle += angularVelocity * delta * this.orbitSpeed;
+      this.currentAngle += angularVelocity * delta * this.orbitSpeed * 10.0;
       this.currentAngle %= Math.PI * 2;
 
       subject.position.x = this.semiMajor * Math.cos(this.currentAngle);

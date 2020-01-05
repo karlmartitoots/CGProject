@@ -31,13 +31,13 @@ void main() {
     vec3 v = normalize(viewPosition - interpolatedPosition);
     vec3 l = normalize(lposr.xyz - interpolatedPosition);
     vec3 pos = interpolatedLocalPosition / size;
-    
+
     // we use the y-coordinate to get effectively height-dependent 1D noise
     // this will be used to create a random angular speed vector different for each height
     // negative values is negative speed, positive values is positive speed
     float ynoise = noise(20.0 * vec3(pos.y), seed) * 20.0;
     float yrotamount = sin(time) * ynoise; // alpha = w * t
-    
+
     // y-axis rotation matrix, angle scales by rotation amount and therefore changes in time
     mat3 yrot = mat3(
         cos(yrotamount)	, 0.0, sin(yrotamount),
@@ -46,19 +46,19 @@ void main() {
     );
     // rotate current position around x-axis
     pos = yrot * pos;
-    
+
     float f = 0.0;
-    f +=  0.03 * (1.0 - abs(noise( 15.0 * pos, seed)));
-    f +=  0.01 * (1.0 - abs(noise( 21.0 * pos, seed)));
+    f += 0.03 * (1.0 - abs(noise( 15.0 * pos, seed)));
+    f += 0.01 * (1.0 - abs(noise( 21.0 * pos, seed)));
     f += 0.005 * (1.0 - abs(noise(100.0 * pos, seed)));
-    
-    // one choice is to use y-coordinate dependent noise to derive color here, 
+
+    // one choice is to use y-coordinate dependent noise to derive color here,
     // however I went for xz-plane symmetric appearance as saturn kind of looks like that
-    
+
     // for color derivation, y-coordinate is used
     // for xz-plane symmetry, abs() is used
     float h = abs(pos.y) + f;
-    
+
     vec3 color;
     if(h > 0.6){
         color = mix(colorBeige, colorDarkBeige, (h - 0.6) / 0.4);
@@ -69,7 +69,7 @@ void main() {
     } else {
         color = mix(colorRed, colorGrey, h / 0.15);
     }
-    
+
     // Diffuse lighting
     float diffuse = orenNayar(l, n, v, 0.3);
     vec3 interpolatedColor = lum * (color * diffuse);
