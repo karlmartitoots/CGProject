@@ -55,12 +55,6 @@ void main() {
   // 4. Find the direction towards the light source, normalize.
   vec3 l = normalize(lposr.xyz - interpolatedPosition);
 
-  // 4.5 Blinn: Find the half-angle vector h
-  vec3 h = normalize(l + v);
-
-  // 5. Find the reflection vector
-  vec3 r = reflect(-l, n);
-
   if (0.995 < c)
     f /= 1.5;
 

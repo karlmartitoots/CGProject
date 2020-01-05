@@ -82,6 +82,82 @@ class TerraPlanet extends CelestialBody {
   }
 }
 
+class DryPlanet extends CelestialBody {
+  constructor(confMap, orbitRadius) {
+    super({
+      orbitRadius: orbitRadius,
+      startAngle: 2 * Math.PI * Math.random(),
+      size: Math.max(confMap.get("minPlanetSize"), getGaussianNoise(confMap.get("starSizeMean") / confMap.get("starPlanetSizeRatio"), confMap.get("planetSizeVariance"))),
+      density: 4.0,
+      rotationsPerUnit: 3,
+      revolutionsPerUnit: getRandomFloatInRange(confMap.get("minRevPerUnit"), confMap.get("maxRevPerUnit")),
+      tilt: getRandomFloatInRange(confMap.get("minTilt"), confMap.get("maxTilt")),
+      orbitTiltX: getRandomFloatInRange(confMap.get("minOrbitTiltX"), confMap.get("maxOrbitTiltX")),
+      orbitTiltZ: getRandomFloatInRange(confMap.get("minOrbitTiltZ"), confMap.get("minOrbitTiltZ")),
+      ellipseX: getGaussianNoise(1, orbitRadius / 50000), // mean 1, variance 0.01
+      ellipseZ: getGaussianNoise(1, orbitRadius / 50000),
+      orbitYaw: Math.random(),
+      visibleOrbit: confMap.get("visibleOrbit")
+    });
+
+    // Temperate
+    var color1 = new THREE.Color(0xEFDEC2);
+    var color2 = new THREE.Color(0xDAC27C);
+    var color3 = new THREE.Color(0xA8651E);
+
+    // Hot
+    var color4 = new THREE.Color(0xDAC27C);
+    var color5 = new THREE.Color(0xEFDEC2);
+    var color6 = new THREE.Color(0xDAC27C);
+
+    this.shaderMaterial = new THREE.ShaderMaterial({
+      uniforms: {
+        viewPosition: {
+          value: new THREE.Vector3(0, 0, 0)
+        },
+
+        locs: {
+          value: null
+        },
+
+        bodycount: {
+          value: 0
+        },
+
+        size: {
+          value: this.size
+        },
+
+        seed: {
+          value: Math.random()
+        },
+
+        id: {
+          value: this.id
+        },
+
+        colorAtm: {
+          value: new THREE.Color(0x66d5ed)
+        },
+
+        color: {
+          value: [color1, color2, color3, color4, color5, color6]
+        },
+
+        obliquity: {
+          value: 0
+        }
+      },
+
+      fragmentShader: dryPlanetFrag,
+      vertexShader: dryPlanetVert
+    });
+
+    this.mesh = createCBody(this.size, false, this.shaderMaterial);
+    this.rotationNode.add(this.mesh);
+  }
+}
+
 class LavaPlanet extends CelestialBody {
   constructor(confMap, orbitRadius) {
     super({

@@ -9,19 +9,19 @@ class Generator {
       'S': [
         {
           probability: 0.3,
-          value: 's[L][R][R][R][R][G][G][R][G][G]'
+          value: 's[L][R][R][D][D][G][G][D][G][G]'
         },
         {
           probability: 0.3,
-          value: 's[L][R][R][R][G][G][G][G]'
+          value: 's[L][R][R][D][G][G][G][G]'
         },
         {
           probability: 0.3,
-          value: 's[L][R][R][R][G][G]'
+          value: 's[L][R][D][D][G][G]'
         },
         {
           probability: 0.1,
-          value: 's[L][R][R][R][G][G][G]'
+          value: 's[L][R][D][D][G][G][G]'
         }
       ],
 
@@ -38,7 +38,7 @@ class Generator {
         {
           probability: 1 / 3,
           value: 'L'
-        }
+        },
       ],
 
       // Rocky bodies
@@ -67,6 +67,14 @@ class Generator {
         {
           probability: 1.0,
           value: 'l'
+        },
+      ],
+
+      // Dry planets
+      'D': [
+        {
+          probability: 1.0,
+          value: 'd'
         },
       ],
 
@@ -231,6 +239,18 @@ class Generator {
 
         // Change the parent's current distance
         distance[parents.length - 1] *= 1.9 + current.size / 80;
+
+        break;
+
+      case ('d'):
+
+        current = new DryPlanet(this.confMap, currentDistance);
+
+        if (parents.length > 0)
+          parents[parents.length - 1].add(current);
+
+        // Change the parent's current distance
+        distance[parents.length - 1] *= 2.1 + current.size / 80;
 
         break;
 
