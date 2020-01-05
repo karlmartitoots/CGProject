@@ -1,4 +1,4 @@
-lavaPlanetFrag = `
+var lavaPlanetFrag = `
 uniform vec3 colorLava;
 uniform vec3 colorDeepLava;
 uniform vec3 colorBurnedGround;
@@ -19,8 +19,6 @@ in vec3 interpolatedLightPosition;
 
 #include <noise.comp>
 #include <lighting.comp>
-
-float shininess = 250.0;
 
 void main() {
   // Luminosity, get from texture

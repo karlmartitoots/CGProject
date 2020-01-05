@@ -1,4 +1,4 @@
-starVert = `
+var starVert = `
 uniform float size;
 out vec3 interpolatedPosition; //We interpolate the position
 out vec3 interpolatedNormal;   //We interpolate the normal

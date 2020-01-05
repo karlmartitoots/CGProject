@@ -1,4 +1,4 @@
-terraPlanetFrag = `
+var terraPlanetFrag = `
 uniform vec3 color[6];
 uniform vec3 colorAtm;
 uniform vec3 colorWater;

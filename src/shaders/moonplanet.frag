@@ -1,4 +1,4 @@
-moonFrag = `
+var moonFrag = `
 uniform float size;
 uniform vec3 colorGrey;
 uniform vec3 colorDarkGrey;

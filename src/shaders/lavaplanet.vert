@@ -1,4 +1,4 @@
-lavaPlanetVert = `
+var lavaPlanetVert = `
 uniform float size;
 uniform float seed;
 uniform vec3 lightPosition;

@@ -1,10 +1,10 @@
-starFrag = `
+var starFrag = `
 uniform float size;
 uniform vec3 lightPosition;
 uniform float seed;
 in vec3 interpolatedLocalPosition;
-in vec3 interpolatedPosition; // We interpolate the position
-in vec3 interpolatedNormal;   // We interpolate the normal
+in vec3 interpolatedPosition;
+in vec3 interpolatedNormal;
 
 #include <noise.comp>
 

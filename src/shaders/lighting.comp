@@ -1,4 +1,4 @@
-lightComp = `
+var lightComp = `
 #define M_PI 3.1415926535897932384626433832795
 
 float lambert(in vec3 l, in vec3 n) {

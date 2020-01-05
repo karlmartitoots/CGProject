@@ -1,4 +1,4 @@
-moonVert = `
+var moonVert = `
 uniform float size;
 uniform float seed;
 uniform vec3 lightPosition;
