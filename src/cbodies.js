@@ -137,7 +137,7 @@ class DryPlanet extends CelestialBody {
         },
 
         colorAtm: {
-          value: new THREE.Color(0x66d5ed)
+          value: new THREE.Color(0xDB7093)
         },
 
         color: {
@@ -322,8 +322,19 @@ class Star extends CelestialBody {
       light: true
     });
 
+    var primaryColor = new THREE.Color(0xF1E3D1);
+    var secondaryColor = new THREE.Color(0xFF00FF);
+
     this.shaderMaterial = new THREE.ShaderMaterial({
       uniforms: {
+        primaryColor: {
+          value: primaryColor
+        },
+
+        secondaryColor: {
+          value: secondaryColor
+        },
+
         viewPosition: {
           value: new THREE.Vector3(0, 0, 0)
         },
@@ -348,22 +359,6 @@ class Star extends CelestialBody {
           value: this.id
         },
 
-        colorGrey: {
-          value: new THREE.Color(0x81858c)
-        },
-
-        colorDarkGrey: {
-          value: new THREE.Color(0x403e3d)
-        },
-
-        colorBurnedGround: {
-          value: new THREE.Color(0x6e3d13)
-        },
-
-        colorAsh: {
-          value: new THREE.Color(0x3d240e)
-        },
-
         obliquity: {
           value: 0
         }
@@ -374,5 +369,35 @@ class Star extends CelestialBody {
 
     this.mesh = createCBody(this.size, true, this.shaderMaterial);
     this.rotationNode.add(this.mesh);
+
+    // Corona
+    this.coronaGeometry = new THREE.PlaneBufferGeometry(this.size * 32, this.size * 32, 1, 1);
+
+    this.coronaMaterial = new THREE.ShaderMaterial({
+      uniforms: {
+        size: {
+          value: this.size * 4.0
+        },
+
+        primaryColor: {
+          value: primaryColor
+        }
+      },
+
+      fragmentShader: coronaFrag,
+      vertexShader: coronaVert,
+
+      transparent: true,
+      blending: THREE.NormalBlending
+    });
+
+    this.corona = new THREE.Mesh(this.coronaGeometry, this.coronaMaterial);
+
+    this.mesh.add(this.corona);
+
+    this.ucb = (delta, cameraPosition) => {
+      this.corona.lookAt(cameraPosition);
+    };
   }
+
 }

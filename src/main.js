@@ -65,7 +65,7 @@ function draw() {
 
   updateControls(delta);
 
-  core.update(core.mesh.getWorldPosition(new THREE.Vector3()), camController.current.camera.position, system);
+  core.update(core.mesh.getWorldPosition(new THREE.Vector3()), camController.current.camera.getWorldPosition(new THREE.Vector3()), system);
 
   system.locTexture.needsUpdate = true;
 

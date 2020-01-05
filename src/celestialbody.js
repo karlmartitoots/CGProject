@@ -100,6 +100,8 @@ class CelestialBody {
     this.helpIndex = 0;
 
     this.worldPosition = new THREE.Vector3();
+
+    this.ucb = (delta, cameraPosition) => {};
   }
 
   _move(delta) {
@@ -131,6 +133,9 @@ class CelestialBody {
       this.mesh.material.uniforms.viewPosition.value = cameraPosition;
       this.mesh.material.uniforms.obliquity.value = this.orbit.axialtilt;
     }
+
+    // Update callback
+    this.ucb(delta, cameraPosition);
 
     // Update recursively
     this.children.forEach((item, index) => {

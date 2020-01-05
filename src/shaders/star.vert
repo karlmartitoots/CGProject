@@ -4,8 +4,6 @@ out vec3 interpolatedPosition; //We interpolate the position
 out vec3 interpolatedNormal;   //We interpolate the normal
 out vec3 interpolatedLocalPosition;
 
-#include <noise.comp>
-
 void main() {
   interpolatedLocalPosition = position;
   interpolatedPosition = (modelViewMatrix * vec4(position, 1.0)).xyz;

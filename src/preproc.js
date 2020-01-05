@@ -1,5 +1,5 @@
 function preprocessShaders() {
-  var shaders = [noiseComp, lightComp, lavaPlanetFrag, moonFrag, starFrag, starVert, terraPlanetFrag, terraPlanetVert, lavaPlanetVert, moonVert, dryPlanetFrag, dryPlanetVert];
+  var shaders = [noiseComp, lightComp, lavaPlanetFrag, moonFrag, starFrag, starVert, terraPlanetFrag, terraPlanetVert, lavaPlanetVert, moonVert, dryPlanetFrag, dryPlanetVert, coronaVert, coronaFrag];
 
   shaders.forEach((item, index) => {
     // Noise
@@ -25,4 +25,6 @@ function preprocessShaders() {
   moonVert = shaders[9];
   dryPlanetFrag = shaders[10];
   dryPlanetVert = shaders[11];
+  coronaVert = shaders[12];
+  coronaFrag = shaders[13];
 }
