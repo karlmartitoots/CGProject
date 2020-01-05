@@ -218,7 +218,7 @@ class Generator {
           parents[parents.length - 1].add(current);
 
         // Change the parent's current distance
-        distance[parents.length - 1] *= 1.9;
+        distance[parents.length - 1] *= 2.1 + current.size / 80;
 
         break;
 
@@ -230,7 +230,7 @@ class Generator {
           parents[parents.length - 1].add(current);
 
         // Change the parent's current distance
-        distance[parents.length - 1] *= 1.9;
+        distance[parents.length - 1] *= 1.9 + current.size / 80;
 
         break;
 
@@ -242,7 +242,7 @@ class Generator {
           parents[parents.length - 1].add(current);
 
         // Change the parent's current distance
-        distance[parents.length - 1] *= 2.6;
+        distance[parents.length - 1] *= 2.4 + current.size / 80;
 
         break;
 
@@ -254,7 +254,7 @@ class Generator {
           parents[parents.length - 1].add(current);
 
         // Change the parent's current distance
-        distance[parents.length - 1] *= 1.7;
+        distance[parents.length - 1] *= 1.8 + current.size / 80;
 
         break;
 

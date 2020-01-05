@@ -69,8 +69,16 @@ void main() {
 
   // Biomes
   // Ice
-  if (iciness > 0.9)
-    noiseColor = vec3(1.0);
+  if (iciness > 0.95) {
+    noiseColor = vec3(0.93, 1.0, 1.0);
+
+    // Very minor color variation
+    float icecrack = voronoi(2.7 * normalPosition, seed);
+    noiseColor.xy -= vec2(icecrack / 16.0);
+
+    float snow = abs(noise(4.0 * normalPosition, seed) / 8.0);
+    noiseColor.x += snow;
+  }
 
   // Water
   else if (f <= 0.0) {
@@ -97,6 +105,8 @@ void main() {
       noiseColor = mix(color[0], color[1], (f - 0.1) / 0.4);
   }
 
+  noiseColor = min(noiseColor, vec3(1.0));
+
   // Atmosphere glow
   // Get dot profuct between planet surface normal and vector to viewer
   // Then power it with a number to get it closer to the edge
@@ -116,5 +126,6 @@ void main() {
   vec3 interpolatedColor = lum * (noiseColor * diffuse + specular + glow);
 
   gl_FragColor = vec4(interpolatedColor, 1.0);
+  //gl_FragColor = vec4(vec3(icecrack), 1.0);
 }
 `
