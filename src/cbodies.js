@@ -163,7 +163,7 @@ class LavaPlanet extends CelestialBody {
     super({
       orbitRadius: orbitRadius,
       startAngle: 2 * Math.PI * Math.random(),
-      size: Math.max(confMap.get("minPlanetSize"), getGaussianNoise(confMap.get("starSizeMean") / confMap.get("starPlanetSizeRatio"), confMap.get("planetSizeVariance"))),
+      size: confMap.get("LavaTerraSizeRatio") * Math.max(confMap.get("minPlanetSize"), getGaussianNoise(confMap.get("starSizeMean") / confMap.get("starPlanetSizeRatio"), confMap.get("planetSizeVariance"))),
       density: 4.0,
       rotationsPerUnit: 3,
       revolutionsPerUnit: getRandomFloatInRange(confMap.get("minRevPerUnit"), confMap.get("maxRevPerUnit")),
@@ -230,6 +230,177 @@ class LavaPlanet extends CelestialBody {
 
     this.mesh = createCBody(this.size, false, this.shaderMaterial);
     this.rotationNode.add(this.mesh);
+  }
+}
+
+class GasGiantPlanet extends CelestialBody {
+  constructor(confMap, orbitRadius) {
+    super({
+      orbitRadius: orbitRadius,
+      startAngle: 2 * Math.PI * Math.random(),
+      size: confMap.get("C1GasGiantTerraSizeRatio") * Math.max(confMap.get("minPlanetSize"), getGaussianNoise(confMap.get("starSizeMean") / confMap.get("starPlanetSizeRatio"), confMap.get("planetSizeVariance"))),
+      density: 1.0,
+      rotationsPerUnit: 3,
+      revolutionsPerUnit: getRandomFloatInRange(confMap.get("minRevPerUnit"), confMap.get("maxRevPerUnit")),
+      tilt: getRandomFloatInRange(confMap.get("minTilt"), confMap.get("maxTilt")),
+      orbitTiltX: getRandomFloatInRange(confMap.get("minOrbitTiltX"), confMap.get("maxOrbitTiltX")),
+      orbitTiltZ: getRandomFloatInRange(confMap.get("minOrbitTiltZ"), confMap.get("minOrbitTiltZ")),
+      ellipseX: getGaussianNoise(1, orbitRadius / 50000), // mean 1, variance 0.01
+      ellipseZ: getGaussianNoise(1, orbitRadius / 50000),
+      orbitYaw: Math.random(),
+      visibleOrbit: confMap.get("visibleOrbit")
+    });
+
+    this.shaderMaterial = new THREE.ShaderMaterial({
+      uniforms: {
+        viewPosition: {
+          value: new THREE.Vector3(0, 0, 0)
+        },
+
+        locs: {
+          value: null
+        },
+
+        bodycount: {
+          value: 0
+        },
+
+        size: {
+          value: this.size
+        },
+
+        seed: {
+          value: Math.random()
+        },
+
+        id: {
+          value: this.id
+        },
+
+        colorRed: {
+          type: 'c',
+          value: new THREE.Color(0xba756c)
+        },
+
+        colorGrey: {
+          type: 'c',
+          value: new THREE.Color(0xdbd9d9)
+        },
+
+        colorBeige: {
+          type: 'c',
+          value: new THREE.Color(0xbfab8f)
+        },
+
+        colorDarkBeige: {
+          type: 'c',
+          value: new THREE.Color(0x635a4b)
+        },
+
+        time: {
+          type: 'f',
+          value: 0.0
+        },
+
+        obliquity: {
+          value: 0
+        }
+      },
+
+      fragmentShader: gasPlanetFrag,
+      vertexShader: gasPlanetVert
+    });
+
+    this.mesh = createCBody(this.size, false, this.shaderMaterial);
+    this.rotationNode.add(this.mesh);
+  }
+}
+
+class GasDwarfPlanet extends CelestialBody {
+  constructor(confMap, orbitRadius) {
+    super({
+      orbitRadius: orbitRadius,
+      startAngle: 2 * Math.PI * Math.random(),
+      // gas dwarf average size is 2-4 earth radii
+      size: confMap.get("GasDwarfTerraSizeRatio") * Math.max(confMap.get("minPlanetSize"), getGaussianNoise(confMap.get("starSizeMean") / confMap.get("starPlanetSizeRatio"), confMap.get("planetSizeVariance"))),
+      density: 1.0,
+      rotationsPerUnit: 3,
+      revolutionsPerUnit: getRandomFloatInRange(confMap.get("minRevPerUnit"), confMap.get("maxRevPerUnit")),
+      tilt: getRandomFloatInRange(confMap.get("minTilt"), confMap.get("maxTilt")),
+      orbitTiltX: getRandomFloatInRange(confMap.get("minOrbitTiltX"), confMap.get("maxOrbitTiltX")),
+      orbitTiltZ: getRandomFloatInRange(confMap.get("minOrbitTiltZ"), confMap.get("minOrbitTiltZ")),
+      ellipseX: getGaussianNoise(1, orbitRadius / 50000), // mean 1, variance 0.01
+      ellipseZ: getGaussianNoise(1, orbitRadius / 50000),
+      orbitYaw: Math.random(),
+      visibleOrbit: confMap.get("visibleOrbit")
+    });
+
+    this.shaderMaterial = new THREE.ShaderMaterial({
+      uniforms: {
+        viewPosition: {
+          value: new THREE.Vector3(0, 0, 0)
+        },
+
+        locs: {
+          value: null
+        },
+
+        bodycount: {
+          value: 0
+        },
+
+        size: {
+          value: this.size
+        },
+
+        seed: {
+          value: Math.random()
+        },
+
+        id: {
+          value: this.id
+        },
+
+        colorRed: {
+          type: 'c',
+          value: new THREE.Color(0xba756c)
+        },
+
+        colorGrey: {
+          type: 'c',
+          value: new THREE.Color(0xdbd9d9)
+        },
+
+        colorBeige: {
+          type: 'c',
+          value: new THREE.Color(0xbfab8f)
+        },
+
+        colorDarkBeige: {
+          type: 'c',
+          value: new THREE.Color(0x635a4b)
+        },
+
+        time: {
+          type: 'f',
+          value: 0.0
+        },
+
+        obliquity: {
+          value: 0
+        }
+      },
+
+      fragmentShader: gasPlanetFrag,
+      vertexShader: gasPlanetVert
+    });
+
+    this.mesh = createCBody(this.size, false, this.shaderMaterial);
+    this.rotationNode.add(this.mesh);
+
+    this.ucb = (delta, cameraPosition) => {
+      
+    };
   }
 }
 

@@ -13,7 +13,7 @@ function setupGui(generator) {
   gui.add(guiObj, 'maxTilt', -Math.PI / 2, Math.PI / 2);
   var starConfFolder = gui.addFolder('Star Configuration');
   //starConfFolder.add(guiObj, 'starAmount', 1, 2);
-  starConfFolder.add(guiObj, 'starSizeMean', 1.0, 100.0);
+  starConfFolder.add(guiObj, 'starSizeMean', 1.0, 200.0);
   starConfFolder.add(guiObj, 'starSizeVariance', 0.0, 10.0);
 
   var planetConfFolder = gui.addFolder('Planet Configuration');
@@ -21,7 +21,7 @@ function setupGui(generator) {
   //planetConfFolder.add(guiObj, 'planetDensityVariance', 1.0, 8.0);
   planetConfFolder.add(guiObj, 'planetSizeVariance', 1, 100);
   //planetConfFolder.add(guiObj, 'minPlanetSize', 1, 100);
-  planetConfFolder.add(guiObj, 'starPlanetSizeRatio', 1, 30);
+  planetConfFolder.add(guiObj, 'starPlanetSizeRatio', 10, 200);
   planetConfFolder.add(guiObj, 'minPlanetAmount', 1, 100);
   planetConfFolder.add(guiObj, 'maxPlanetAmount', 1, 100);
 
@@ -65,9 +65,9 @@ function createGuiObject(generator) {
     //starAmount: 1,
     starSizeMean: 20,
     starSizeVariance: 0,
-    starPlanetSizeRatio: 3,
+    starPlanetSizeRatio: 100,
     planetSizeVariance: 0,
-    planetMoonSizeRatio: 3,
+    planetMoonSizeRatio: 4,
     moonSizeVariance: 0,
     //planetDensityMean: 4.0,
     //planetDensityVariance: 1.0,

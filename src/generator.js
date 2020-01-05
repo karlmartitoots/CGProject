@@ -81,16 +81,20 @@ class Generator {
       // Gas bodies
       'G': [
         {
-          probability: 0.3,
-          value: 'g[M][M]'
+          probability: 0.1,
+          value: 'w'
+        },
+        {
+          probability: 0.2,
+          value: 'g[M]'
         },
         {
           probability: 0.6,
-          value: 'g[M][M][M]'
+          value: 'g[M][M]'
         },
         {
           probability: 0.1,
-          value: 'g[M][M][M][R]'
+          value: 'g[M][M][M]'
         }
       ],
 
@@ -229,6 +233,30 @@ class Generator {
         distance[parents.length - 1] *= 2.1 + current.size / 80;
 
         break;
+      
+      case ('g'):
+
+        current = new GasGiantPlanet(this.confMap, currentDistance);
+
+        if (parents.length > 0)
+          parents[parents.length - 1].add(current);
+
+        // Change the parent's current distance
+        distance[parents.length - 1] *= 2.4 + current.size / 80;
+
+        break;
+      
+      case ('w'):
+  
+        current = new GasDwarfPlanet(this.confMap, currentDistance);
+
+        if (parents.length > 0)
+          parents[parents.length - 1].add(current);
+
+        // Change the parent's current distance
+        distance[parents.length - 1] *= 2.4 + current.size / 80;
+
+        break;
 
       case ('l'):
 
@@ -251,18 +279,6 @@ class Generator {
 
         // Change the parent's current distance
         distance[parents.length - 1] *= 2.1 + current.size / 80;
-
-        break;
-
-      case ('g'):
-
-        current = new TerraPlanet(this.confMap, currentDistance);
-
-        if (parents.length > 0)
-          parents[parents.length - 1].add(current);
-
-        // Change the parent's current distance
-        distance[parents.length - 1] *= 2.4 + current.size / 80;
 
         break;
 

@@ -21,9 +21,14 @@ defaultConf.set("minPlanetDensity", 0.5);
 defaultConf.set("minPlanetAmount", 10); // integer from 0 to undetermined
 defaultConf.set("maxPlanetAmount", 10); // integer from 0 to undetermined
 defaultConf.set("planetSizeVariance", 0.5); // determines how much planet size varies according to gamma distribution
-defaultConf.set("minPlanetSize", 1.0);
+defaultConf.set("minPlanetSize", 0.0);
 defaultConf.set("minDistanceBetweenPlanetOrbits", 30.0);
-defaultConf.set("starPlanetSizeRatio", 5.0);
+defaultConf.set("starPlanetSizeRatio", 100.0);
+
+// specific planet settings
+defaultConf.set("C1GasGiantTerraSizeRatio", 12.0);
+defaultConf.set("GasDwarfTerraSizeRatio", 12.0);
+defaultConf.set("LavaTerraSizeRatio", 2.0);
 
 // moon settings
 defaultConf.set("moonDensityMean", 3.0); // integer from 0 to undetermined
@@ -31,7 +36,7 @@ defaultConf.set("moonDensityVariance", 1.0); // integer from 0 to undetermined
 defaultConf.set("minMoonDensity", 1.0);
 defaultConf.set("planetMoonSizeRatio", 4.0);
 defaultConf.set("moonSizeVariance", 1.0);
-defaultConf.set("minMoonSize", 1.0);
+defaultConf.set("minMoonSize", 0.0);
 defaultConf.set("minMoonAmount", 0); // less or equal to maxMoonAmount
 defaultConf.set("maxMoonAmount", 0); // more or equal to minMoonAmount
 defaultConf.set("minMoonRevPerUnit", 0);
@@ -66,7 +71,7 @@ class Conf {
         "starAmount", "starSizeMean", "starSizeVariance", "minStarSize",
         "minPlanetDensity", "planetDensityMean", "planetDensityVariance", "minPlanetAmount", "minPlanetSize", "planetSizeVariance", "minDistanceBetweenPlanetOrbits", "starPlanetSizeRatio",
         "minMoonAmount", "minMoonSize", "moonDensityMean", "moonDensityVariance", "minMoonDensity", "planetMoonSizeRatio", "moonSizeVariance",
-        "minEllipseX", "maxEllipseX", "minEllipseZ", "maxEllipseZ", "orbitYaw"];
+        "minEllipseX", "maxEllipseX", "minEllipseZ", "maxEllipseZ", "orbitYaw", "C1GasGiantTerraSizeRatio", "GasDwarfTerraSizeRatio"];
         var minMaxs = [["minMoonAmount", "maxMoonAmount"], ["minTilt", "maxTilt"],
             ["minMoonTilt", "maxMoonTilt"], ["minOrbitTiltX", "maxOrbitTiltX"], ["minRevPerUnit", "maxRevPerUnit"],
             ["minOrbitTiltZ", "maxOrbitTiltZ"], ["minEllipseX", "maxEllipseX"], ["minEllipseZ", "maxEllipseZ"],

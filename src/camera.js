@@ -16,7 +16,7 @@ class Camera {
     this.height = sceneHeight;
 
     // Viewer position in world space
-    var viewerPosition = new THREE.Vector3(0.0, 30.0, 0.0);
+    var viewerPosition = new THREE.Vector3(0.0, 300.0, 0.0);
 
     //Setup the camera
     var camera;
@@ -50,7 +50,7 @@ class Camera {
       case controltype.FLY:
       default:
         controls = new THREE.FlyControls(camera, renderer.domElement);
-        controls.movementSpeed = 1000;
+        controls.movementSpeed = 100000;
         controls.domElement = renderer.domElement;
         controls.rollSpeed = Math.PI / 6;
         controls.autoForward = false;
