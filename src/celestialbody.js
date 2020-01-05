@@ -90,7 +90,7 @@ class CelestialBody {
 
     // Attached camera, set to zero for now
     // TODO: Make width and height configurable somehow
-    this.cam = new Camera(800, 500, camtype.PLANET, controltype.ORBIT, this.size);
+    this.cam = new Camera(sceneWidth, sceneHeight, camtype.PLANET, controltype.ORBIT, this.size);
     this.tiltNode.add(this.cam.camera);
 
     // Scale the camera

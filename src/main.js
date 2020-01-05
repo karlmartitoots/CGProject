@@ -1,6 +1,6 @@
 var renderer, scene, cam;
-var sceneWidth = 800;
-var sceneHeight = 500;
+var sceneWidth = window.innerWidth;
+var sceneHeight = window.innerHeight;
 var bodies = [];
 var clock = new THREE.Clock();
 var delta = clock.getDelta();

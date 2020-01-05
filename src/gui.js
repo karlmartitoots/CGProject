@@ -50,6 +50,8 @@ function setupGui(generator) {
   orbitsConfFolder.add(guiObj, 'maxEllipseZ', 0.3, 3.0);
   orbitsConfFolder.add(guiObj, 'orbitYaw', 0, 1);
 
+  gui.close();
+
   setCustomConf(guiObj);
 }
 
@@ -111,7 +113,7 @@ function createGuiObject(generator) {
 
 function setCustomConf(guiObject) {
   var customConf = new Map();
-  for(prop in guiObject) {
+  for (prop in guiObject) {
     if(prop == 'seed' || prop == 'Generate')
       continue;
 

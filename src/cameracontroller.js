@@ -80,7 +80,7 @@ class CameraController {
     // If in explorer mode (attached to planet)
     if (this._explorer) {
       // If current body exists
-      if (this._state != null ) {
+      if (this._state != null) {
         // We want to traverse the bodies with children only
         if (this._state.getChild().children.length > 0) {
           this._stack.push(this._state);

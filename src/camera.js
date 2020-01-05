@@ -12,8 +12,8 @@ const controltype = {
 class Camera {
   constructor(width, height, type = camtype.MAIN, control = controltype.FLY, size = 10) {
     // Initialize variables
-    this.width = width;
-    this.height = height;
+    this.width = sceneWidth;
+    this.height = sceneHeight;
 
     // Viewer position in world space
     var viewerPosition = new THREE.Vector3(0.0, 30.0, 0.0);
