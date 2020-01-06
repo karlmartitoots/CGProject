@@ -57,19 +57,29 @@ function onLoad() {
 }
 
 var c = 0;
+var cp = new THREE.Vector3();
 
 function draw() {
+  scene.updateMatrixWorld(true);
+
   requestAnimationFrame(draw);
 
   delta = clock.getDelta();
 
   updateControls(delta);
 
-  core.update(core.mesh.getWorldPosition(new THREE.Vector3()), camController.current.camera.getWorldPosition(new THREE.Vector3()), system);
+  cp = camController.current.camera.getWorldPosition(cp);
+
+  core.update(
+    cp,
+    system
+  );
 
   system.locTexture.needsUpdate = true;
 
   c = ++c % 144;
+  if (c == 0)
+    console.log(core.shaderMaterial.uniforms.bodycount.value);
 
   renderer.render(scene, camController.current.camera);
 }

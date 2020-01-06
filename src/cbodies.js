@@ -74,8 +74,11 @@ class TerraPlanet extends CelestialBody {
       },
 
       fragmentShader: terraPlanetFrag,
-      vertexShader: terraPlanetVert
+      vertexShader: terraPlanetVert,
     });
+
+    this.shaderMaterial.magFilter = THREE.NearestFilter;
+    this.shaderMaterial.minFilter = THREE.NearestFilter;
 
     this.mesh = createCBody(this.size, false, this.shaderMaterial);
     this.rotationNode.add(this.mesh);
@@ -153,6 +156,9 @@ class DryPlanet extends CelestialBody {
       vertexShader: dryPlanetVert
     });
 
+    this.shaderMaterial.magFilter = THREE.NearestFilter;
+    this.shaderMaterial.minFilter = THREE.NearestFilter;
+
     this.mesh = createCBody(this.size, false, this.shaderMaterial);
     this.rotationNode.add(this.mesh);
   }
@@ -227,6 +233,9 @@ class LavaPlanet extends CelestialBody {
       fragmentShader: lavaPlanetFrag,
       vertexShader: lavaPlanetVert
     });
+
+    this.shaderMaterial.magFilter = THREE.NearestFilter;
+    this.shaderMaterial.minFilter = THREE.NearestFilter;
 
     this.mesh = createCBody(this.size, false, this.shaderMaterial);
     this.rotationNode.add(this.mesh);
@@ -311,6 +320,9 @@ class GasGiantPlanet extends CelestialBody {
       vertexShader: gasPlanetVert
     });
 
+    this.shaderMaterial.magFilter = THREE.NearestFilter;
+    this.shaderMaterial.minFilter = THREE.NearestFilter;
+
     this.ucb = (delta, cameraPosition) => {
       this.shaderMaterial.uniforms.time.value += delta / 50.0;
     };
@@ -356,6 +368,9 @@ class GasGiantPlanet extends CelestialBody {
 
       side: THREE.DoubleSide
     });
+
+    this.shaderMaterial.magFilter = THREE.NearestFilter;
+    this.shaderMaterial.minFilter = THREE.NearestFilter;
 
     this.ring = new THREE.Mesh(this.ringGeometry, this.ringMaterial);
     this.ring.rotateX(Math.PI / 2.0);
@@ -448,6 +463,9 @@ class GasDwarfPlanet extends CelestialBody {
       vertexShader: gasPlanetVert
     });
 
+    this.shaderMaterial.magFilter = THREE.NearestFilter;
+    this.shaderMaterial.minFilter = THREE.NearestFilter;
+
     this.mesh = createCBody(this.size, false, this.shaderMaterial);
     this.rotationNode.add(this.mesh);
 
@@ -531,6 +549,9 @@ class Moon extends CelestialBody {
       vertexShader: moonVert
     });
 
+    this.shaderMaterial.magFilter = THREE.NearestFilter;
+    this.shaderMaterial.minFilter = THREE.NearestFilter;
+
     this.mesh = createCBody(this.size, false, this.shaderMaterial);
     this.rotationNode.add(this.mesh);
   }
@@ -590,6 +611,9 @@ class Star extends CelestialBody {
       fragmentShader: starFrag,
       vertexShader: starVert
     });
+
+    this.shaderMaterial.magFilter = THREE.NearestFilter;
+    this.shaderMaterial.minFilter = THREE.NearestFilter;
 
     this.mesh = createCBody(this.size, true, this.shaderMaterial);
     this.rotationNode.add(this.mesh);

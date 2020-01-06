@@ -65,7 +65,7 @@ function createGuiObject(generator) {
     //starAmount: 1,
     starSizeMean: 20,
     starSizeVariance: 0,
-    starPlanetSizeRatio: 100,
+    starPlanetSizeRatio: 5,
     planetSizeVariance: 0,
     planetMoonSizeRatio: 4,
     moonSizeVariance: 0,

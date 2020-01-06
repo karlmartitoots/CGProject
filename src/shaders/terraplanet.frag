@@ -45,12 +45,11 @@ void main() {
   f *= 1.8;
 
   // Biomes
-  float height = interpolatedLocalPosition.y + (fnoise(12.0 * normalPosition, seed, 6, 0.55) + max(1.2 * noise(4.5 * normalPosition, seed), 0.0)) / 10.0;
+  float height = interpolatedLocalPosition.y + fnoise(15.0 * normalPosition, seed, 6, 0.45) + 3.0 * noise(1.5 * normalPosition, seed);
   float theight = (height - obliquity) / pposr.w;
   height / pposr.w;
 
-  float iciness = abs(theight) * 1.4 + max(f, 0.005) * ldist / 400.0 + ldist / 3200.0;
-  float caps = 1.0 - pow(1.0 - abs(height), 2.0);
+  float iciness = abs(theight) + max(f, 0.005) * ldist / 800.0 + ldist / 6400.0;
 
   // 1. Find normal
   vec3 n = normalize(interpolatedNormal);
@@ -70,7 +69,7 @@ void main() {
 
   // Biomes
   // Ice
-  if (iciness > 2.4 || caps > 0.995) {
+  if (iciness > 0.95) {
     noiseColor = vec3(0.93, 1.0, 1.0);
 
     // Very minor color variation
@@ -82,14 +81,14 @@ void main() {
   }
 
   // Water
-  else if (f <= 0.0) {
+  else if (f<= 0.0) {
     f = f * f * f;
     noiseColor = mix(colorWater, colorDeepWater, min(1.0, -f));
     specular = pow(max(0.0, dot(n, h)), 3.0 * shininess);
   }
 
   // Hot
-  else if (abs(height) + ldist / 1600.0 + fnoise(32.2 * normalPosition, seed, 4, 0.85) / 15.0 < 0.3 && f > 0.01 + ldist / 1600.0 + height * height / 80.0) {
+  else if (abs(height) + ldist / 800.0 + fnoise(32.2 * normalPosition, seed, 4, 0.85) < 2.0 && f > 0.02 + ldist / 3200.0 + height * height / 80.0) {
     if (f > 0.3)
       noiseColor = mix(color[4], color[5], min(1.0, (f - 0.3)));
 
@@ -131,6 +130,7 @@ void main() {
   vec3 interpolatedColor = lum * (noiseColor * diffuse + specular + glow);
 
   gl_FragColor = vec4(interpolatedColor, 1.0);
-  // gl_FragColor = vec4(vec3(height), 1.0);
+  //gl_FragColor = vec4(vec3(icecrack), 1.0);
 }
 `
+

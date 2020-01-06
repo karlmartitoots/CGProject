@@ -15,9 +15,6 @@ class Camera {
     this.width = sceneWidth;
     this.height = sceneHeight;
 
-    // Viewer position in world space
-    var viewerPosition = new THREE.Vector3(0.0, 300.0, 0.0);
-
     //Setup the camera
     var camera;
     var controls;

@@ -233,7 +233,7 @@ class Generator {
         distance[parents.length - 1] *= 2.1 + current.size / 80;
 
         break;
-      
+
       case ('g'):
 
         current = new GasGiantPlanet(this.confMap, currentDistance);
@@ -245,9 +245,9 @@ class Generator {
         distance[parents.length - 1] *= 2.4 + current.size / 80;
 
         break;
-      
+
       case ('w'):
-  
+
         current = new GasDwarfPlanet(this.confMap, currentDistance);
 
         if (parents.length > 0)

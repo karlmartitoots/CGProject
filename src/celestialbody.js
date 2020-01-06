@@ -113,7 +113,7 @@ class CelestialBody {
     this.rotationNode.rotation.y -= this.rotSpeed * delta;
   }
 
-  update(lightSource, cameraPosition, system) {
+  update(cameraViewPosition, system) {
     // TODO: Add distance check. If too far, don't update
     this.delta = this.clock.getDelta();
 
@@ -130,16 +130,16 @@ class CelestialBody {
 
     // Update uniforms
     if (typeof this.mesh.material != 'undefined') {
-      this.mesh.material.uniforms.viewPosition.value = cameraPosition;
+      this.mesh.material.uniforms.viewPosition.value = cameraViewPosition;
       this.mesh.material.uniforms.obliquity.value = this.orbit.axialtilt;
     }
 
     // Update callback
-    this.ucb(delta, cameraPosition);
+    this.ucb(delta, cameraViewPosition);
 
     // Update recursively
     this.children.forEach((item, index) => {
-      item.update(lightSource, cameraPosition, system);
+      item.update(cameraViewPosition, system);
     });
   }
 
